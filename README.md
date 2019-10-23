@@ -5,3 +5,5 @@ LabLineup is a web app that allows students inside of a course lab to request he
 Google Style Guide: https://google.github.io/styleguide/
 
 # Technologies
+- Django
+- Bootstrap
