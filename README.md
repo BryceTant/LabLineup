@@ -17,6 +17,6 @@ Google Style Guide: https://google.github.io/styleguide/
 
 # Authors
 - Bryce Tant - bjtant@email.sc.edu
-- Graham McDonald -
+- Graham McDonald - mcdonag@email.sc.edu
 - Landon Everhart - lte@email.sc.edu
 - Reed Segars -
