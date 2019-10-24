@@ -9,3 +9,9 @@ Google Style Guide: https://google.github.io/styleguide/
 - Bootstrap
 - Google Cloud
 - Email Sender (To Be Chosen)
+
+#Authors
+- Bryce Tant -
+- Graham McDonald -
+- Landon Everhart - lte@email.sc.edu
+- Reed Segars -
