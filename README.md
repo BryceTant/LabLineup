@@ -10,8 +10,8 @@ Google Style Guide: https://google.github.io/styleguide/
 - Google Cloud
 - Email Sender (To Be Chosen)
 
-#Authors
-- Bryce Tant -
+# Authors
+- Bryce Tant - bjtant@email.sc.edu
 - Graham McDonald -
 - Landon Everhart - lte@email.sc.edu
 - Reed Segars -
