@@ -7,3 +7,5 @@ Google Style Guide: https://google.github.io/styleguide/
 # Technologies
 - Django
 - Bootstrap
+- Google Cloud
+- Email Sender (To Be Chosen)
