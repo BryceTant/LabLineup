@@ -20,3 +20,6 @@ Google Style Guide: https://google.github.io/styleguide/
 - Graham McDonald - mcdonag@email.sc.edu
 - Landon Everhart - lte@email.sc.edu
 - Reed Segars - jrsegars@email.sc.edu
+
+#Running
+To run the app, use the Django command "python manage.py runserver"
