@@ -14,7 +14,7 @@ Google Style Guide: https://google.github.io/styleguide/
 - Bootstrap
 - Google Cloud
 - MailGun
-- Postgre
+- MySQL
 
 # Authors
 - Bryce Tant - bjtant@email.sc.edu
