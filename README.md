@@ -13,7 +13,8 @@ Google Style Guide: https://google.github.io/styleguide/
 - Django
 - Bootstrap
 - Google Cloud
-- Email Sender (To Be Chosen)
+- MailGun
+- Postgre
 
 # Authors
 - Bryce Tant - bjtant@email.sc.edu
