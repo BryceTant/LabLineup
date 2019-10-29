@@ -22,5 +22,9 @@ Google Style Guide: https://google.github.io/styleguide/
 - Landon Everhart - lte@email.sc.edu
 - Reed Segars - jrsegars@email.sc.edu
 
+#Editing
+The virtualenv name is LLenv.
+To activate the virtualenv in Windows, go to the project dir, type .\LLenv\Scripts\activate.bat
+
 #Running
 To run the app, use the Django command "python manage.py runserver"
