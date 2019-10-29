@@ -1,20 +1,15 @@
 #Copyright 2019 LabLineup
 #NOTE: The API Key is hardcoded and should be removed if the code is publicly published
 
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+import requests
+
+API='https://api.mailgun.net/v3/sandbox5cabdfbc85c04547bc9022f1756f244f.mailgun.org/messages'
+API_KEY='8417d7db91e6ff4430906312affaf067-816b23ef-53a937ca'
 
 def sendNotification(email, labName, numRequests):
-    message = Mail(
-        from_email='no-reply@lablineup.com',
-        to_emails=email,
-        subject=("LabLineup Notification: " + labName + " has " + str(numRequests) + " requests in the queue"),
-        html_content=('<h1>LabLineup Notification</h1><br><br>'+ labName + " has " + str(numRequests) + " requests in the queue."))
-    try:
-        sg = SendGridAPIClient('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')
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as e:
-        print(e.message)
+    message={}
+    message["from"] = "LabLineup <no-reply@lablineup.com>"
+    message["to"] = [email]
+    message["subject"] = ("LabLineup Alert for " + labName)
+    message["text"] = (labName + " has " + str(numRequests) + " requests in the queue.")
+    return requests.post(API,auth=('api',API_KEY),data=message)
