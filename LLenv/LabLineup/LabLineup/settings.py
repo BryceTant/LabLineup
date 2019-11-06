@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'LabLineup.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'lldb',
+        'USER': 'testDBUser',
+        'PASSWORD': 'z5b3P9wwr9F6',  #TODO: Get this from secure store
+        'HOST': '35.231.63.117',
+        'PORT': '3306',
     }
 }
 
