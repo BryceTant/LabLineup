@@ -13,14 +13,14 @@ class request:
 
     def toString(self):
         finalString = "RID:\t" + self.rid
-        finalString =+ "\tLID:\t" + self.lid
-        finalString =+ "\tSUID:\t" + self.suid
-        finalString =+ "\tStation:\t" + self.station
-        finalString =+ "\tDescription:\t" + self.description
-        finalString =+ "\tTime Submitted:\t" + self.timeSubmitted
-        finalString =+ "\tTime Completed:\t" + self.timeCompleted
-        finalString =+ "\tHUID:\t" + self.huid
-        finalString =+ "\tFeedback:\t" + self.feedback
+        finalString = finalString + "\tLID:\t" + self.lid
+        finalString = finalString + "\tSUID:\t" + self.suid
+        finalString = finalString + "\tStation:\t" + self.station
+        finalString = finalString + "\tDescription:\t" + self.description
+        finalString = finalString + "\tTime Submitted:\t" + self.timeSubmitted
+        finalString = finalString + "\tTime Completed:\t" + self.timeCompleted
+        finalString = finalString + "\tHUID:\t" + self.huid
+        finalString = finalString + "\tFeedback:\t" + self.feedback
         return finalString
 
     def timeTaken(self):

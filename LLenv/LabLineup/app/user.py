@@ -1,15 +1,13 @@
 class user:
-        def __init__(self, uid, firstname, lastname, email, phoneNo):
+        def __init__(self, uid, firstname, lastname, email):
             self.uid = uid
             self.firstname = firstname
             self.lastname = lastname
             self.email = email
-            self.phoneNo = phoneNo
             
         def toString(self):
             finalString = "UID:\t" + self.uid
-            finalString =+ "\tFirst Name:\t" + self.firstname
-            finalString =+ "\tLast Name:\t" + self.lastname
-            finalString =+ "\tEmail:\t" + self.email
-            finalString =+ "\tphoneNo:\t" + self.phoneNo
+            finalString = finalString + "\tFirst Name:\t" + self.firstname
+            finalString = finalString + "\tLast Name:\t" + self.lastname
+            finalString = finalString + "\tEmail:\t" + self.email
             return finalString
