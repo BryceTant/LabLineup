@@ -29,8 +29,8 @@ def contact(request):
         request,
         'app/contact.html',
         {
-            'title':'Contact',
-            'message':'Your contact page.',
+            'title':'Contact Us',
+            'message':'Please feel free to contact us with any suggestions or comments.',
             'year':datetime.now().year,
         }
     )
