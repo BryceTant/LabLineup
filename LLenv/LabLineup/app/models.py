@@ -23,8 +23,8 @@ class Request(models.Model):
 	station = models.CharField(max_length=10)  #varchar(11), ~Null
 	description = models.CharField(max_length=250)  #varchar(250), ~Null
 	timeSubmitted = models.DateTimeField() #datetime, ~Null
-	timeCompleted = models.DateTimeField(blank=True)  #datimee, NULL
-	feedback = models.IntegerField(blank=True)  #int(1), NULL
+	timeCompleted = models.DateTimeField(null=True, blank=True)  #datimee, NULL
+	feedback = models.IntegerField(null=True, blank=True)  #int(1), NULL
 	suid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="suid")  #int(11), ~Null, FK
 	lid = models.ForeignKey('Lab', on_delete=models.CASCADE)  #int(11), ~Null, FK
-	huid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="huid")  #int(11), ~Null, FK
+	huid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="huid", null=True)  #int(11), Null, FK
