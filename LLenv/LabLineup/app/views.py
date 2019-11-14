@@ -6,6 +6,10 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpRequest
 
+from app.models import Lab
+from app.models import Role
+from app.models import Request
+
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)

@@ -28,6 +28,3 @@ class Request(models.Model):
 	suid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="suid")  #int(11), ~Null, FK
 	lid = models.ForeignKey('Lab', on_delete=models.CASCADE)  #int(11), ~Null, FK
 	huid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="huid")  #int(11), ~Null, FK
-
-
-# Create your models here.
