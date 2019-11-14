@@ -3,8 +3,9 @@ Definition of views.
 """
 
 from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpRequest
+from app.forms import BootstrapRegisterForm
 
 from app.models import Lab
 from app.models import Role
@@ -47,3 +48,24 @@ def about(request):
             'year':datetime.now().year,
         }
     )
+
+def register(request):
+	"""Renders the register page."""
+	assert(isinstance(request, HttpRequest))
+	if request.method == 'POST':
+		form = BootstrapRegisterForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect('/about')
+	else:
+		form = BootstrapRegisterForm()
+	return render(
+		request,
+		'app/register.html',
+		{
+			'title':'Register',
+			'message:':'Create an account.',
+			'year':datetime.now().year,
+			'form':form
+		}
+	)
