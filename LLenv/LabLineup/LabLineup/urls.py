@@ -29,5 +29,11 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('admin/', admin.site.urls),
 	path('help/', views.help, name='help'),
+	path('app/', views.selectLab, name='selectLab'),
 	path('addLab/', views.addLab, name='addLab'),
+	path('lab/<int:labID>/student/', views.labStudent, name='labStudent'),
+	path('lab/<int:labID>/queue/', views.labQueue, name='labQueue'),
+	path('lab/<int:labID>/manageLab/', views.labManage, name='labManage'),
+	path('lab/<int:labID>/feedback/', views.labFeedback, name='labFeedback'),
+	path('lab/<int:labID>/feedback/<int:helperID>/', views.labFeedbackHelper, name='labFeedbackHelper'),
 ]
