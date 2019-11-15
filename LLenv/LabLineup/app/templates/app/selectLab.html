@@ -1,0 +1,37 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+<h3>{{ message }}</h3>
+<div class="row">
+    <div class="col-md-8">
+        <section id="labsAsStudent">
+            <h3>Student</h3>
+            {% for lab in labsWhereStudent %}
+                {% include 'selectLabPartial.html' %}
+            {% endfor %}
+        </section>
+        <section id="labsAsTA">
+            <h3>Teaching Assistant</h3>
+            {% for lab in labsWhereTA %}
+                {% include 'selectLabPartial.html' %}
+            {% endfor %}
+        </section>
+        <section id="labsAsProfessor">
+            <h3>Professor</h3>
+            {% for lab in labsWhereProfessor %}
+                {% include 'selectLabPartial.html' %}
+            {% endfor %}
+        </section>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+
+
+{% endblock %}

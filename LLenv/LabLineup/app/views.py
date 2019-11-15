@@ -14,6 +14,7 @@ from app.models import Request
 from app.models import LabCode
 
 from app.modelFunc import generateLabCode
+from app.modelFunc import getLabsWithRole
 
 def home(request):
     """Renders the home page."""
@@ -111,7 +112,25 @@ def addLab(request):
 def selectLab(request):
 	"""Renders main app page (select a lab)"""
 	assert isinstance(request, HttpRequest)
-	pass
+	#Lists of lab objects for each role
+	labsWhereStudent = getLabsWithRole(userID=request.user, role = 's')
+	labsWhereTA = getLabsWithRole(userID=request.user, role = 't')
+	labsWhereProfessor = getLabsWithRole(userID=request.user, role = 'p')
+
+	return render (
+		request,
+		'app/selectLab.html',
+		{
+			'title':'Select Lab',
+			'message':'Select a lab',
+			'year':datetime.now().year
+		},
+		dict(
+			labsWhereStudent=labsWhereStudent,
+			labsWhereTA=labsWhereTA,
+			labsWhereProfessor=labsWhereProfessor
+		)
+	)
 
 def labStudent(request, labID):
 	"""Renders pages for lab/{labID}/student."""
