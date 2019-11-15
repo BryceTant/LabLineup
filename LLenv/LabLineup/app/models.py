@@ -28,3 +28,10 @@ class Request(models.Model):
 	suid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="suid")  #int(11), ~Null, FK
 	lid = models.ForeignKey('Lab', on_delete=models.CASCADE)  #int(11), ~Null, FK
 	huid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="huid", null=True)  #int(11), Null, FK
+
+
+class LabCode(models.Model):
+	code = models.CharField(max_length=20, primary_key=True, unique=True)
+	lid = models.ForeignKey('Lab', on_delete=models.CASCADE)
+	RoleChoices = (('s',"Student"), ('p', "Professor"), ('t', "Teaching Assistant"))
+	role = models.CharField(max_length=1, choices=RoleChoices, default='s')  #varchar(1) (choice)

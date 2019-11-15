@@ -1,7 +1,25 @@
 from app.models import Lab
 from app.models import Role
 from app.models import Request
+from app.models import LabCode
 from django.contrib.auth.models import User
+from string import ascii_lowercase
+from random import choice
+from random import randint
+
+
+#Generates and saves a LabCode for the specified lab and role and returns the code
+def generateLabCode(labID, role):
+	roleList=['s', 't', 'p']
+	codeString = str(labID)
+	for i in range(0,5):
+		charChoice = choice(ascii_lowercase)
+		while charChoice in roleList:
+			charChoice = choice(ascii_lowercase)
+		codeString = codeString + charChoice
+	newCodeString = codeString.replace(codeString[len(str(labID)) + randint(0,4)], role)
+	newCode = LabCode(lid_id=labID, role=role, code=newCodeString)
+	return newCode.code
 
 
 #To get the role of a userID in a labID

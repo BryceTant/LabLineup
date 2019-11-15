@@ -6,10 +6,14 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from app.forms import BootstrapRegisterForm
+from app.forms import AddLabForm
 
 from app.models import Lab
 from app.models import Role
 from app.models import Request
+from app.models import LabCode
+
+from app.modelFunc import generateLabCode
 
 def home(request):
     """Renders the home page."""
@@ -69,3 +73,37 @@ def register(request):
 			'form':form
 		}
 	)
+
+def help(request):
+	"""Renders the about page."""
+	assert isinstance(request, HttpRequest)
+	return render(
+        request,
+        'app/help.html',
+        {
+            'title':'FAQs',
+            'message':'Help / Frequently Asked Questions',
+            'year':datetime.now().year,
+        }
+    )
+
+def addLab(request):
+	"""Renders the about page."""
+	assert isinstance(request, HttpRequest)
+	if request.method == 'POST':
+		form = AddLabForm(request.POST, user=request.user)
+		if form.is_valid():
+			form.save()
+			return redirect('/about')
+	else:
+		form = AddLabForm(user=request.user)
+	return render(
+        request,
+        'app/addLab.html',
+        {
+            'title':'Add Lab',
+            'message':'Add a lab to your account',
+            'year':datetime.now().year,
+			'form':form,
+        }
+    )

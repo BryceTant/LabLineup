@@ -7,6 +7,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from app.models import Role
+from app.models import LabCode
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -58,3 +60,19 @@ class BootstrapRegisterForm(UserCreationForm):
 		if commit:
 			user.save()
 		return user
+
+class AddLabForm(forms.Form):
+	labcode = forms.CharField(required=True, max_length=20,
+								widget=forms.TextInput({
+									'class':'form-control',
+									'placeholder':'Lab Code'}))
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user', None)
+		super(AddLabForm, self).__init__(*args, **kwargs)
+
+	def save(self):
+		userID = self.user.id
+		labCode = LabCode.objects.get(code=self.cleaned_data['labcode'])
+		obj = Role(lid_id=labCode.lid_id, uid_id=userID, role=labCode.role) #Add the role
+		obj.save()
