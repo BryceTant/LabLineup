@@ -61,7 +61,7 @@ def register(request):
 		form = BootstrapRegisterForm(request.POST)
 		if form.is_valid():
 			form.save()
-			return redirect('/about')
+			return redirect('/login')
 	else:
 		form = BootstrapRegisterForm()
 	return render(

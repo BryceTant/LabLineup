@@ -9,13 +9,17 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting Started</h2>
-        <p>
-            Click below to sign up for a free account and begin using LabLineup right away.
-        </p>
-        <p><a class="btn btn-default" href="{% url 'register' %}">Sign Up &raquo;</a></p>
-    </div>
+	<div class="col-md-4">
+		{% if user.is_authenticated %}
+			<h2>Launch</h2>
+			<p>Welcome back, {{user.first_name}}. Click below to launch LabLineup right away.</p>
+			<p><a class="btn btn-default" href="{% url 'selectLab' %}">Launch &raquo;</a></p>
+		{% else %}
+		<h2>Getting Started</h2>
+		<p>Click below to sign up for a free account and begin using LabLineup right away.</p>
+		<p><a class="btn btn-default" href="{% url 'register' %}">Sign Up &raquo;</a></p>
+		{% endif %}
+	</div>
     <div class="col-md-4">
         <h2>Get Help</h2>
         <p>Click below to get help and read our frequently asked questions.</p>

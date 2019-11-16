@@ -13,5 +13,3 @@ def sendNotification(email, labName, numRequests):
     message["subject"] = ("LabLineup Alert for " + labName)
     message["text"] = (labName + " has " + str(numRequests) + " requests in the queue.")
     return requests.post(API,auth=('api',API_KEY),data=message)
-
-sendNotification("gsmcdonald@ieee.org", "Test Lab", 4)
