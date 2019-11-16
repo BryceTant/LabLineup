@@ -123,13 +123,11 @@ def selectLab(request):
 		{
 			'title':'Select Lab',
 			'message':'Select a lab',
-			'year':datetime.now().year
-		},
-		dict(
-			labsWhereStudent=labsWhereStudent,
-			labsWhereTA=labsWhereTA,
-			labsWhereProfessor=labsWhereProfessor
-		)
+			'year':datetime.now().year,
+			'labsWhereStudent':labsWhereStudent,
+			'labsWhereTA':labsWhereTA,
+			'labsWhereProfessor':labsWhereProfessor
+		}
 	)
 
 def labStudent(request, labID):

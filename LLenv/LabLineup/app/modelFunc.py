@@ -29,15 +29,19 @@ def getRole(userID, labID):
 #To get a list of labs in which the userID has role role
 def getLabsWithRole(userID, role):
 	labs = []
-	for lidOjb in Role.objects.filter(uid_id=userID, role=role):
-		labs.append(Lab.objects.get(lid=lidObj.lid_id))
+	query = Role.objects.filter(uid_id=userID, role=role)
+	if query:
+		for lidObj in query:
+			labs.append(Lab.objects.get(lid=lidObj.lid_id))
 	return labs
 
 #To get a list of feedback (ratings) for a TA or professor in a lab
 def getFeedbackForUser(userID, labID):
 	feedback = []
-	for entry in Request.objects.filter(huid_id=userID, lid_id=labID):
-		feedback.append(entry.feedback)
+	query = Request.objects.filter(huid_id=userID, lid_id=labID)
+	if query:
+		for entry in query:
+			feedback.append(entry.feedback)
 	return feedback
 
 #To get a list of the current requests (as a list of Request objects) in a lab
