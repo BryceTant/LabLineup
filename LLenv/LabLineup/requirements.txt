@@ -1,1 +1,5 @@
-django >= 2.1.6, < 3.0 
+Django==2.2.7
+mysql-connector-python==8.0.18
+mysqlclient==1.4.5
+pytz==2019.3
+sqlparse==0.3.0

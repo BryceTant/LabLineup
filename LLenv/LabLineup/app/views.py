@@ -95,7 +95,7 @@ def addLab(request):
 		form = AddLabForm(request.POST, user=request.user)
 		if form.is_valid():
 			form.save()
-			return redirect('/about')
+			return redirect('/app')
 	else:
 		form = AddLabForm(user=request.user)
 	return render(
