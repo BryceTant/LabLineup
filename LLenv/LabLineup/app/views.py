@@ -87,6 +87,18 @@ def help(request):
             'year':datetime.now().year,
         }
     )
+def createLab(request):
+    """Renders the createLab page. """
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/createLab.html',
+        {
+            'title': 'Create a Lab',
+            'message': 'Create a new lab for your class',
+            # Add form for rendering?
+        }
+    )
 
 def addLab(request):
 	"""Renders the about page."""

@@ -30,6 +30,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path('help/', views.help, name='help'),
 	path('app/', views.selectLab, name='selectLab'),
+    path('createLab/', views.createLab, name='createLab'),
 	path('addLab/', views.addLab, name='addLab'),
 	path('lab/<int:labID>/student/', views.labStudent, name='labStudent'),
 	path('lab/<int:labID>/queue/', views.labQueue, name='labQueue'),
