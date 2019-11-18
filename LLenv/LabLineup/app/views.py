@@ -90,13 +90,21 @@ def help(request):
 def createLab(request):
     """Renders the createLab page. """
     assert isinstance(request, HttpRequest)
+    if request.method == 'POST':
+        form = CreateLabForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('/app')
+        else:
+            form = CreateLabForm(user=request.user)
     return render(
         request,
         'app/createLab.html',
         {
-            'title': 'Create a Lab',
-            'message': 'Create a new lab for your class',
-            # Add form for rendering?
+            'title': 'Create Lab',
+            'message': 'Create a lab for your class',
+            'year':datetime.now().year,
+            #'form':form,
         }
     )
 

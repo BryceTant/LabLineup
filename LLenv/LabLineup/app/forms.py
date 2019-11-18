@@ -76,3 +76,6 @@ class AddLabForm(forms.Form):
 		labCode = LabCode.objects.get(code=self.cleaned_data['labcode'])
 		obj = Role(lid_id=labCode.lid_id, uid_id=userID, role=labCode.role) #Add the role
 		obj.save()
+
+class CreateLabForm(forms.Form):
+    pass # TODO: implement        
