@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from app.models import Role
 from app.models import LabCode
+from app.models import Lab
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -78,4 +79,18 @@ class AddLabForm(forms.Form):
 		obj.save()
 
 class CreateLabForm(forms.Form):
-    pass # TODO: implement        
+    labname = forms.CharField(required=True, max_length=75,
+                            widget=forms.TextInput({
+                                'class':'form-control',
+                                'placeholder':'Name'}))
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(CreateLabForm, self).__init__(*args, **kwargs)
+
+    def save(self):
+        userID = self.user.id
+        labName = Lab.object.get(name=self.cleaned_data['labname'])
+        # Check this
+        obj = Role(lid_id=labName.lid_id, uid_id=userID, role=labName.role)
+        obj.save()
