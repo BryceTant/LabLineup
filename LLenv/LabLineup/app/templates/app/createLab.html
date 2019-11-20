@@ -15,13 +15,13 @@
                   <div class="form-group">
                       <label for="id_labname" class="col-md-2 control-label">Lab Name</label>
                       <div class="col-md-10">
-                          {{ form.labname }}
+                          {{ form.labName }}
                       </div>
                   </div>
                   <div class="form-group">
                       <label for="id_description" class="col-md-2 control-label">Description</label>
                       <div class="col-md-10">
-                          {{ form.labdescrip }}
+                          {{ form.labDescription }}
                       </div>
                   </div>
                   <div class="form-group">
@@ -31,7 +31,7 @@
                       </div>
                   </div>
                   {% if form.errors %}
-                  <p class="validation-summary-errors">Please specify a lab name.</p>
+                  <p class="validation-summary-errors">Please specify a lab name and description.</p>
                   {% endif %}
               </form>
           </section>
