@@ -12,9 +12,9 @@ Google Style Guide: https://google.github.io/styleguide/
 # Technologies
 - Django
 - Bootstrap
-- Google Cloud
+- Google Cloud Platform
 - MailGun
-- MySQL
+- MySQL (CloudSQL)
 
 # Authors
 - Bryce Tant - bjtant@email.sc.edu

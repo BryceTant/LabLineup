@@ -79,23 +79,22 @@ class AddLabForm(forms.Form):
 		obj.save()
 
 class CreateLabForm(forms.Form):
-    labname = forms.CharField(required=True, max_length=75,
-                            widget=forms.TextInput({
-                                'class':'form-control',
-                                'placeholder':'Name'}))
-    labdescrip = forms.CharField(required=False, max_length=150,
-                            widget=forms.TextInput({
-                                'class':'form-control',
-                                'placeholder':'Description'}))
+	labName = forms.CharField(required=True, max_length=75,
+								widget=forms.TextInput({
+									'class':'form-control',
+									'placeholder':'Lab Name'}))
+	labDescription = forms.CharField(required=True, max_length=150,
+								widget=forms.TextInput({
+									'class':'form-control',
+									'placeholder':'Lab Description'}))
 
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        super(CreateLabForm, self).__init__(*args, **kwargs)
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user', None)
+		super(CreateLabForm, self).__init__(*args, **kwargs)
 
-    def save(self):
-        userID = self.user.id
-        labName = Lab.object.get(name=self.cleaned_data['labname'])
-        labDescrip = Lab.object.get(description=self.cleaned_data['labdescrip'])
-        # Check this
-        obj = Role(lid_id=labName.lid_id, uid_id=userID, role=labName.role)
-        obj.save()
+	def save(self):
+		userID = self.user.id
+		newLab = Lab(name=self.cleaned_data['labName'], description=self.cleaned_data['labDescription'])
+		newLab.save()
+		creatorRole = Role(lid_id=newLab.lid, uid_id=userID, role='p') #Add the professor role for the current user
+		creatorRole.save()

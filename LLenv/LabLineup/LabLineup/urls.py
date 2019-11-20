@@ -10,9 +10,9 @@ from app import forms, views
 
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('contact/', views.contact, name='contact'),
-    path('about/', views.about, name='about'),
+    path('', views.home, name='home'),  #Home page of website
+    path('contact/', views.contact, name='contact'),  #Contact form/information page
+    path('about/', views.about, name='about'),  #About page with info on app
     path('login/',
          LoginView.as_view
          (
@@ -24,17 +24,20 @@ urlpatterns = [
                  'year' : datetime.now().year,
              }
          ),
-         name='login'),
-    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
-    path('register/', views.register, name='register'),
-    path('admin/', admin.site.urls),
-	path('help/', views.help, name='help'),
-	path('app/', views.selectLab, name='selectLab'),
-    path('createLab/', views.createLab, name='createLab'),
-	path('addLab/', views.addLab, name='addLab'),
-	path('lab/<int:labID>/student/', views.labStudent, name='labStudent'),
-	path('lab/<int:labID>/queue/', views.labQueue, name='labQueue'),
-	path('lab/<int:labID>/manageLab/', views.labManage, name='labManage'),
-	path('lab/<int:labID>/feedback/', views.labFeedback, name='labFeedback'),
-	path('lab/<int:labID>/feedback/<int:helperID>/', views.labFeedbackHelper, name='labFeedbackHelper'),
+         name='login'),  #Login page
+    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),  #Logout page
+    path('register/', views.register, name='register'),  #Create an account page
+    path('admin/', admin.site.urls),  #Admin panel
+	path('help/', views.help, name='help'),  #Help and FAQs page
+	path('app/', views.selectLab, name='selectLab'),  #First page of app (select a lab)
+    path('createLab/', views.createLab, name='createLab'),  #Page to create a new lab (as professor)
+	path('addLab/', views.addLab, name='addLab'),  #Page to add a lab to your account (using a lab code)
+	path('student/request/', views.studentRequest, name='studentRequest'),  #Student page for lab to submit a new request
+	path('student/requestSubmitted/', views.studentRequestSubmitted, name='studentRequestSubmitted'),  #Student page after request submitted (waiting page)
+	path('student/requestFeedback/', views.studentRequestSubmitted, name='studentRequestSubmitted'),  #Student page after request has been completed (feedback)
+	path('lab/queue/', views.labQueue, name='labQueue'),  #TA/Professor queue for the lab
+	path('lab/manageLab/', views.labManage, name='labManage'),  #Professor page to manage lab settings
+	path('lab/feedback/', views.labFeedback, name='labFeedback'),  #Professor page to view feedback and select TA's to view feedback
+	path('lab/feedback/helper/', views.labFeedbackHelper, name='labFeedbackHelper'),  #Professor/TA page to view the TA's feedback
+	path('account/', views.manageAccount, name='manageAccount'),  #Manage account page (to change name, email, password, etc.)
 ]
