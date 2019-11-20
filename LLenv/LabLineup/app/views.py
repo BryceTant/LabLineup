@@ -150,32 +150,52 @@ def selectLab(request):
 		}
 	)
 
-def labStudent(request, labID):
+def studentRequest(request):
 	"""Renders pages for lab/{labID}/student."""
 	#Should only render if user's role is student
 	#Blank Request Form => Request Waiting Form => Feedback Form
 	assert isinstance(request, HttpRequest)
 	pass
 
-def labQueue(request, labID):
+def studentRequestSubmitted(request):
+	"""Renders pages for lab/{labID}/student."""
+	#Should only render if user's role is student
+	#Blank Request Form => Request Waiting Form => Feedback Form
+	assert isinstance(request, HttpRequest)
+	pass
+
+def studentRequestFeedback(request):
+	"""Renders pages for lab/{labID}/student."""
+	#Should only render if user's role is student
+	#Blank Request Form => Request Waiting Form => Feedback Form
+	assert isinstance(request, HttpRequest)
+	pass
+
+def labQueue(request):
 	"""Renders queue for lab (for TA's and professors)"""
 	#Should only render if user's role is TA or professor
 	assert isinstance(request, HttpRequest)
 	pass
 
-def labManage(request, labID):
+def labManage(request):
 	"""Renders manage lab page for professors"""
 	#Should only render if user's role is professor
 	assert isinstance(request, HttpRequest)
 	pass
 
-def labFeedback(request, labID):
+def labFeedback(request):
 	"""Renders feedback page for professors"""
 	#Should only render if user's role is professor
 	assert isinstance(request, HttpRequest)
 	pass
 
-def labFeedbackHelper(request, labID, helperID):
+def labFeedbackHelper(request):
+	"""Renders feedback page for specific TA for specific lab"""
+	#Should only render if user's role is professor or the specified TA
+	assert isinstance(request, HttpRequest)
+	pass
+
+def manageAccount(request):
 	"""Renders feedback page for specific TA for specific lab"""
 	#Should only render if user's role is professor or the specified TA
 	assert isinstance(request, HttpRequest)
