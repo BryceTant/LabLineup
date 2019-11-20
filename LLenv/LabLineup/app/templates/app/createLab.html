@@ -13,9 +13,15 @@
                   {% csrf_token %}
                   <hr />
                   <div class="form-group">
-                      <label for="id_labname" class="col-md-2 control-label">Name</label>
+                      <label for="id_labname" class="col-md-2 control-label">Lab Name</label>
                       <div class="col-md-10">
                           {{ form.labname }}
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="id_description" class="col-md-2 control-label">Description</label>
+                      <div class="col-md-10">
+                          {{ form.labdescrip }}
                       </div>
                   </div>
                   <div class="form-group">
@@ -25,7 +31,7 @@
                       </div>
                   </div>
                   {% if form.errors %}
-                  <p class="validation-summary-errors">The lab code you entered does not exist.</p>
+                  <p class="validation-summary-errors">Please specify a lab name.</p>
                   {% endif %}
               </form>
           </section>

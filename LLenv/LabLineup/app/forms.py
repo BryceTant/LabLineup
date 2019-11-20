@@ -83,6 +83,10 @@ class CreateLabForm(forms.Form):
                             widget=forms.TextInput({
                                 'class':'form-control',
                                 'placeholder':'Name'}))
+    labdescrip = forms.CharField(required=False, max_length=150,
+                            widget=forms.TextInput({
+                                'class':'form-control',
+                                'placeholder':'Description'}))
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -91,6 +95,7 @@ class CreateLabForm(forms.Form):
     def save(self):
         userID = self.user.id
         labName = Lab.object.get(name=self.cleaned_data['labname'])
+        labDescrip = Lab.object.get(description=self.cleaned_data['labdescrip'])
         # Check this
         obj = Role(lid_id=labName.lid_id, uid_id=userID, role=labName.role)
         obj.save()
