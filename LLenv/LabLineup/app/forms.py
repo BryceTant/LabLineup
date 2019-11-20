@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from app.models import Role
 from app.models import LabCode
+from app.models import Lab
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -77,5 +78,23 @@ class AddLabForm(forms.Form):
 		obj = Role(lid_id=labCode.lid_id, uid_id=userID, role=labCode.role) #Add the role
 		obj.save()
 
-class CreateLabForm(forms.Form):
-    pass # TODO: implement        
+class CreateLabForm(forms.Form):   
+	labName = forms.CharField(required=True, max_length=75,
+								widget=forms.TextInput({
+									'class':'form-control',
+									'placeholder':'Lab Name'}))
+	labDescription = forms.CharField(required=True, max_length=150,
+								widget=forms.TextInput({
+									'class':'form-control',
+									'placeholder':'Lab Description'}))
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user', None)
+		super(CreateLabForm, self).__init__(*args, **kwargs)
+
+	def save(self):
+		userID = self.user.id
+		newLab = Lab(name=self.cleaned_data['labName'], description=self.cleaned_data['labDescription'])
+		newLab.save()
+		creatorRole = Role(lid_id=newLab.lid, uid_id=userID, role='p') #Add the professor role for the current user
+		creatorRole.save()
