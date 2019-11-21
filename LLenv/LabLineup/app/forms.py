@@ -78,7 +78,7 @@ class AddLabForm(forms.Form):
 		obj = Role(lid_id=labCode.lid_id, uid_id=userID, role=labCode.role) #Add the role
 		obj.save()
 
-class CreateLabForm(forms.Form):   
+class CreateLabForm(forms.Form):
 	labName = forms.CharField(required=True, max_length=75,
 								widget=forms.TextInput({
 									'class':'form-control',

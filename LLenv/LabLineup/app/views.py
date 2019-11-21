@@ -5,8 +5,10 @@ Definition of views.
 from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
+from django.views.generic import CreateView
 from app.forms import BootstrapRegisterForm
 from app.forms import AddLabForm
+from app.forms import CreateLabForm
 
 from app.models import Lab
 from app.models import Role
@@ -91,12 +93,12 @@ def createLab(request):
     """Renders the createLab page. """
     assert isinstance(request, HttpRequest)
     if request.method == 'POST':
-        form = CreateLabForm(request.POST, user=request.user)
+        form = CreateLabForm(request.POST, user=request)
         if form.is_valid():
             form.save()
             return redirect('/app')
-        else:
-            form = CreateLabForm(user=request.user)
+    else:
+        form = CreateLabForm(user=request.user)
     return render(
         request,
         'app/createLab.html',
@@ -104,7 +106,7 @@ def createLab(request):
             'title': 'Create Lab',
             'message': 'Create a lab for your class',
             'year':datetime.now().year,
-            #'form':form,
+            'form':form
         }
     )
 
