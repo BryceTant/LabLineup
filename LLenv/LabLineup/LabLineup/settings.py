@@ -39,10 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'LabLineup',
     'app',
-    'crispy_forms'
 ]
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Middleware framework
 # https://docs.djangoproject.com/en/2.1/topics/http/middleware/

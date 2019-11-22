@@ -35,3 +35,9 @@ class LabCode(models.Model):
 	lid = models.ForeignKey('Lab', on_delete=models.CASCADE)
 	RoleChoices = (('s',"Student"), ('p', "Professor"), ('t', "Teaching Assistant"))
 	role = models.CharField(max_length=1, choices=RoleChoices, default='s')  #varchar(1) (choice)
+
+class Notify(models.Model):
+	uid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE) #int(11)
+	lid = models.ForeignKey('Lab', on_delete=models.CASCADE)
+	notifyNew = models.BooleanField(default=False)
+	notifyThreshold = models.IntegerField(null=True, blank=True)

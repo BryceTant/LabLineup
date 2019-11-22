@@ -9,6 +9,7 @@ from django.views.generic import CreateView
 from app.forms import BootstrapRegisterForm
 from app.forms import AddLabForm
 from app.forms import CreateLabForm
+from app.forms import ManageLabForm
 
 from app.models import Lab
 from app.models import Role
@@ -17,6 +18,7 @@ from app.models import LabCode
 
 from app.modelFunc import generateLabCode
 from app.modelFunc import getLabsWithRole
+from app.modelFunc import getRole
 
 def home(request):
     """Renders the home page."""
@@ -183,7 +185,42 @@ def labManage(request):
 	"""Renders manage lab page for professors"""
 	#Should only render if user's role is professor
 	assert isinstance(request, HttpRequest)
-	pass
+	currentLID = request.session.get('currentLab')
+	currentLab = Lab.objects.get(lid=currentLID)
+	initialData = {'lid':currentLID, 
+					'labName': currentLab.name,
+					'labDescription':currentLab.description}
+	if (getRole(userID=request.user, labID=currentLID)=='p'):  #If the user is a professor for the current lab
+		#Load page to manage lab
+		if request.method == 'POST':
+			form = ManageLabForm(request.POST, lid=currentLID, initial=initialData)
+			if form.is_valid():
+				form.save()
+				return redirect('/lab/queue')
+		else:
+			form = ManageLabForm(lid=currentLID, initial=initialData)
+			return render(
+				request,
+				'app/manageLab.html',
+				{
+					'title':'Manage Lab',
+					'message':'Edit lab settings',
+					'year':datetime.now().year,
+					'form':form,
+				}
+			)
+	else:
+		#User is not the professor for the current lab (Do not load the page)
+		return render(
+			request,
+			'app/permissionDenied.html',
+			{
+				'title':'Permission Denied',
+				'message':'You do not have permission to view this page',
+				'year':datetime.now().year
+			}
+		)
+
 
 def labFeedback(request):
 	"""Renders feedback page for professors"""
@@ -198,7 +235,11 @@ def labFeedbackHelper(request):
 	pass
 
 def manageAccount(request):
-	"""Renders feedback page for specific TA for specific lab"""
-	#Should only render if user's role is professor or the specified TA
+	"""Renders page to edit account settings"""
+	assert isinstance(request, HttpRequest)
+	pass
+
+def currentRequest(request):
+	"""Renders page to edit account settings"""
 	assert isinstance(request, HttpRequest)
 	pass
