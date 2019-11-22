@@ -1,0 +1,23 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>{{ title }}.</h2>
+<h3>{{ message }}</h3>
+
+<h3>You are already a member of this lab.</h3>
+
+<p>
+	You are already enrolled in this lab.
+	Please contact us if you believe you have received this in error.
+</p>
+
+<button type="button" class="btn btn-primary" onclick="goBack()">Go Back</button>
+
+<script>
+	function goBack() {
+		window.history.go(-1);
+	}
+</script>
+
+{% endblock %}

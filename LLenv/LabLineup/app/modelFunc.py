@@ -24,7 +24,11 @@ def generateLabCode(labID, role):
 
 #To get the role of a userID in a labID
 def getRole(userID, labID):
-	return Role.objects.get(uid_id=userID, lid_id=labID).role
+	query = Role.objects.get(uid_id=userID, lid_id=labID)
+	if query:
+		return query.role
+	else:
+		return None
 
 #To get a list of labs in which the userID has role role
 def getLabsWithRole(userID, role):
@@ -47,27 +51,35 @@ def getFeedbackForUser(userID, labID):
 #To get a list of the current requests (as a list of Request objects) in a lab
 def getRequests(labID):
 	requests = []
-	for request in Request.objects.filter(lid_id=labID, timeCompleted__isnull=True):
-		requests.append(request)
+	query = Request.objects.filter(lid_id=labID, timeCompleted__isnull=True)
+	if query:
+		for request in query:
+			requests.append(request)
 	return requests
 
 #To get a list of completed requests for a lab (as a list of Request objects)
 def getCompletedRequests(labID):
 	requests = []
-	for request in Request.objects.filter(lid_id=labID, timeCompleted__isnull=False):
-		requests.append(request)
+	query = Request.objects.filter(lid_id=labID, timeCompleted__isnull=False)
+	if query:
+		for request in query:
+			requests.append(request)
 	return requests
 
 #To get a list of all users in a lab (as a list of tuples containing (UserObject, role)
 def getLabUsers(labID):
 	users = []
-	for user in Role.objects.filter(lid_id=labID):
-		users.append((User.objects.get(id=user.uid_id), user.role))
+	query = Role.objects.filter(lid_id=labID)
+	if query:
+		for user in query:
+			users.append((User.objects.get(id=user.uid_id), user.role))
 	return users
 
 #To get a list of all users in a lab with role role (as a list of user objects)
 def getLabUsersWithRole(labID, role):
 	users = []
-	for user in Role.objects.filter(lid_id=labID, role=role).uid_id:
-		users.append(User.objects.get(id=user))
+	query = Role.objects.filter(lid_id=labID, role=role)
+	if query:
+		for user in query:
+			users.append(User.objects.get(id=user.uid_id))
 	return users
