@@ -2,6 +2,7 @@ from app.models import Lab
 from app.models import Role
 from app.models import Request
 from app.models import LabCode
+from app.models import Notify
 from django.contrib.auth.models import User
 from string import ascii_lowercase
 from random import choice
@@ -66,6 +67,14 @@ def getCompletedRequests(labID):
 			requests.append(request)
 	return requests
 
+#To get the oldest request in the queue
+def getNextRequest(labID):
+	return Request.objects.filter(lid_id=labID).latest('timeSubmitted')
+
+#To get the most recent request in the queue
+def getLastRequest(labID):
+	return Request.objects.filter(lid_id=labID).earliest('timeSubmitted')
+
 #To get a list of all users in a lab (as a list of tuples containing (UserObject, role)
 def getLabUsers(labID):
 	users = []
@@ -81,5 +90,23 @@ def getLabUsersWithRole(labID, role):
 	query = Role.objects.filter(lid_id=labID, role=role)
 	if query:
 		for user in query:
+			users.append(User.objects.get(id=user.uid_id))
+	return users
+
+#To get a list of users to email when a new request is submitted in lab labID
+def getEmailsToNotifyNew(labID):
+	users = []
+	queryUsers = Notify.objects.filter(lid_id = labID, notifyNew=True)
+	if queryUsers:
+		for user in queryUsers:
+			users.append(User.objects.get(id=user.uid_id))
+	return users
+
+#To get a list of users to email when the number of requests is currentCount in lab labID
+def getEmailsToNotifyThreshold(labID, currentCount):
+	users = []
+	queryUsers = Notify.objects.filter(notifyThreshold <= currentCount, lid_id = labID)
+	if queryUsers:
+		for user in queryUsers:
 			users.append(User.objects.get(id=user.uid_id))
 	return users
