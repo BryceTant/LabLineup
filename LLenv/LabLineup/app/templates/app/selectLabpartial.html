@@ -1,0 +1,25 @@
+{% if labsWhereStudent %}
+
+<!-- Add some sort of a tile for displaying a single lab -->
+<!-- Each lab should navigate to /lab/.... depending on role -->
+
+<a href="app/student/request">
+    <div class="panel panel-default">
+        <div class="card-body">
+            <div class="panel-heading"><b>{{lab.name}}</b></div>
+            <div class="panel-body">{{lab.description}}</div>
+        </div>
+    </div>
+</a>
+
+{% else %}
+<a href="app/lab/queue">
+    <div class="panel panel-default">
+        <div class="card-body">
+            <div class="panel-heading"><b>{{lab.name}}</b></div>
+            <div class="panel-body">{{lab.description}}</div>
+        </div>
+    </div>
+</a>
+{% endif %}
+
