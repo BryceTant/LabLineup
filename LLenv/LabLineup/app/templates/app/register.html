@@ -1,0 +1,73 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+<h3>{{ message }}</h3>
+<div class="row">
+    <div class="col-md-8">
+        <section id="registerForm">
+            <form action="." method="post" class="form-horizontal">
+                {% csrf_token %}
+                <h4>Create an account for LabLineup</h4>
+                <hr />
+                <div class="form-group">
+                    <label for="id_firstname" class="col-md-2 control-label">First name</label>
+                    <div class="col-md-10">
+                        {{ form.firstname }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_lastname" class="col-md-2 control-label">Last name</label>
+                    <div class="col-md-10">
+                        {{ form.lastname }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_username" class="col-md-2 control-label">Username</label>
+                    <div class="col-md-10">
+                        {{ form.username }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_email" class="col-md-2 control-label">Email</label>
+                    <div class="col-md-10">
+                        {{ form.email }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_password" class="col-md-2 control-label">Password</label>
+                    <div class="col-md-10">
+                        {{ form.password1 }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_password" class="col-md-2 control-label">Password Confirmation</label>
+                    <div class="col-md-10">
+                        {{ form.password2 }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="hidden" name="next" value="/" />
+                        <input type="submit" value="Register" class="btn btn-default" />
+                    </div>
+                </div>
+                {% if form.errors %}
+                <p class="validation-summary-errors">The username you entered has already been taken or your passwords did not match. Please try again.</p>
+                {% endif %}
+            </form>
+        </section>
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+    {% load staticfiles %}
+<script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
+
+{% endblock %}
