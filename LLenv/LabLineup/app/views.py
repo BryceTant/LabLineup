@@ -140,7 +140,6 @@ def selectLab(request):
 	labsWhereStudent = getLabsWithRole(userID=request.user, role = 's')
 	labsWhereTA = getLabsWithRole(userID=request.user, role = 't')
 	labsWhereProfessor = getLabsWithRole(userID=request.user, role = 'p')
-
 	return render (
 		request,
 		'app/selectLab.html',

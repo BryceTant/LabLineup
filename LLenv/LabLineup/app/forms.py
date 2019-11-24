@@ -117,7 +117,7 @@ class ManageLabForm(forms.Form):
 									'class':'form-control'}))
 
 	def save(self):
-		currentLab = Lab.objects.get(lid = self.lid)		
+		currentLab = Lab.objects.get(lid = self.lid)
 		if (self.cleaned_data['labName'] != ""):  #If name updated
 			Lab.objects.filter(lid=currentLab.lid).update(name=self.cleaned_data['labName'])
 
