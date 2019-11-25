@@ -184,7 +184,8 @@ def labManage(request):
 	"""Renders manage lab page for professors"""
 	#Should only render if user's role is professor
 	assert isinstance(request, HttpRequest)
-	currentLID = request.session.get('currentLab')
+	#currentLID = request.session.get('currentLab')
+	currentLID = 3
 	currentLab = Lab.objects.get(lid=currentLID)
 	initialData = {'lid':currentLID, 
 					'labName': currentLab.name,

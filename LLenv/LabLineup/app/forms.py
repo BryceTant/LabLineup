@@ -108,7 +108,6 @@ class ManageLabForm(forms.Form):
 		self.lid = kwargs.pop('lid', None)
 		super(ManageLabForm, self).__init__(*args, **kwargs)
 
-
 	labName = forms.CharField(required=False, max_length=75,
 								widget=forms.TextInput({
 									'class':'form-control'}))
@@ -123,3 +122,5 @@ class ManageLabForm(forms.Form):
 
 		if (self.cleaned_data['labDescription'] != ""):  #If description updated
 			Lab.objects.filter(lid=currentLab.lid).update(description=self.cleaned_data['labDescription'])
+
+
