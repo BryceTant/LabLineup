@@ -1,18 +1,21 @@
-{% block content %}
+{% if labsWhereStudent %}
+<a href="/student/request">
+    <div class="panel panel-default">
+        <div class="card-body">
+            <div class="panel-heading"><b>{{lab.name}}</b></div>
+            <div class="panel-body">{{lab.description}}</div>
+        </div>
+    </div>
+</a>
 
-<!-- Add some sort of a tile for displaying a single lab -->
-<!-- Each lab should navigate to /lab/.... depending on role -->
+{% else %}
+<a href="/lab/queue" onclick="update_session()">
+    <div class="panel panel-default">
+        <div class="card-body">
+            <div class="panel-heading"><b>{{lab.name}}</b></div>
+            <div class="panel-body">{{lab.description}}</div>
+        </div>
+    </div>
+</a>
 
-{{lab.name}}
-<br />
-{{lab.description}}
-<br />
-<br />
-<br />
-
-{% endblock %}
-
-{% block scripts %}
- {% load staticfiles %}
-
-{% endblock %}
+{% endif %}

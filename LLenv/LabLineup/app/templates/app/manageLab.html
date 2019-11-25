@@ -1,7 +1,6 @@
 {% extends "app/layout.html" %}
 
 {% block content %}
-<h1>CHANGE THIS TO REFLECT MANAGE LAB</h1>
 <h2>{{ title }}</h2>
 <h3>{{ message }}</h3>
 <div class="row">
@@ -11,15 +10,21 @@
                 {% csrf_token %}
                 <hr />
                 <div class="form-group">
-                    <label for="id_labname" class="col-md-2 control-label">Lab Name</label>
+                   <label for="id_labname" class="col-md-2 control-label">Lab Name</label>
                     <div class="col-md-10">
-                        {{ form.labDescription }}
+                        {{ form.labName }}
                     </div>
+                </div>
+                <div class="form-group">
+                      <label for="id_description" class="col-md-2 control-label">Description</label>
+                      <div class="col-md-10">
+                          {{ form.labDescription }}
+                      </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="hidden" name="next" value="/" />
-                        <input type="submit" value="Add Lab" class="btn btn-default" />
+                        <input type="submit" value="Delete Lab" class="btn btn-default" />
                     </div>
                 </div>
                 {% if form.errors %}

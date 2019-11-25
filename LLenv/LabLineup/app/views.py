@@ -4,7 +4,7 @@ Definition of views.
 
 from datetime import datetime
 from django.shortcuts import render, redirect
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.views.generic import CreateView
 from app.forms import BootstrapRegisterForm
 from app.forms import AddLabForm
@@ -140,7 +140,6 @@ def selectLab(request):
 	labsWhereStudent = getLabsWithRole(userID=request.user, role = 's')
 	labsWhereTA = getLabsWithRole(userID=request.user, role = 't')
 	labsWhereProfessor = getLabsWithRole(userID=request.user, role = 'p')
-
 	return render (
 		request,
 		'app/selectLab.html',
@@ -185,7 +184,8 @@ def labManage(request):
 	"""Renders manage lab page for professors"""
 	#Should only render if user's role is professor
 	assert isinstance(request, HttpRequest)
-	currentLID = request.session.get('currentLab')
+	#currentLID = request.session.get('currentLab')
+	currentLID = 3
 	currentLab = Lab.objects.get(lid=currentLID)
 	initialData = {'lid':currentLID, 
 					'labName': currentLab.name,
@@ -243,3 +243,9 @@ def currentRequest(request):
 	"""Renders page to edit account settings"""
 	assert isinstance(request, HttpRequest)
 	pass
+
+def update_session(request):
+    if not request.is_ajax() or not request.method=='POST':
+        return HttpResponseNotAllowed(['POST'])
+    request.session['currentLab'] = 'lab.lid'
+    return HttpResponse('ok')
