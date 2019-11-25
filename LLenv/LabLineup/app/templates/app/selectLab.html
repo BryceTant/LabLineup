@@ -2,7 +2,12 @@
 
 {% block content %}
 
-<h2>{{ title }}</h2>
+<table style="width:100%">
+	<tr>
+		<td><h2 valign="middle">{{ title }}</h2></td>
+		<td align="right" valign="middle"><a href="/addLab/"><button type="button" class="btn btn-success">+</button></a></td>
+	</tr>
+</table>
 
 <script>
 	function setLab(selectedLabID, role) {

@@ -104,6 +104,7 @@ class CreateLabForm(forms.Form):
 		newLab.save()
 		creatorRole = Role(lid_id=newLab.lid, uid_id=userID, role='p') #Add the professor role for the current user
 		creatorRole.save()
+		return newLab.lid
 
 class ManageLabForm(forms.Form):
 	def __init__(self, *args, **kwargs):

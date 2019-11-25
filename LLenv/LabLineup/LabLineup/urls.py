@@ -38,7 +38,10 @@ urlpatterns = [
 	path('lab/queue/', views.labQueue, name='labQueue'),  #TA/Professor queue for the lab
 	path('lab/queue/currentRequest', views.currentRequest, name='currentRequest'), #TA/Professor responding to request
 	path('lab/manageLab/', views.labManage, name='labManage'),  #Professor page to manage lab settings
+	path('lab/notifications/', views.notifications, name='notifications'), #Page to edit notifications
 	path('lab/feedback/', views.labFeedback, name='labFeedback'),  #Professor page to view feedback and select TA's to view feedback
 	path('lab/feedback/helper/', views.labFeedbackHelper, name='labFeedbackHelper'),  #Professor/TA page to view the TA's feedback
+	path('professor/', views.professor, name='professor'),  #Professor page to select between manageLab, manageNotifications, feedback, etc.
+	path('ta/', views.ta, name='ta'),  #TA page to select between manageNotifications, feedback for TA, etc.
 	path('account/', views.manageAccount, name='manageAccount'),  #Manage account page (to change name, email, password, etc.)
 ]
