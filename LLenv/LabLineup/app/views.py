@@ -95,25 +95,26 @@ def help(request):
         }
     )
 def createLab(request):
-    """Renders the createLab page. """
-    assert isinstance(request, HttpRequest)
-    if request.method == 'POST':
-        form = CreateLabForm(request.POST, user=request)
-        if form.is_valid():
-            form.save()
-            return redirect('/app')
-    else:
-        form = CreateLabForm(user=request.user)
-    return render(
-        request,
-        'app/createLab.html',
-        {
-            'title': 'Create Lab',
-            'message': 'Create a lab for your class',
-            'year':datetime.now().year,
-            'form':form
-        }
-    )
+	"""Renders the createLab page. """
+	assert isinstance(request, HttpRequest)
+	if request.method == 'POST':
+		form = CreateLabForm(request.POST, user=request)
+		if form.is_valid():
+			newLabID = form.save()
+			request.session["currentLab"] = newLabID
+			return redirect('/lab/manageLab')
+	else:
+		form = CreateLabForm(user=request.user)
+	return render(
+		request,
+		'app/createLab.html',
+		{
+		'title': 'Create Lab',
+		'message': 'Create a lab for your class',
+		'year':datetime.now().year,
+		'form':form
+		}
+	)
 def addLab(request):
 	"""Renders the about page."""
 	assert isinstance(request, HttpRequest)
@@ -284,5 +285,17 @@ def manageAccount(request):
 	pass
 def currentRequest(request):
 	"""Renders page to edit account settings"""
+	assert isinstance(request, HttpRequest)
+	pass
+def notifications(request):
+	"""Renders page to edit notification settings for lab"""
+	assert isinstance(request, HttpRequest)
+	pass
+def professor(request):
+	"""Renders page to allow professors to navigate"""
+	assert isinstance(request, HttpRequest)
+	pass
+def ta(request):
+	"""Renders page to allow TA's to navigate"""
 	assert isinstance(request, HttpRequest)
 	pass
