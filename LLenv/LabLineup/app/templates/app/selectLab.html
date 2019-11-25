@@ -3,39 +3,52 @@
 {% block content %}
 
 <h2>{{ title }}</h2>
+
+<script>
+	function setLab(selectedLabID, role) {
+		document.forms["selectLabForm"].elements["labID"].value = selectedLabID;
+		document.getElementById("selectLabForm").submit();
+	}
+</script>
+
+<form id="selectLabForm" action="." method="post">
+	{% csrf_token %}
+	<input type="hidden" name="labID" value=0 />
+</form>
+
 <div class="row">
-    <div class="col-md-8">
-        <section id="labsAsStudent">
-            {% if labsWhereStudent %}
-                <h3>Student</h3>
-            {% endif %}
-            {% for lab in labsWhereStudent %}
-            <a href="/student/request/">
-                {% include 'app/selectLabpartial.html' %}
-            </a>
-            {% endfor %}
-        </section>
-        <section id="labsAsTA">
-            {% if labsWhereTA %}
-                <h3>Teaching Assistant</h3>
-            {% endif %}
-            {% for lab in labsWhereTA %}
-            <a href="/lab/queue/">
-                {% include 'app/selectLabpartial.html' %}
-            </a>
-            {% endfor %}
-        </section>
-        <section id="labsAsProfessor">
-            {% if labsWhereProfessor %}
-                <h3>Professor</h3>
-            {% endif %}
-            {% for lab in labsWhereProfessor %}
-            <a href="/lab/queue/">
-                {% include 'app/selectLabpartial.html' %}
-            </a>
-            {% endfor %}
-        </section>
-    </div>
+	<div class="col-md-8">
+		<section id="labsAsStudent">
+			{% if labsWhereStudent %}
+			<h3>Student</h3>
+			{% endif %}
+			{% for lab in labsWhereStudent %}
+			<div onclick="javascript:setLab({{lab.lid}})">
+				{% include 'app/selectLabpartial.html' %}
+			</div>
+			{% endfor %}
+		</section>
+		<section id="labsAsTA">
+			{% if labsWhereTA %}
+			<h3>Teaching Assistant</h3>
+			{% endif %}
+			{% for lab in labsWhereTA %}
+			<div onclick="javascript:setLab({{lab.lid}})">
+				{% include 'app/selectLabpartial.html' %}
+			</div>
+			{% endfor %}
+		</section>
+		<section id="labsAsProfessor">
+			{% if labsWhereProfessor %}
+			<h3>Professor</h3>
+			{% endif %}
+			{% for lab in labsWhereProfessor %}
+			<div onclick="javascript:setLab({{lab.lid}})">
+				{% include 'app/selectLabpartial.html' %}
+			</div>
+			{% endfor %}
+		</section>
+	</div>
 </div>
 
 {% endblock %}

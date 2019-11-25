@@ -136,22 +136,31 @@ def addLab(request):
 def selectLab(request):
 	"""Renders main app page (select a lab)"""
 	assert isinstance(request, HttpRequest)
-	#Lists of lab objects for each role
-	labsWhereStudent = getLabsWithRole(userID=request.user, role = 's')
-	labsWhereTA = getLabsWithRole(userID=request.user, role = 't')
-	labsWhereProfessor = getLabsWithRole(userID=request.user, role = 'p')
-	return render (
-		request,
-		'app/selectLab.html',
-		{
-			'title':'Select Lab',
-			'message':'Select a lab',
-			'year':datetime.now().year,
-			'labsWhereStudent':labsWhereStudent,
-			'labsWhereTA':labsWhereTA,
-			'labsWhereProfessor':labsWhereProfessor
-		}
-	)
+	if request.method == 'POST':
+		selectedLabID = int(request.POST.get("labID", ""))
+		request.session["currentLab"] = selectedLabID
+		role = getRole(userID=request.user, labID=selectedLabID)
+		if role == 's':
+			return redirect('/student/request')
+		else: #TA or professor
+			return redirect('/lab/queue')
+	else:
+		#Lists of lab objects for each role
+		labsWhereStudent = getLabsWithRole(userID=request.user, role = 's')
+		labsWhereTA = getLabsWithRole(userID=request.user, role = 't')
+		labsWhereProfessor = getLabsWithRole(userID=request.user, role = 'p')
+		return render (
+			request,
+			'app/selectLab.html',
+			{
+				'title':'Select Lab',
+				'message':'Select a lab',
+				'year':datetime.now().year,
+				'labsWhereStudent':labsWhereStudent,
+				'labsWhereTA':labsWhereTA,
+				'labsWhereProfessor':labsWhereProfessor
+			}
+		)
 
 def studentRequest(request):
 	"""Renders pages for lab/{labID}/student."""
@@ -184,8 +193,7 @@ def labManage(request):
 	"""Renders manage lab page for professors"""
 	#Should only render if user's role is professor
 	assert isinstance(request, HttpRequest)
-	#currentLID = request.session.get('currentLab')
-	currentLID = 3
+	currentLID = request.session.get('currentLab')
 	currentLab = Lab.objects.get(lid=currentLID)
 	initialData = {'lid':currentLID, 
 					'labName': currentLab.name,
@@ -243,9 +251,3 @@ def currentRequest(request):
 	"""Renders page to edit account settings"""
 	assert isinstance(request, HttpRequest)
 	pass
-
-def update_session(request):
-    if not request.is_ajax() or not request.method=='POST':
-        return HttpResponseNotAllowed(['POST'])
-    request.session['currentLab'] = 'lab.lid'
-    return HttpResponse('ok')
