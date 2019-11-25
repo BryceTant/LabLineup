@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from app.models import Role
 from app.models import LabCode
 from app.models import Lab
+from app.models import Request
+import datetime
 
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -122,5 +124,30 @@ class ManageLabForm(forms.Form):
 
 		if (self.cleaned_data['labDescription'] != ""):  #If description updated
 			Lab.objects.filter(lid=currentLab.lid).update(description=self.cleaned_data['labDescription'])
+
+class SubmitRequestForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user', None)
+		self.lid = kwargs.pop('lid', None)
+		super(SubmitRequestForm, self).__init__(*args, **kwargs)
+
+	station = forms.CharField(required=True, max_length=10,
+								widget=forms.TextInput({
+									'class':'form-control',
+									'placeholder':'Station'}))
+	description = forms.CharField(required=True, max_length=250,
+								widget=forms.TextInput({
+									'class':'form-control',
+									'placeholder':'Problem Description'}))
+
+	def save(self):
+		userID = self.user.id
+		labID = self.lid
+		newStation = self.cleaned_data['station']
+		newDescription = self.cleaned_data['description']
+		newRequest = Request(station=newStation, description=newDescription, timeSubmitted=datetime.datetime.now(),
+					   timeCompleted=None, feedback=None, huid_id=None, lid_id=labID, suid_id=userID)
+		newRequest.save()
+		return newRequest.rid #Must return rid to be set to session variable
 
 

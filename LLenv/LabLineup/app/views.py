@@ -11,6 +11,7 @@ from app.forms import BootstrapRegisterForm
 from app.forms import AddLabForm
 from app.forms import CreateLabForm
 from app.forms import ManageLabForm
+from app.forms import SubmitRequestForm
 
 from app.models import Lab
 from app.models import Role
@@ -22,6 +23,9 @@ from app.modelFunc import getLabsWithRole
 from app.modelFunc import getRole
 from app.modelFunc import getLabCode
 from app.modelFunc import deleteLabCode
+from app.modelFunc import getRequestCount
+
+from app.SendEmail import sendAll
 
 def home(request):
     """Renders the home page."""
@@ -158,13 +162,42 @@ def selectLab(request):
 				'labsWhereProfessor':labsWhereProfessor
 			}
 		)
-
 def studentRequest(request):
-	"""Renders pages for lab/{labID}/student."""
+	"""Renders page for student to submit request."""
 	#Should only render if user's role is student
 	#Blank Request Form => Request Waiting Form => Feedback Form
 	assert isinstance(request, HttpRequest)
-	pass
+	currentLID = request.session.get('currentLab')
+	if (getRole(userID=request.user, labID=currentLID)=='s'):
+		if request.method == 'POST':
+			form = SubmitRequestForm(request.POST, user=request.user, lid=currentLID)
+			if form.is_valid():
+				newRID = form.save()
+				request.session["currentRequest"] = newRID
+				#sendAll(currentLID, getRequestCount(currentLID)) ENABLE THIS LINE FOR SENDING EMAIL NOTIFICATIONS
+				return redirect('/student/requestSubmitted')
+		else:
+			form = SubmitRequestForm(user=request.user, lid=currentLID)
+		return render(
+			request,
+			'app/submitRequest.html',
+			{
+				'title': 'Submit Request',
+				'message': 'Submit a request for help',
+				'year':datetime.now().year,
+				'form':form
+			}
+		)
+	else:
+		return render(
+			request,
+			'app/permissionDenied.html',
+			{
+				'title':'Permission Denied',
+				'message':'You do not have permission to view this page',
+				'year':datetime.now().year
+			}
+		)
 def studentRequestSubmitted(request):
 	"""Renders pages for lab/{labID}/student."""
 	#Should only render if user's role is student

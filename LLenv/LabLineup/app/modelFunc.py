@@ -74,6 +74,11 @@ def getRequests(labID):
 			requests.append(request)
 	return requests
 
+#To get a count of current requests in a lab
+def getRequestCount(labID):
+	count = Request.objects.filter(lid_id=labID, timeCompleted__isnull=True).count()
+	return count
+
 #To get a list of completed requests for a lab (as a list of Request objects)
 def getCompletedRequests(labID):
 	requests = []

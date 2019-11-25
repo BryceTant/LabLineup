@@ -1,0 +1,46 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+<div class="row">
+    <div class="col-md-8">
+        <section id="SubmitRequestForm">
+			<form action="." method="post" class="form-horizontal">
+				{% csrf_token %}
+				<hr />
+				<div class="form-group">
+					<label for="id_station" class="col-md-2 control-label">Station</label>
+					<div class="col-md-10">
+						{{ form.station }}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="id_description" class="col-md-2 control-label">Description</label>
+					<div class="col-md-10">
+						{{ form.description }}
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-offset-2 col-md-10">
+						<input type="hidden" name="next" value="/" />
+						<input type="submit" value="Submit" class="btn btn-default" />
+					</div>
+				</div>
+				{% if form.errors %}
+				<p class="validation-summary-errors">Error</p>
+				{% endif %}
+			</form>
+        </section>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+    {% load staticfiles %}
+<script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
+
+{% endblock %}
