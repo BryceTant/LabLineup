@@ -4,7 +4,7 @@ Definition of views.
 
 from datetime import datetime
 from django.shortcuts import render, redirect
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.views.generic import CreateView
 from app.forms import BootstrapRegisterForm
 from app.forms import AddLabForm
@@ -243,3 +243,9 @@ def currentRequest(request):
 	"""Renders page to edit account settings"""
 	assert isinstance(request, HttpRequest)
 	pass
+
+def update_session(request):
+    if not request.is_ajax() or not request.method=='POST':
+        return HttpResponseNotAllowed(['POST'])
+    request.session['currentLab'] = 'lab.lid'
+    return HttpResponse('ok')
