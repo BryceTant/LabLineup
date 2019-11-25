@@ -6,6 +6,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.views.generic import CreateView
+
 from app.forms import BootstrapRegisterForm
 from app.forms import AddLabForm
 from app.forms import CreateLabForm
@@ -19,6 +20,8 @@ from app.models import LabCode
 from app.modelFunc import generateLabCode
 from app.modelFunc import getLabsWithRole
 from app.modelFunc import getRole
+from app.modelFunc import getLabCode
+from app.modelFunc import deleteLabCode
 
 def home(request):
     """Renders the home page."""
@@ -31,7 +34,6 @@ def home(request):
             'year':datetime.now().year,
         }
     )
-
 def contact(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
@@ -44,7 +46,6 @@ def contact(request):
             'year':datetime.now().year,
         }
     )
-
 def about(request):
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
@@ -57,7 +58,6 @@ def about(request):
             'year':datetime.now().year,
         }
     )
-
 def register(request):
 	"""Renders the register page."""
 	assert(isinstance(request, HttpRequest))
@@ -78,7 +78,6 @@ def register(request):
 			'form':form
 		}
 	)
-
 def help(request):
 	"""Renders the about page."""
 	assert isinstance(request, HttpRequest)
@@ -111,7 +110,6 @@ def createLab(request):
             'form':form
         }
     )
-
 def addLab(request):
 	"""Renders the about page."""
 	assert isinstance(request, HttpRequest)
@@ -132,7 +130,6 @@ def addLab(request):
 			'form':form,
         }
     )
-
 def selectLab(request):
 	"""Renders main app page (select a lab)"""
 	assert isinstance(request, HttpRequest)
@@ -168,27 +165,23 @@ def studentRequest(request):
 	#Blank Request Form => Request Waiting Form => Feedback Form
 	assert isinstance(request, HttpRequest)
 	pass
-
 def studentRequestSubmitted(request):
 	"""Renders pages for lab/{labID}/student."""
 	#Should only render if user's role is student
 	#Blank Request Form => Request Waiting Form => Feedback Form
 	assert isinstance(request, HttpRequest)
 	pass
-
 def studentRequestFeedback(request):
 	"""Renders pages for lab/{labID}/student."""
 	#Should only render if user's role is student
 	#Blank Request Form => Request Waiting Form => Feedback Form
 	assert isinstance(request, HttpRequest)
 	pass
-
 def labQueue(request):
 	"""Renders queue for lab (for TA's and professors)"""
 	#Should only render if user's role is TA or professor
 	assert isinstance(request, HttpRequest)
 	pass
-
 def labManage(request):
 	"""Renders manage lab page for professors"""
 	#Should only render if user's role is professor
@@ -201,12 +194,24 @@ def labManage(request):
 	if (getRole(userID=request.user, labID=currentLID)=='p'):  #If the user is a professor for the current lab
 		#Load page to manage lab
 		if request.method == 'POST':
-			form = ManageLabForm(request.POST, lid=currentLID, initial=initialData)
-			if form.is_valid():
-				form.save()
-				return redirect('/lab/queue')
+			print (request.POST)
+			if 'detailsForm' in request.POST:  #If the lab name/description was saved
+				form = ManageLabForm(request.POST, prefix='detailsForm', lid=currentLID, initial=initialData)
+				if form.is_valid():
+					form.save()
+					return redirect('/lab/queue')
+			else: #Either create or delete lab code
+				labCodeToRemove = request.POST.get("labCodeToRemove","")
+				createLabCodeRole = request.POST.get("role","")
+				if labCodeToRemove != "":  #Remove lab code
+					deleteLabCode(labCodeToRemove)
+				else:  #Create lab code
+					generateLabCode(labID = currentLID, role=createLabCodeRole)
+				return redirect('/lab/manageLab')
 		else:
-			form = ManageLabForm(lid=currentLID, initial=initialData)
+			form = ManageLabForm(prefix='detailsForm', lid=currentLID, initial=initialData)
+			studentLabCode = getLabCode(currentLID, 's')
+			taLabCode = getLabCode(currentLID, 't')
 			return render(
 				request,
 				'app/manageLab.html',
@@ -214,7 +219,9 @@ def labManage(request):
 					'title':'Manage Lab',
 					'message':'Edit lab settings',
 					'year':datetime.now().year,
-					'form':form,
+					'detailsForm':form,
+					'studentLabCode':studentLabCode,
+					'taLabCode':taLabCode
 				}
 			)
 	else:
@@ -228,25 +235,20 @@ def labManage(request):
 				'year':datetime.now().year
 			}
 		)
-
-
 def labFeedback(request):
 	"""Renders feedback page for professors"""
 	#Should only render if user's role is professor
 	assert isinstance(request, HttpRequest)
 	pass
-
 def labFeedbackHelper(request):
 	"""Renders feedback page for specific TA for specific lab"""
 	#Should only render if user's role is professor or the specified TA
 	assert isinstance(request, HttpRequest)
 	pass
-
 def manageAccount(request):
 	"""Renders page to edit account settings"""
 	assert isinstance(request, HttpRequest)
 	pass
-
 def currentRequest(request):
 	"""Renders page to edit account settings"""
 	assert isinstance(request, HttpRequest)

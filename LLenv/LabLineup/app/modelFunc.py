@@ -23,8 +23,21 @@ def generateLabCode(labID, role):
 		codeString = codeString + charChoice
 	newCodeString = codeString.replace(codeString[len(str(labID)) + randint(0,4)], role)
 	newCode = LabCode(lid_id=labID, role=role, code=newCodeString)
+	newCode.save()
 	return newCode.code
 
+#To delete a labCode (so users can no longer use it to add the lab)
+def deleteLabCode(labCode):
+	LabCode.objects.filter(code=labCode).delete()
+
+#To get lab codes for lab labID with role role
+def getLabCode(labID, role):
+	query = None
+	try:
+		query = LabCode.objects.get(lid_id=labID, role=role).code
+	except:
+		pass
+	return query
 
 #To get the role of a userID in a labID
 def getRole(userID, labID):
@@ -191,3 +204,15 @@ def getNumCompleteTA(labID, helperID):
 	queryCount = Request.objects.filter(lid_id=labID, huid_id=helperID).exclude(timeCompleted=None).count()
 	return queryCount
 
+#To delete a lab (and all related data). This action should be confirmed beforehand
+def deleteLab(labID):
+	#Delete all requests
+	Request.objects.filter(lid_id=labID).delete()
+	#Delete all users' roles
+	Role.objects.filter(lid_id=labID).delete()
+	#Delete all lab codes
+	LabCode.objects.filter(lid_id=labID).delete()
+	#Delete all notification settings
+	Notify.objects.filter(lid_id=labID).delete()
+	#Delete lab
+	Lab.objects.filter(lid=labID).delete()
