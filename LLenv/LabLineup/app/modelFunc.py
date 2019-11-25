@@ -7,6 +7,9 @@ from django.contrib.auth.models import User
 from string import ascii_lowercase
 from random import choice
 from random import randint
+from django.db.models import Avg
+import datetime
+from statistics import mean
 
 
 #Generates and saves a LabCode for the specified lab and role and returns the code
@@ -110,3 +113,81 @@ def getEmailsToNotifyThreshold(labID, currentCount):
 		for user in queryUsers:
 			users.append(User.objects.get(id=user.uid_id))
 	return users
+
+#To get the average wait time as a string of minutes:seconds for a lab
+def getAvgWait(labID):
+	waitTimes = []
+	avgWaitTime = []
+	query = Request.objects.filter(lid_id=labID)
+	if query:
+		for request in query:
+			timeCompleted = 0
+			if request.timeCompleted != None:
+				#If the request has been completed
+				timeCompleted = request.timeCompleted
+			else:
+				#If the request has not been completed, use current time
+				timeCompleted = datetime.datetime.now()
+			timeSubmitted = request.timeSubmitted
+			timeTaken = (timeCompleted - timeSubmitted).seconds
+			waitTimes.append(timeTaken)
+		avgWaitTime = divmod(mean(waitTimes), 60)
+	else:
+		avgWaitTime = [0,0]
+	return str(avgWaitTime[0]) + ":" + str(round(avgWaitTime[1],2)) #returns minutes:seconds
+
+
+#To get the average wait time as a string of minutes:seconds for a lab for a specific helper
+def getAvgWaitTA(labID, helperID):
+	waitTimes = []
+	avgWaitTime = []
+	query = Request.objects.filter(lid_id=labID, huid_id=helperID)
+	if query:
+		for request in query:
+			timeCompleted = 0
+			if request.timeCompleted != None:
+				#If the request has been completed
+				timeCompleted = request.timeCompleted
+			else:
+				#If the request has not been completed, use current time
+				timeCompleted = datetime.datetime.now()
+			timeSubmitted = request.timeSubmitted
+			timeTaken = (timeCompleted - timeSubmitted).seconds
+			waitTimes.append(timeTaken)
+		avgWaitTime = divmod(mean(waitTimes), 60)
+	else:
+		avgWaitTime = [0,0]
+	return str(avgWaitTime[0]) + ":" + str(round(avgWaitTime[1],2)) #returns minutes:seconds
+
+#To get the average feedback for a lab as an int
+def getAvgFeedback(labID):
+	feedbacks = []
+	avgFeedback = 0
+	query = Request.objects.filter(lid_id=labID).exclude(feedback=None)
+	if query:
+		for request in query:
+			feedbacks.append(request.feedback)
+		avgFeedback = mean(feedbacks)
+	return avgFeedback
+
+#To get the average feedback for a lab for a helper as an int
+def getAvgFeedbackTA(labID, helperID):
+	feedbacks = []
+	avgFeedback = 0
+	query = Request.objects.filter(lid_id=labID, huid_id=helperID).exclude(feedback=None)
+	if query:
+		for request in query:
+			feedbacks.append(request.feedback)
+		avgFeedback = mean(feedbacks)
+	return avgFeedback
+
+#To get the number of requests completed for a lab
+def getNumComplete(labID):
+	queryCount = Request.objects.filter(lid_id=labID).exclude(timeCompleted=None).count()
+	return queryCount
+
+#To get the number of requests a helper has completed for a lab
+def getNumCompleteTA(labID, helperID):
+	queryCount = Request.objects.filter(lid_id=labID, huid_id=helperID).exclude(timeCompleted=None).count()
+	return queryCount
+
