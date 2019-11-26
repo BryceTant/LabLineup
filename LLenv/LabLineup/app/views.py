@@ -6,12 +6,15 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.views.generic import CreateView
+from django.contrib.auth import update_session_auth_hash
 
 from app.forms import BootstrapRegisterForm
 from app.forms import AddLabForm
 from app.forms import CreateLabForm
 from app.forms import ManageLabForm
 from app.forms import SubmitRequestForm
+from app.forms import ChangePasswordForm
+from app.forms import EditAccountDetailsForm
 
 from app.models import Lab
 from app.models import Role
@@ -26,6 +29,7 @@ from app.modelFunc import deleteLabCode
 from app.modelFunc import getRequestCount
 
 from app.SendEmail import sendAll
+
 
 def home(request):
     """Renders the home page."""
@@ -98,7 +102,7 @@ def createLab(request):
 	"""Renders the createLab page. """
 	assert isinstance(request, HttpRequest)
 	if request.method == 'POST':
-		form = CreateLabForm(request.POST, user=request)
+		form = CreateLabForm(request.POST, user=request.user)
 		if form.is_valid():
 			newLabID = form.save()
 			request.session["currentLab"] = newLabID
@@ -222,13 +226,14 @@ def labManage(request):
 	assert isinstance(request, HttpRequest)
 	currentLID = request.session.get('currentLab')
 	currentLab = Lab.objects.get(lid=currentLID)
-	initialData = {'lid':currentLID, 
-					'labName': currentLab.name,
-					'labDescription':currentLab.description}
+	initialData =	{
+						'lid':currentLID, 
+						'labName': currentLab.name,
+						'labDescription':currentLab.description
+					}
 	if (getRole(userID=request.user, labID=currentLID)=='p'):  #If the user is a professor for the current lab
 		#Load page to manage lab
 		if request.method == 'POST':
-			print (request.POST)
 			if 'detailsForm' in request.POST:  #If the lab name/description was saved
 				form = ManageLabForm(request.POST, prefix='detailsForm', lid=currentLID, initial=initialData)
 				if form.is_valid():
@@ -282,7 +287,40 @@ def labFeedbackHelper(request):
 def manageAccount(request):
 	"""Renders page to edit account settings"""
 	assert isinstance(request, HttpRequest)
-	pass
+	initialAccountDetails = {
+								'firstname':request.user.first_name,
+								'lastname':request.user.last_name,
+								'email':request.user.email
+							}
+	if request.method == 'POST':
+		if 'changePassword' in request.POST:
+			form = ChangePasswordForm(data=request.POST, user=request.user)
+			if form.is_valid():
+				form.save()
+				update_session_auth_hash(request, form.user)
+			return redirect('/account')
+		elif 'editAccountDetails' in request.POST:
+			form = EditAccountDetailsForm(data=request.POST, user=request.user, initial=initialAccountDetails)
+			if form.is_valid():
+				form.save()
+			return redirect('/account')
+		else:
+			print ("Error")
+			return redirect('/account')
+	else:
+		changePasswordForm = ChangePasswordForm(user=request.user)
+		editAccountDetailsForm = EditAccountDetailsForm(user=request.user, initial=initialAccountDetails)
+		return render (
+			request,
+			'app/account.html',
+			{
+				'title':'Manage Account',
+				'message':'Manage Account',
+				'year':datetime.now().year,
+				'changePasswordForm':changePasswordForm,
+				'editAccountDetailsForm':editAccountDetailsForm
+			}
+		)
 def currentRequest(request):
 	"""Renders page to edit account settings"""
 	assert isinstance(request, HttpRequest)

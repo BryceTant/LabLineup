@@ -5,6 +5,7 @@ Definition of forms.
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from app.models import Role
@@ -24,6 +25,22 @@ class BootstrapAuthenticationForm(AuthenticationForm):
                                widget=forms.PasswordInput({
                                    'class': 'form-control',
                                    'placeholder':'Password'}))
+
+class ChangePasswordForm(PasswordChangeForm):
+	"""Form to change user password"""
+	old_password = forms.CharField(label=_("Password"),
+								widget=forms.PasswordInput({
+									'class':'form-control',
+									'placeholder':'Old Password'}))
+	new_password1 = forms.CharField(label=_("Password"),
+								widget=forms.PasswordInput({
+									'class':'form-control',
+									'placeholder':'New Password'}))
+	new_password2 = forms.CharField(label=_("Password"),
+								widget=forms.PasswordInput({
+									'class':'form-control',
+									'placeholder':'New Password'}))
+
 
 class BootstrapRegisterForm(UserCreationForm):
 	"""User registration form that uses Bootstrap CSS"""
@@ -151,4 +168,26 @@ class SubmitRequestForm(forms.Form):
 		newRequest.save()
 		return newRequest.rid #Must return rid to be set to session variable
 
+class EditAccountDetailsForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user', None)
+		super(EditAccountDetailsForm, self).__init__(*args, **kwargs)
 
+	firstname = forms.CharField(required=False, max_length=30,
+								widget=forms.TextInput({
+									'class':'form-control'}))
+	lastname = forms.CharField(required=False, max_length=150,
+								widget=forms.TextInput({
+									'class':'form-control'}))
+	email = forms.EmailField(required=False,
+								widget=forms.TextInput({
+									'class':'form-control'}))
+
+	def save(self):
+		userID = self.user.id
+		if self.cleaned_data['firstname'] != self.user.first_name: #If first name updated
+			User.objects.filter(id=userID).update(first_name=self.cleaned_data['firstname'])
+		if self.cleaned_data['lastname'] != self.user.last_name: #If last name updated
+			User.objects.filter(id=userID).update(last_name=self.cleaned_data['lastname'])
+		if self.cleaned_data['email'] != self.user.email: #If email updated
+			User.objects.filter(id=userID).update(email=self.cleaned_data['email'])
