@@ -66,7 +66,7 @@ def about(request):
         'app/about.html',
         {
             'title': 'About',
-            'message': 'Your application description page.',
+            'message': 'What is LabLineup?',
             'year': datetime.now().year,
         }
     )

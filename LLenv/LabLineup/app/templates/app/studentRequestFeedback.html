@@ -4,34 +4,18 @@
 
 <h2>{{ title }}</h2>
 <h3>{{ message }}</h3>
-<p>1) How do you rate the urgency at which you received assistance today?</p>
+<p>1) How do you rate the help that you received today?</p>
 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
   <div class="btn-group mr-2" role="group" aria-label="First group">
-    <button type="button" class="btn btn-danger">Very slow</button>
-    <button type="button" class="btn btn-warning">Slow</button>
-    <button type="button" class="btn btn-secondary">Average</button>
-    <button type="button" class="btn btn-primary">Fast</button>
-    <button type="button" class="btn btn-success">Very fast</button>
-  </div>
-</div>
-<p></p>
-<p>2) How do you rate the overall app experience?</p>
-<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-  <div class="btn-group mr-2" role="group" aria-label="Second group">
-    <button type="button" class="btn btn-danger">Very poor</button>
-    <button type="button" class="btn btn-warning">Poor</button>
-    <button type="button" class="btn btn-secondary">Average</button>
-    <button type="button" class="btn btn-primary">Good</button>
-    <button type="button" class="btn btn-success">Very good</button>
+    <button type="button" class="btn btn-secondary">1</button>
+    <button type="button" class="btn btn-secondary">2</button>
+    <button type="button" class="btn btn-secondary">3</button>
+    <button type="button" class="btn btn-secondary">4</button>
+    <button type="button" class="btn btn-secondary">5</button>
   </div>
 </div>
 
 <p></p>
-<p>Please tell us anything else you would like to share about your experience today</p>
-<form>
-    <div class="form-group">
-    <textarea class="form-control" id="studentFeedback" rows="5"></textarea>
-  </div>
-</form>
+
 <button type="submit" class="btn btn-primary">Submit</button>
 {% endblock %}
