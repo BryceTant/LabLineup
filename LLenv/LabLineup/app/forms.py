@@ -95,7 +95,14 @@ class AddLabForm(forms.Form):
 	def save(self):
 		userID = self.user.id
 		labCode = LabCode.objects.get(code=self.cleaned_data['labcode'])
-		if not Role.objects.get(uid_id=userID, lid_id=labCode.lid_id):  #If the user doesn't already have a role for this lab
+		noRole = True
+		try:
+			Role.objects.get(uid_id=userID, lid_id=labCode.lid_id)
+			noRole = False
+		except:
+			pass
+			#TODO This should produce an error
+		if noRole:  #If the user doesn't already have a role for this lab
 			obj = Role(lid_id=labCode.lid_id, uid_id=userID, role=labCode.role) #Add the role
 			obj.save()
 		else:
