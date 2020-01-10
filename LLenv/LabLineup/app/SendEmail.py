@@ -24,7 +24,7 @@ def sendEmail(emails, subject, text):
 	return requests.post(API,auth=('api',API_KEY),data=message)
 
 
-def sendNew(lid):
+def sendNewRequest(lid):
 	labName = Lab.objects.get(lid=lid).name
 	subject = labName + " has receied a new request"
 	request = getLastRequest(lid)
@@ -46,8 +46,13 @@ def sendThreshold(lid, currentCount):
 	text = "LabLineup currently has " + str(currentCount) + " requests in the queue."
 	text = text + "\nThis exceeds your threshold."
 
+	#getEmailsToNotifyThreshold could return null. That should prevent the message from sending
 	sendEmail(getEmailsToNotifyThreshold(lid, currentCount), subject, text)
 
-def sendAll(lid, currentCount):
-	sendNew(lid)
+def sendAllRequest(lid, currentCount):
+	sendNewRequest(lid)
 	sendThreshold(lid, currentCount)
+
+def sendPasswordReset(userID):
+	#TODO: Implement this
+	pass

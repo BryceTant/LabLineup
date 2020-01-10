@@ -100,8 +100,7 @@ class AddLabForm(forms.Form):
 			Role.objects.get(uid_id=userID, lid_id=labCode.lid_id)
 			noRole = False
 		except:
-			pass
-			#TODO This should produce an error
+			pass  #Error handled in form Validation
 		if noRole:  #If the user doesn't already have a role for this lab
 			obj = Role(lid_id=labCode.lid_id, uid_id=userID, role=labCode.role) #Add the role
 			obj.save()
@@ -198,3 +197,20 @@ class EditAccountDetailsForm(forms.Form):
 			User.objects.filter(id=userID).update(last_name=self.cleaned_data['lastname'])
 		if self.cleaned_data['email'] != self.user.email: #If email updated
 			User.objects.filter(id=userID).update(email=self.cleaned_data['email'])
+
+class ResetPasswordForm(forms.Form):
+    """Form to reset user password"""
+    new_password1 = forms.CharField(label=_("New Password"),
+                                    widget=forms.PasswordInput({
+                                    'class':'form-control',
+                                    'placeholder':'New Password'}))
+    new_password2 = forms.CharField(label=_("New Password"),
+                                    widget=forms.PasswordInput({
+                                    'class':'form-control',
+                                    'placeholder':'Repeat New Password'}))
+
+    def save(self):
+        if (self.cleaned_data["new_password1"] == self.cleaned_data["new_password2"]):
+            return self.cleaned_data["new_password1"]
+        else:
+            return False

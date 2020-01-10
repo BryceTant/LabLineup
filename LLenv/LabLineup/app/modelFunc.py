@@ -3,8 +3,11 @@ from app.models import Role
 from app.models import Request
 from app.models import LabCode
 from app.models import Notify
+from app.models import PasswordResetCode
 from django.contrib.auth.models import User
 from string import ascii_lowercase
+from string import ascii_letters
+from string import digits
 from random import choice
 from random import randint
 from django.db.models import Avg
@@ -221,3 +224,41 @@ def deleteLab(labID):
 	Notify.objects.filter(lid_id=labID).delete()
 	#Delete lab
 	Lab.objects.filter(lid=labID).delete()
+
+#To get a user object by searching by email
+def getUserByEmail(emailAddr):
+	query = None
+	try:
+		query = User.object.get(email=emailAddr)
+	except:
+		pass
+	return query
+
+#To generate a random alphanumeric string of specified length
+#Taken from PYNative (https://pynative.com/python-generate-random-string/)
+def randomAlphanumericString(length=25):
+	lettersAndNumbers = ascii_letters + digits
+	return ''.join(choice(lettersAndNumbers) for i in range(length))
+
+#To generate a password reset code
+def generatePasswordResetCode(userID):
+	prcSet = False
+	while not prcSet:
+		try:
+			newPRC = PasswordResetCode(uid=userID, prc=randomAlphanumericString(length=25), timeGenerated=datetime.datetime.now())
+			newPRC.save()
+			return newPRC
+		except:
+			pass
+
+#To reset the password
+def resetPassword(prc, newPassword):
+	query = None
+	try:
+		query = PasswordResetCode.objects.get(prc=prc)
+		user = User.objects.get(id=query.uid_id)
+		user.set_password(newPassword)
+		user.save()
+		query.delete()
+	except:
+		pass

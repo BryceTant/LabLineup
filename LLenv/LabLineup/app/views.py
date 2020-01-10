@@ -15,6 +15,7 @@ from app.forms import ManageLabForm
 from app.forms import SubmitRequestForm
 from app.forms import ChangePasswordForm
 from app.forms import EditAccountDetailsForm
+from app.forms import ResetPasswordForm
 
 from app.models import Lab
 from app.models import Role
@@ -27,8 +28,9 @@ from app.modelFunc import getRole
 from app.modelFunc import getLabCode
 from app.modelFunc import deleteLabCode
 from app.modelFunc import getRequestCount
+from app.modelFunc import resetPassword
 
-from app.SendEmail import sendAll
+from app.SendEmail import sendAllRequest
 
 
 def home(request):
@@ -196,7 +198,7 @@ def studentRequest(request):
             if form.is_valid():
                 newRID = form.save()
                 request.session["currentRequest"] = newRID
-                # sendAll(currentLID, getRequestCount(currentLID)) ENABLE THIS LINE FOR SENDING EMAIL NOTIFICATIONS
+                # sendAllRequest(currentLID, getRequestCount(currentLID)) ENABLE THIS LINE FOR SENDING EMAIL NOTIFICATIONS
                 return redirect('/student/requestSubmitted')
         else:
             form = SubmitRequestForm(user=request.user, lid=currentLID)
@@ -393,3 +395,42 @@ def ta(request):
     """Renders page to allow TA's to navigate"""
     assert isinstance(request, HttpRequest)
     pass
+
+def forgotPassword(request):
+    """Renders the home page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/index.html',
+        {
+            'title': 'Home Page',
+            'year': datetime.now().year,
+        }
+    )
+
+def resetPassword(request, prc):
+    """Renders the reset password page."""
+    assert isinstance(request, HttpRequest)
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            new_password=form.save()
+            if new_password != False:
+                resetPassword(request.GET.get("prc"), new_password)
+                return redirect('/login')
+            else:
+                pass #TODO: This should show an error
+        else:
+            return redirect('/')  #TODO: Change this
+    else:
+        form = ResetPasswordForm()
+    return render(
+        request,
+        'app/resetPassword.html',
+        {
+            'title': 'Reset Password',
+            'message': 'Set a new password for your LabLineup account',
+            'year': datetime.now().year,
+            'form': form,
+        }
+    )
