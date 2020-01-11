@@ -16,6 +16,7 @@ from app.forms import SubmitRequestForm
 from app.forms import ChangePasswordForm
 from app.forms import EditAccountDetailsForm
 from app.forms import ResetPasswordForm
+from app.forms import ForgotPasswordForm
 
 from app.models import Lab
 from app.models import Role
@@ -28,9 +29,12 @@ from app.modelFunc import getRole
 from app.modelFunc import getLabCode
 from app.modelFunc import deleteLabCode
 from app.modelFunc import getRequestCount
-from app.modelFunc import resetPassword
+from app.modelFunc import getUserByEmail
+from app.modelFunc import generatePasswordResetCode
+from app.modelFunc import resetPasswordFunc
 
 from app.SendEmail import sendAllRequest
+from app.SendEmail import sendPasswordReset
 
 
 def home(request):
@@ -399,14 +403,37 @@ def ta(request):
 def forgotPassword(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/index.html',
-        {
-            'title': 'Home Page',
-            'year': datetime.now().year,
-        }
-    )
+    if (request.method == "POST"):
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            user = getUserByEmail(form.save())
+            if (user != None):
+                prc = generatePasswordResetCode(user.id)
+                sendPasswordReset(user, prc.prc)
+                return redirect('/')
+            else:
+                #No user found with that email
+                return render(
+                    request,
+                    'app/error.html',
+                    {
+                        'title': "Error",
+                        'message': "No account with that email was found",
+                        'year': datetime.now().year,
+                    }
+                )
+    else:
+        form = ForgotPasswordForm()
+        return render(
+            request,
+            'app/forgotPassword.html',
+            {
+                'title': 'Forgot Password',
+                'message' : "If an account is found with your email, a password reset link will be sent to your email",
+                'form' : form,
+                'year': datetime.now().year,
+            }
+        )
 
 def resetPassword(request, prc):
     """Renders the reset password page."""
@@ -416,21 +443,40 @@ def resetPassword(request, prc):
         if form.is_valid():
             new_password=form.save()
             if new_password != False:
-                resetPassword(request.GET.get("prc"), new_password)
-                return redirect('/login')
+                result = resetPasswordFunc(prc, new_password)
+                if result:
+                    return redirect('/login')
+                else:
+                    return render(
+                        request,
+                        'app/error.html',
+                        {
+                            'title': "Error",
+                            'message': 'The Password Reset Code was not found',
+                            'year': datetime.now().year
+                        }
+                    )
             else:
-                pass #TODO: This should show an error
+                return render(
+                    request,
+                    'app/error.html',
+                    {
+                        'title': 'Error',
+                        'message': 'The passwords do not match. Please try again',
+                        'year': datetime.now().year
+                    }
+                )
         else:
             return redirect('/')  #TODO: Change this
     else:
         form = ResetPasswordForm()
-    return render(
-        request,
-        'app/resetPassword.html',
-        {
-            'title': 'Reset Password',
-            'message': 'Set a new password for your LabLineup account',
-            'year': datetime.now().year,
-            'form': form,
-        }
-    )
+        return render(
+            request,
+            'app/resetPassword.html',
+            {
+                'title': 'Reset Password',
+                'message': 'Set a new password for your LabLineup account',
+                'year': datetime.now().year,
+                'form': form,
+            }
+        )

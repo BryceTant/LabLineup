@@ -43,44 +43,77 @@ class ChangePasswordForm(PasswordChangeForm):
 
 
 class BootstrapRegisterForm(UserCreationForm):
-	"""User registration form that uses Bootstrap CSS"""
-	firstname = forms.CharField(required=True, max_length=254,
-								widget=forms.TextInput({
-									'class':'form-control',
-									'placeholder':'First Name'}))
-	lastname = forms.CharField(required=True, max_length=254,
-								widget=forms.TextInput({
-									'class':'form-control',
-									'placeholder':'Last Name'}))
-	username = forms.CharField(required=True, max_length=254,
-								widget=forms.TextInput({
-									'class':'form-control',
-									'placeholder':'Username'}))
-	password1 = forms.CharField(required=True,label=_("Password"),
+    """User registration form that uses Bootstrap CSS"""
+    firstname = forms.CharField(required=True, max_length=254,
+                                widget=forms.TextInput({
+                                    'class':'form-control',
+                                    'placeholder':'First Name'}))
+    lastname = forms.CharField(required=True, max_length=254,
+                                widget=forms.TextInput({
+                                    'class':'form-control',
+                                    'placeholder':'Last Name'}))
+    username = forms.CharField(required=True, max_length=254,
+                                widget=forms.TextInput({
+                                    'class':'form-control',
+                                    'placeholder':'Username'}))
+    password1 = forms.CharField(required=True,label=_("Password"),
                                widget=forms.PasswordInput({
                                    'class': 'form-control',
                                    'placeholder':'Password'}))
-	password2 = forms.CharField(required=True,label=_("Password Confirmation"),
+    password2 = forms.CharField(required=True,label=_("Password Confirmation"),
                                widget=forms.PasswordInput({
                                    'class': 'form-control',
                                    'placeholder':'Password'}))
-	email = forms.EmailField(required=True,
-								widget=forms.TextInput({
-									'class':'form-control',
-									'placeholder':'Email'}))
+    email = forms.EmailField(required=True,
+                                widget=forms.TextInput({
+                                    'class':'form-control',
+                                    'placeholder':'Email'}))
 
-	class Meta:
-		model = User
-		fields = ("firstname", "lastname", "username", "email", "password1", "password2")
+    class Meta:
+        model = User
+        fields = ("firstname", "lastname", "username", "email", "password1", "password2")
 
-	def save(self, commit=True):
-		user = super(BootstrapRegisterForm, self).save(commit=False)
-		user.email = self.cleaned_data["email"]
-		user.first_name = self.cleaned_data["firstname"]
-		user.last_name = self.cleaned_data["lastname"]
-		if commit:
-			user.save()
-		return user
+    def is_valid(self):
+        baseValid = super().is_valid()
+        queryEmail = None
+        try:
+            queryEmail = User.objects.get(email=self.cleaned_data["email"])
+        except:
+            pass
+        if (queryEmail == None):
+            pass
+        else:
+            baseValid = False
+            self.add_error(field="email",error="Email has already been used")
+        queryUsername = None
+        try:
+            queryUsername = User.objects.get(username=self.cleaned_data["username"])
+        except:
+            pass
+        if (queryEmail == None):
+            pass
+        else:
+            baseValid = False
+            self.add_error(field="username", error="The username has already been taken")
+        return baseValid
+
+    def save(self, commit=True):
+        queryEmail = None
+        try:
+            queryEmail = User.objects.get(email=self.cleaned_data["email"])
+        except:
+            pass
+        if (queryEmail == None):
+            user = super(BootstrapRegisterForm, self).save(commit=False)
+            user.email = self.cleaned_data["email"]
+            user.first_name = self.cleaned_data["firstname"]
+            user.last_name = self.cleaned_data["lastname"]
+            if commit:
+                user.save()
+            return user
+        else:
+            pass
+            #raise forms.ValidationError("This email has already been used by " + str(queryEmail.username))
 
 class AddLabForm(forms.Form):
 	labcode = forms.CharField(required=True, max_length=20,
@@ -214,3 +247,13 @@ class ResetPasswordForm(forms.Form):
             return self.cleaned_data["new_password1"]
         else:
             return False
+
+class ForgotPasswordForm(forms.Form):
+    """Form to send password reset link to email"""
+    email = forms.EmailField(label=_("Email"),
+                                    widget=forms.TextInput({
+                                    'class':'form-control',
+                                    'placeholder':'Your Email'}))
+
+    def save(self):
+        return self.cleaned_data["email"]

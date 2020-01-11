@@ -9,6 +9,8 @@ from app.models import Lab
 from app.models import Request
 from django.contrib.auth.models import User
 
+import requests
+
 
 API='https://api.mailgun.net/v3/notify.lablineup.com/messages'
 API_KEY='8417d7db91e6ff4430906312affaf067-816b23ef-53a937ca'
@@ -20,13 +22,13 @@ def sendEmail(emails, subject, text):
 	message["from"] = FROM
 	message["to"] = emails
 	message["subject"] = subject
-	message["text"] = text
+	message["html"] = text
 	return requests.post(API,auth=('api',API_KEY),data=message)
 
 
 def sendNewRequest(lid):
 	labName = Lab.objects.get(lid=lid).name
-	subject = labName + " has receied a new request"
+	subject = labName + " has received a new request"
 	request = getLastRequest(lid)
 	studentName = User.objects.get(id=request.uid_id).first_name + " " + User.objects.get(id=request.uid_id).last_name
 
@@ -53,6 +55,11 @@ def sendAllRequest(lid, currentCount):
 	sendNewRequest(lid)
 	sendThreshold(lid, currentCount)
 
-def sendPasswordReset(userID):
-	#TODO: Implement this
-	pass
+def sendPasswordReset(user, prc):
+    baseURL = '127.0.0.1:8000'
+    resetLink = "<a href=" + baseURL + "/account/resetPassword/"+ str(prc) + ">"
+    resetLink = resetLink + baseURL + "/account/resetPassword/" + str(prc) + "</a>"
+    text = "A password reset link has been requested for your account. <br>"
+    text = text + "Your username is " + str(user.username) + "<br>"
+    text = text + "Go to " + resetLink + " to reset your password."
+    sendEmail([user.email], "Password Reset Link", text)

@@ -30,6 +30,7 @@
                 </div>
                 {% if form.errors %}
                 <p class="validation-summary-errors">Please enter a correct user name and password.</p>
+                Forgot your username or password? <a href="{% url 'forgotPassword' %}">Reset it here</a>
                 {% endif %}
             </form>
         </section>
