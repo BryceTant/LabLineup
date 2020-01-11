@@ -28,3 +28,9 @@ To activate the virtualenv in Windows, go to the project dir, type .\LLenv\Scrip
 
 # Running
 To run the app, use the Django command "python manage.py runserver"
+
+# Testing
+To run the tests, use the commands:
+-
+-
+Directory:
