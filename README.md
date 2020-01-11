@@ -31,6 +31,5 @@ To run the app, use the Django command "python manage.py runserver"
 
 # Testing
 To run the tests, use the commands:
--
--
+
 Directory:
