@@ -54,7 +54,10 @@
                     </div>
                 </div>
                 {% if form.errors %}
-                <p class="validation-summary-errors">The username you entered has already been taken or your passwords did not match. Please try again.</p>
+                <p class="validation-summary-errors">One or more fields are invalid:</p>
+                {% for field in form.errors.items %}
+                    {{field.1}}
+                {% endfor %}
                 {% endif %}
             </form>
         </section>

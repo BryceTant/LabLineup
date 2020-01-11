@@ -41,3 +41,8 @@ class Notify(models.Model):
 	lid = models.ForeignKey('Lab', on_delete=models.CASCADE)
 	notifyNew = models.BooleanField(default=False)
 	notifyThreshold = models.IntegerField(null=True, blank=True)
+
+class PasswordResetCode(models.Model):
+	uid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE) #int(11)
+	prc = models.CharField(primary_key=True, max_length=25) #varchar(25) ~Null
+	timeGenerated = models.DateTimeField()
