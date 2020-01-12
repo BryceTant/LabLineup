@@ -264,3 +264,12 @@ def resetPasswordFunc(prc, newPassword):
     user.save()
     query.delete()
     return True #Return True if successful
+
+#To get the user's notifications settings object for the specified lab
+def getNotificationSettings(userID, labID):
+    query = None
+    try:
+        query = Notify.objects.get(uid_id = userID, lid_id = labID)
+    except:
+        pass
+    return query

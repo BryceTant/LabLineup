@@ -17,11 +17,13 @@ from app.forms import ChangePasswordForm
 from app.forms import EditAccountDetailsForm
 from app.forms import ResetPasswordForm
 from app.forms import ForgotPasswordForm
+from app.forms import ManageLabNotificationsForm
 
 from app.models import Lab
 from app.models import Role
 from app.models import Request
 from app.models import LabCode
+from app.models import Notify
 
 from app.modelFunc import generateLabCode
 from app.modelFunc import getLabsWithRole
@@ -32,6 +34,7 @@ from app.modelFunc import getRequestCount
 from app.modelFunc import getUserByEmail
 from app.modelFunc import generatePasswordResetCode
 from app.modelFunc import resetPasswordFunc
+from app.modelFunc import getNotificationSettings
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -49,7 +52,6 @@ def home(request):
         }
     )
 
-
 def contact(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
@@ -63,7 +65,6 @@ def contact(request):
         }
     )
 
-
 def about(request):
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
@@ -76,7 +77,6 @@ def about(request):
             'year': datetime.now().year,
         }
     )
-
 
 def register(request):
     """Renders the register page."""
@@ -99,7 +99,6 @@ def register(request):
         }
     )
 
-
 def help(request):
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
@@ -112,7 +111,6 @@ def help(request):
             'year': datetime.now().year,
         }
     )
-
 
 def createLab(request):
     """Renders the createLab page. """
@@ -136,7 +134,6 @@ def createLab(request):
         }
     )
 
-
 def addLab(request):
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
@@ -157,7 +154,6 @@ def addLab(request):
             'form': form,
         }
     )
-
 
 def selectLab(request):
     """Renders main app page (select a lab)"""
@@ -187,7 +183,6 @@ def selectLab(request):
                 'labsWhereProfessor': labsWhereProfessor
             }
         )
-
 
 def studentRequest(request):
     """Renders page for student to submit request."""
@@ -227,14 +222,12 @@ def studentRequest(request):
             }
         )
 
-
 def studentRequestSubmitted(request):
     """Renders pages for lab/{labID}/student."""
     # Should only render if user's role is student
     # Blank Request Form => Request Waiting Form => Feedback Form
     assert isinstance(request, HttpRequest)
     pass
-
 
 def studentRequestFeedback(request):
     """Renders pages for lab/{labID}/student."""
@@ -255,16 +248,14 @@ def studentRequestFeedback(request):
     else:
         pass
 
-
 def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""
     # Should only render if user's role is TA or professor
     assert isinstance(request, HttpRequest)
     pass
 
-
 def labManage(request):
-    """Renders manage lab page for professors"""
+    """Renders manage lab page for professors and TAs (pages will be different)"""
     # Should only render if user's role is professor
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
@@ -309,6 +300,34 @@ def labManage(request):
                     'taLabCode': taLabCode
                 }
             )
+    #If the user if a TA for the current lab
+    elif (getRole(userID=request.user, labID=currentLID) == 't'):
+        userNotificationSettings = getNotificationSettings(userID=request.user, labID=currentLID)
+        if userNotificationSettings == None:
+            userNotificationSettings = Notify(uid_id=request.user.id,
+                                              lid_id=currentLID,
+                                              notifyNew=False,
+                                              notifyThreshold=0)
+            userNotificationSettings.save()
+        initialData["notifyNew"] = userNotificationSettings.notifyNew
+        initialData["notifyThreshold"] = userNotificationSettings.notifyThreshold
+        if request.method == 'POST':
+            notificationForm = ManageLabNotificationsForm(request.POST, user=request.user, lid = currentLID)
+            if form.is_valid():
+                form.save()
+                return redirect('/lab/manageLab')
+        else:
+            notificationForm = ManageLabNotificationsForm(user = request.user, lid = currentLID, initial=initialData)
+            return render(
+                request,
+                'app/manageLabTA.html',
+                {
+                    'title': 'Manage Lab',
+                    'message': 'Edit Lab Settings',
+                    'year': datetime.now().year,
+                    'notificationForm': notificationForm,
+                }
+            )
     else:
         # User is not the professor for the current lab (Do not load the page)
         return render(
@@ -321,20 +340,17 @@ def labManage(request):
             }
         )
 
-
 def labFeedback(request):
     """Renders feedback page for professors"""
     # Should only render if user's role is professor
     assert isinstance(request, HttpRequest)
     pass
 
-
 def labFeedbackHelper(request):
     """Renders feedback page for specific TA for specific lab"""
     # Should only render if user's role is professor or the specified TA
     assert isinstance(request, HttpRequest)
     pass
-
 
 def manageAccount(request):
     """Renders page to edit account settings"""
@@ -376,24 +392,20 @@ def manageAccount(request):
             }
         )
 
-
 def currentRequest(request):
     """Renders page to edit account settings"""
     assert isinstance(request, HttpRequest)
     pass
-
 
 def notifications(request):
     """Renders page to edit notification settings for lab"""
     assert isinstance(request, HttpRequest)
     pass
 
-
 def professor(request):
     """Renders page to allow professors to navigate"""
     assert isinstance(request, HttpRequest)
     pass
-
 
 def ta(request):
     """Renders page to allow TA's to navigate"""
@@ -480,3 +492,4 @@ def resetPassword(request, prc):
                 'form': form,
             }
         )
+
