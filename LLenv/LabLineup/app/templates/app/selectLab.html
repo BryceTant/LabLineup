@@ -3,57 +3,64 @@
 {% block content %}
 
 <table style="width:100%">
-	<tr>
-		<td><h2 valign="middle">{{ title }}</h2></td>
-		<td align="right" valign="middle"><a href="/addLab/"><button type="button" class="btn btn-success">+</button></a></td>
-	</tr>
+    <tr>
+        <td><h2 valign="middle">{{ title }}</h2></td>
+        <td align="right" valign="middle"><a href="/addLab/"><button type="button" class="btn btn-success">+</button></a></td>
+    </tr>
 </table>
 
 <script>
-	function setLab(selectedLabID, role) {
-		document.forms["selectLabForm"].elements["labID"].value = selectedLabID;
-		document.getElementById("selectLabForm").submit();
-	}
+    function setLab(selectedLabID, role) {
+        document.forms["selectLabForm"].elements["labID"].value = selectedLabID;
+        document.getElementById("selectLabForm").submit();
+    }
 </script>
 
 <form id="selectLabForm" action="." method="post">
-	{% csrf_token %}
-	<input type="hidden" name="labID" value=0 />
+    {% csrf_token %}
+    <input type="hidden" name="labID" value=0 />
 </form>
 
 <div class="row">
-	<div class="col-md-8">
-		<section id="labsAsStudent">
-			{% if labsWhereStudent %}
-			<h3>Student</h3>
-			{% endif %}
-			{% for lab in labsWhereStudent %}
-			<div onclick="javascript:setLab({{lab.lid}})">
-				{% include 'app/selectLabpartial.html' %}
-			</div>
-			{% endfor %}
-		</section>
-		<section id="labsAsTA">
-			{% if labsWhereTA %}
-			<h3>Teaching Assistant</h3>
-			{% endif %}
-			{% for lab in labsWhereTA %}
-			<div onclick="javascript:setLab({{lab.lid}})">
-				{% include 'app/selectLabpartial.html' %}
-			</div>
-			{% endfor %}
-		</section>
-		<section id="labsAsProfessor">
-			{% if labsWhereProfessor %}
-			<h3>Professor</h3>
-			{% endif %}
-			{% for lab in labsWhereProfessor %}
-			<div onclick="javascript:setLab({{lab.lid}})">
-				{% include 'app/selectLabpartial.html' %}
-			</div>
-			{% endfor %}
-		</section>
-	</div>
+    <div class="col-md-8">
+        <section id="labsAsStudent">
+            {% if labsWhereStudent %}
+            <h3>Student</h3>
+            {% endif %}
+            {% for lab in labsWhereStudent %}
+            <div onclick="javascript:setLab({{lab.lid}})">
+                {% include 'app/selectLabpartial.html' %}
+            </div>
+            {% endfor %}
+        </section>
+        <section id="labsAsTA">
+            {% if labsWhereTA %}
+            <h3>Teaching Assistant</h3>
+            {% endif %}
+            {% for lab in labsWhereTA %}
+            <div onclick="javascript:setLab({{lab.lid}})">
+                {% include 'app/selectLabpartial.html' %}
+            </div>
+            {% endfor %}
+        </section>
+        <section id="labsAsProfessor">
+            {% if labsWhereProfessor %}
+            <h3>Professor</h3>
+            {% endif %}
+            {% for lab in labsWhereProfessor %}
+            <div onclick="javascript:setLab({{lab.lid}})">
+                {% include 'app/selectLabpartial.html' %}
+            </div>
+            {% endfor %}
+        </section>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <section id="createNewLab">
+            <a href="/createLab"><button class="btn btn-default">Create a lab (Professor)</button></a>
+        </section>
+    </div>
 </div>
 
 {% endblock %}

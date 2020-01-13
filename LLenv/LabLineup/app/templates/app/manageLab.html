@@ -3,101 +3,103 @@
 {% block content %}
 
 <script>
-	function setLabCodeToRemove(selectedLabCode) {
-		document.forms["removeLabCodeForm"].elements["labCodeToRemove"].value = selectedLabCode;
-		document.getElementById("removeLabCodeForm").submit();
-	}
-	function createLabCode(role) {
-		document.forms["createLabCodeForm"].elements["role"].value = role;
-		document.getElementById("createLabCodeForm").submit();
-	}
+    function setLabCodeToRemove(selectedLabCode) {
+        document.forms["removeLabCodeForm"].elements["labCodeToRemove"].value = selectedLabCode;
+        document.getElementById("removeLabCodeForm").submit();
+    }
+    function createLabCode(role) {
+        document.forms["createLabCodeForm"].elements["role"].value = role;
+        document.getElementById("createLabCodeForm").submit();
+    }
 </script>
 
 <form id="removeLabCodeForm" action="." method="post" prefix="removeLabCodeForm">
-	{% csrf_token %}
-	<input type="hidden" name="labCodeToRemove" value=0 />
+    {% csrf_token %}
+    <input type="hidden" name="labCodeToRemove" value=0 />
 </form>
 <form id="createLabCodeForm" action="." method="post" prefix="createLabCodeForm">
-	{% csrf_token %}
-	<input type="hidden" name="role" value='' />
+    {% csrf_token %}
+    <input type="hidden" name="role" value='' />
 </form>
 
 
 <h2>{{ title }}</h2>
 <h3>{{ message }}</h3>
 <div class="row">
-	<div class="col-md-8">
-		<section id="ManageLabForm">
-			<form action="." method="post" class="form-horizontal" prefix="detailsForm">
-				{% csrf_token %}
-				<hr />
-				<div class="form-group">
-					<label for="id_labname" class="col-md-2 control-label">Lab Name</label>
-					<div class="col-md-10">
-						{{ detailsForm.labName }}
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="id_description" class="col-md-2 control-label">Description</label>
-					<div class="col-md-10">
-						{{ detailsForm.labDescription }}
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-md-offset-2 col-md-10">
-						<input type="hidden" name="next" value="/" />
-						<input type="submit" name="detailsForm" value="Save Changes" class="btn btn-default" />
-					</div>
-				</div>
-			</form>
-		</section>
-	</div>
+    <div class="col-md-8">
+        <section id="ManageLabForm">
+            <form action="." method="post" class="form-horizontal" prefix="detailsForm">
+                {% csrf_token %}
+                <hr />
+                <div class="form-group">
+                    <label for="id_labname" class="col-md-2 control-label">Lab Name</label>
+                    <div class="col-md-10">
+                        {{ detailsForm.labName }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_description" class="col-md-2 control-label">Description</label>
+                    <div class="col-md-10">
+                        {{ detailsForm.labDescription }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="hidden" name="next" value="/" />
+                        <input type="submit" name="detailsForm" value="Save Changes" class="btn btn-default" />
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
 </div>
 
 <div class="row">
-	<div class="col-md-8">
-		<section id="LabCodes">
-			<h3>TA Lab Code</h3>
-			{% if taLabCode %}
-			<div class="panel panel-default">
-				<div class="card-body">
-					<table style="width:100%">
-						<tr>
-							<td>{{taLabCode}}</td>
-							<td align="right"><button type="button" class="btn btn-danger" onclick="javascript: setLabCodeToRemove('{{taLabCode}}')">X</button></td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			{% else %}
-			<div class="panel panel-default">
-				<div class="card-body">
-					<button type="button" class="btn btn-success btn-block" onclick="javascript: createLabCode('t');">+</button>
-				</div>
-			</div>
-			{% endif %}
-			<h3>Student Lab Code</h3>
-			{% if studentLabCode %}
-				<div class="panel panel-default">
-					<div class="card-body">
-						<table style="width:100%">
-							<tr>
-								<td>{{studentLabCode}}</td>
-								<td align="right"><button type="button" class="btn btn-danger" onclick="javascript: setLabCodeToRemove('{{studentLabCode}}');">X</button></td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			{% else %}
-				<div class="panel panel-default">
-					<div class="card-body">
-						<button type="button" class="btn btn-success btn-block" onclick="javascript: createLabCode('s');">+</button>
-					</div>
-				</div>
-			{% endif %}
-		</section>
-	</div>
+    <div class="col-md-8">
+        <section id="LabCodes">
+            <h3>TA Lab Code</h3>
+            {% if taLabCode %}
+            <div class="panel panel-default">
+                <div class="card-body">
+                    <table style="width:100%">
+                        <tr>
+                            <td>{{taLabCode}}</td>
+                            <td align="right"><button type="button" class="btn btn-danger" onclick="javascript: setLabCodeToRemove('{{taLabCode}}')">X</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <div class="panel panel-default">
+                <div class="card-body">
+                    <button type="button" class="btn btn-success btn-block" onclick="javascript: createLabCode('t');">+</button>
+                </div>
+            </div>
+            {% endif %}
+            <h3>Student Lab Code</h3>
+            {% if studentLabCode %}
+            <div class="panel panel-default">
+                <div class="card-body">
+                    <table style="width:100%">
+                        <tr>
+                            <td>{{studentLabCode}}</td>
+                            <td align="right"><button type="button" class="btn btn-danger" onclick="javascript: setLabCodeToRemove('{{studentLabCode}}');">X</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <div class="panel panel-default">
+                <div class="card-body">
+                    <button type="button" class="btn btn-success btn-block" onclick="javascript: createLabCode('s');">+</button>
+                </div>
+            </div>
+            {% endif %}
+        </section>
+    </div>
 </div>
+
+{% include 'app/manageLabNotifications.html' with notificationForm=notificationForm %}
 
 {% endblock %}
 
