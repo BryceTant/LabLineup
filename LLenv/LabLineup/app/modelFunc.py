@@ -4,6 +4,7 @@ from app.models import Request
 from app.models import LabCode
 from app.models import Notify
 from app.models import PasswordResetCode
+from app.models import Subscription
 from django.contrib.auth.models import User
 from string import ascii_lowercase
 from string import ascii_letters
@@ -58,6 +59,19 @@ def getLabsWithRole(userID, role):
         for lidObj in query:
             labs.append(Lab.objects.get(lid=lidObj.lid_id))
     return labs
+
+#To get the number of labs in which the user is a professor (owner)
+def getNumberOfLabs(userID):
+    return Role.objects.filter(uid_id=userID, role='p').count()
+
+#To get a user's lab limit (as professor/owner)
+def getLabLimit(userID):
+    query = None
+    try:
+        query = Subscription.objects.get(uid_id=userID).labLimit
+    except:
+        pass
+    return query
 
 #To get a list of feedback (ratings) for a TA or professor in a lab
 def getFeedbackForUser(userID, labID):

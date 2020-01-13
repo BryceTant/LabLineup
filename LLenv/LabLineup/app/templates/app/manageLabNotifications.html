@@ -2,31 +2,32 @@
 <div class="row">
     <div class="col-md-8">
         <section id="ManageLabNotificationsForm">
-			<form action="." method="post" class="form-horizontal">
-				{% csrf_token %}
-				<hr />
-				<div class="form-group">
-					<label for="id_notifyNew" class="col-md-2 control-label">Receive a notification when a new request is submitted</label>
+            <form action="." method="post" class="form-horizontal" prefix="notificationForm">
+                {% csrf_token %}
+                <hr />
+                <h3>Notification Settings</h3>
+                <div class="form-group">
+                    <label for="id_notifyNew" class="col-md-2 control-label">Receive a notification when a new request is submitted</label>
                     <div class="custom-control">
-						{{ notificationsForm.notifyNew }}
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="id_notifyThreshold" class="col-md-2 control-label">Receive a notification when the request queue reaches</label>
-					<div class="col-md-10">
-						{{ notificationForm.notifyThreshold }}
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-md-offset-2 col-md-10">
-						<input type="hidden" name="next" value="/" />
-						<input type="submit" value="Save Settings" class="btn btn-default" />
-					</div>
-				</div>
-				{% if form.errors %}
-				<p class="validation-summary-errors">Error</p>
-				{% endif %}
-			</form>
+                        {{ notificationForm.notifyNew }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_notifyThreshold" class="col-md-2 control-label">Receive a notification when the request queue reaches the set number (0 for off)</label>
+                    <div class="col-md-10">
+                        {{ notificationForm.notifyThreshold }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="hidden" name="next" value="/" />
+                        <input type="submit" value="Save Notification Settings" class="btn btn-default" name="notificationForm" />
+                    </div>
+                </div>
+                {% if form.errors %}
+                <p class="validation-summary-errors">Error</p>
+                {% endif %}
+            </form>
         </section>
     </div>
 </div>

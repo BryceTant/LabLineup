@@ -24,9 +24,12 @@ from app.models import Role
 from app.models import Request
 from app.models import LabCode
 from app.models import Notify
+from app.models import Subscription
 
 from app.modelFunc import generateLabCode
 from app.modelFunc import getLabsWithRole
+from app.modelFunc import getNumberOfLabs
+from app.modelFunc import getLabLimit
 from app.modelFunc import getRole
 from app.modelFunc import getLabCode
 from app.modelFunc import deleteLabCode
@@ -115,24 +118,36 @@ def help(request):
 def createLab(request):
     """Renders the createLab page. """
     assert isinstance(request, HttpRequest)
-    if request.method == 'POST':
-        form = CreateLabForm(request.POST, user=request.user)
-        if form.is_valid():
-            newLabID = form.save()
-            request.session["currentLab"] = newLabID
-            return redirect('/lab/manageLab')
+    labLimit = getLabLimit(userID=request.user)
+    if (labLimit != None and getNumberOfLabs(userID=request.user) >= labLimit):
+        return render(
+            request,
+            'app/error.html',
+            {
+                'title': "Error",
+                'message': "You have reached your limit for labs as a professor. Please upgrade your subscription.",
+                'year': datetime.now().year
+            }
+        )
     else:
-        form = CreateLabForm(user=request.user)
-    return render(
-        request,
-        'app/createLab.html',
-        {
-            'title': 'Create Lab',
-            'message': 'Create a lab for your class',
-            'year': datetime.now().year,
-            'form': form
-        }
-    )
+        if request.method == 'POST':
+            form = CreateLabForm(request.POST, user=request.user)
+            if form.is_valid():
+                newLabID = form.save()
+                request.session["currentLab"] = newLabID
+                return redirect('/lab/manageLab')
+        else:
+            form = CreateLabForm(user=request.user)
+        return render(
+            request,
+            'app/createLab.html',
+            {
+                'title': 'Create Lab',
+                'message': 'Create a lab for your class',
+                'year': datetime.now().year,
+                'form': form
+            }
+        )
 
 def addLab(request):
     """Renders the about page."""
@@ -197,7 +212,7 @@ def studentRequest(request):
             if form.is_valid():
                 newRID = form.save()
                 request.session["currentRequest"] = newRID
-                # sendAllRequest(currentLID, getRequestCount(currentLID)) ENABLE THIS LINE FOR SENDING EMAIL NOTIFICATIONS
+                sendAllRequest(currentLID, getRequestCount(currentLID))
                 return redirect('/student/requestSubmitted')
         else:
             form = SubmitRequestForm(user=request.user, lid=currentLID)
@@ -267,14 +282,33 @@ def labManage(request):
     }
     # If the user is a professor for the current lab
     if (getRole(userID=request.user, labID=currentLID) == 'p'):
+        userNotificationSettings = getNotificationSettings(userID=request.user, labID=currentLID)
+        if userNotificationSettings == None:
+            userNotificationSettings = Notify(uid_id=request.user.id,
+                                              lid_id=currentLID,
+                                              notifyNew=False,
+                                              notifyThreshold=0)
+            userNotificationSettings.save()
+        initialData["notifyNew"] = userNotificationSettings.notifyNew
+        initialData["notifyThreshold"] = userNotificationSettings.notifyThreshold
         # Load page to manage lab
         if request.method == 'POST':
             if 'detailsForm' in request.POST:  # If the lab name/description was saved
-                form = ManageLabForm(
-                    request.POST, prefix='detailsForm', lid=currentLID, initial=initialData)
+                form = ManageLabForm(request.POST,
+                                     prefix='detailsForm',
+                                     lid=currentLID,
+                                     initial=initialData)
                 if form.is_valid():
                     form.save()
-                    return redirect('/lab/queue')
+                    return redirect('/lab/manageLab')
+            elif 'notificationForm' in request.POST:  # If the notification settings were updated
+                notificationForm = ManageLabNotificationsForm(request.POST,
+                                                              user=request.user,
+                                                              prefix='notificationForm',
+                                                              lid=currentLID)
+                if notificationForm.is_valid():
+                    notificationForm.save()
+                    return redirect('/lab/manageLab')
             else:  # Either create or delete lab code
                 labCodeToRemove = request.POST.get("labCodeToRemove", "")
                 createLabCodeRole = request.POST.get("role", "")
@@ -286,6 +320,10 @@ def labManage(request):
         else:
             form = ManageLabForm(prefix='detailsForm',
                                  lid=currentLID, initial=initialData)
+            notificationForm = ManageLabNotificationsForm(prefix='notificationForm',
+                                                          user=request.user,
+                                                          lid=currentLID,
+                                                          initial=initialData)
             studentLabCode = getLabCode(currentLID, 's')
             taLabCode = getLabCode(currentLID, 't')
             return render(
@@ -296,6 +334,7 @@ def labManage(request):
                     'message': 'Edit lab settings',
                     'year': datetime.now().year,
                     'detailsForm': form,
+                    'notificationForm': notificationForm,
                     'studentLabCode': studentLabCode,
                     'taLabCode': taLabCode
                 }
@@ -313,8 +352,8 @@ def labManage(request):
         initialData["notifyThreshold"] = userNotificationSettings.notifyThreshold
         if request.method == 'POST':
             notificationForm = ManageLabNotificationsForm(request.POST, user=request.user, lid = currentLID)
-            if form.is_valid():
-                form.save()
+            if notificationForm.is_valid():
+                notificationForm.save()
                 return redirect('/lab/manageLab')
         else:
             notificationForm = ManageLabNotificationsForm(user = request.user, lid = currentLID, initial=initialData)

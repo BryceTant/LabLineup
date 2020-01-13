@@ -271,5 +271,8 @@ class ManageLabNotificationsForm(forms.Form):
 
     def save(self):
         currentLab = Lab.objects.get(lid = self.lid)
-        Notify.objects.filter(lid_id=currentLab.lid, uid_id=self.user.id).update(notifyNew = self.cleaned_data["notifyNew"], 
-                                                                                 notifyThreshold = self.cleaned_data["notifyThreshold"])
+        Notify.objects.filter(lid_id=currentLab.lid, uid_id=self.user).update(notifyNew = self.cleaned_data["notifyNew"],
+                                                                              notifyThreshold = self.cleaned_data["notifyThreshold"])
+
+        query = Notify.objects.filter(lid_id=currentLab.lid, uid_id=self.user)
+        print (query)

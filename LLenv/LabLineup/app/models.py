@@ -46,3 +46,9 @@ class PasswordResetCode(models.Model):
 	uid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE) #int(11)
 	prc = models.CharField(primary_key=True, max_length=25) #varchar(25) ~Null
 	timeGenerated = models.DateTimeField()
+
+class Subscription(models.Model):
+    uid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE) #int(11)
+    initialSub = models.DateTimeField()
+    subRenewal = models.DateTimeField()
+    labLimit = models.IntegerField()
