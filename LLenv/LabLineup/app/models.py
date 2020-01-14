@@ -52,3 +52,7 @@ class Subscription(models.Model):
     initialSub = models.DateTimeField()
     subRenewal = models.DateTimeField()
     labLimit = models.IntegerField()
+
+class EmailConfirmation(models.Model):
+    uid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE) #int(11)
+    regConCode = models.CharField(primary_key=True, max_length=25) #varchar(25)

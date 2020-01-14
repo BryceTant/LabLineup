@@ -99,22 +99,14 @@ class BootstrapRegisterForm(UserCreationForm):
         return baseValid
 
     def save(self, commit=True):
-        queryEmail = None
-        try:
-            queryEmail = User.objects.get(email=self.cleaned_data["email"])
-        except:
-            pass
-        if (queryEmail == None):
-            user = super(BootstrapRegisterForm, self).save(commit=False)
-            user.email = self.cleaned_data["email"]
-            user.first_name = self.cleaned_data["firstname"]
-            user.last_name = self.cleaned_data["lastname"]
-            if commit:
-                user.save()
-            return user
-        else:
-            pass
-            #raise forms.ValidationError("This email has already been used by " + str(queryEmail.username))
+        user = super(BootstrapRegisterForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
+        user.first_name = self.cleaned_data["firstname"]
+        user.last_name = self.cleaned_data["lastname"]
+        user.is_active = False  # Account won't be active until email is confirmed
+        if commit:
+            user.save()
+        return user
 
 class AddLabForm(forms.Form):
     labcode = forms.CharField(required=True, max_length=20,

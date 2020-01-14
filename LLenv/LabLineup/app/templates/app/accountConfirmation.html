@@ -1,0 +1,17 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+
+<h3>{{ message }}</h3>
+
+{% if accountConfirmed %}
+    <a href="/login"><button type="button" class="btn btn-primary">Login</button></a>
+{% else %}
+    <h3>If you believe you have recieved this in error, please contact us.</h3>
+    <a href="/contact"><button type="button" class="btn btn-primary">Contact us</button></a>
+{% endif %}
+
+
+{% endblock %}

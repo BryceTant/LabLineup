@@ -9,7 +9,7 @@ from app.models import Lab
 from app.models import Request
 from django.contrib.auth.models import User
 
-import requests
+import requests  #Note: this is for HTTP requests, not lab requests
 from datetime import datetime
 
 
@@ -99,3 +99,12 @@ def sendThreshold(lid, currentCount):
     vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
 
     sendEmail(getEmailsToNotifyThreshold(lid, currentCount), subject, variables=vars)
+
+def sendRegistrationConfirmation(user, regConCode):
+    subject = "LabLineup Account Confirmation"
+    regConLink = BASEURL + "/account/confirmAccount/" + str(regConCode)
+
+    vars = "{\"firstName\": \"" + user.first_name + "\","
+    vars = vars + "\"regConLink\": \"" + regConLink + "\"}"
+
+    sendEmail([user.email], subject, template="accountconfirm", variables=vars)

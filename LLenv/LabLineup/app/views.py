@@ -25,7 +25,7 @@ from app.models import Request
 from app.models import LabCode
 from app.models import Notify
 from app.models import Subscription
-
+from app.models import EmailConfirmation
 from app.modelFunc import generateLabCode
 from app.modelFunc import getLabsWithRole
 from app.modelFunc import getNumberOfLabs
@@ -38,9 +38,12 @@ from app.modelFunc import getUserByEmail
 from app.modelFunc import generatePasswordResetCode
 from app.modelFunc import resetPasswordFunc
 from app.modelFunc import getNotificationSettings
+from app.modelFunc import generateRegConCode
+from app.modelFunc import confirmAccount
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
+from app.SendEmail import sendRegistrationConfirmation
 
 
 def home(request):
@@ -87,7 +90,9 @@ def register(request):
     if request.method == 'POST':
         form = BootstrapRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            output = form.save()
+            rcc = generateRegConCode(output.id)
+            sendRegistrationConfirmation(output, rcc.regConCode)
             return redirect('/login')
     else:
         form = BootstrapRegisterForm()
@@ -532,3 +537,29 @@ def resetPassword(request, prc):
             }
         )
 
+def confirmAccountView(request, regConCode):
+    assert isinstance(request, HttpRequest)
+    if confirmAccount(regConCode=regConCode):
+        #Code is found, account is activated
+        return render(
+            request,
+            'app/accountConfirmation.html',
+            {
+                'title': 'Account Confirmed',
+                'message': 'Your account has been activated.',
+                'year': datetime.now().year,
+                'accountConfirmed': True
+            }
+        )
+    else:
+        #Code is not found
+        return render(
+            request,
+            'app/accountConfirmation.html',
+            {
+                'title': 'Account Confirmation Failed',
+                'message': 'The account confirmation link is invalid.',
+                'year': datetime.now().year,
+                'accountConfirmed': False
+            }
+        )

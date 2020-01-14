@@ -46,4 +46,5 @@ urlpatterns = [
 	path('account/', views.manageAccount, name='manageAccount'),  #Manage account page (to change name, email, password, etc.)
 	path('account/resetPassword/<str:prc>/', views.resetPassword, name='resetPassword'), #View to accept new password if prc (password reset code) is found
 	path('account/forgotPassword/', views.forgotPassword, name='forgotPassword'), #View to all user to enter user
+    path('account/confirmAccount/<str:regConCode>/', views.confirmAccountView, name='confirmAccountView'), #View to confirm new account
 ]

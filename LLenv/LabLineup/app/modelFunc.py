@@ -5,6 +5,7 @@ from app.models import LabCode
 from app.models import Notify
 from app.models import PasswordResetCode
 from app.models import Subscription
+from app.models import EmailConfirmation
 from django.contrib.auth.models import User
 from string import ascii_lowercase
 from string import ascii_letters
@@ -287,3 +288,35 @@ def getNotificationSettings(userID, labID):
     except:
         pass
     return query
+
+#To generate a registration confirmation code
+def generateRegConCode(userID):
+    regConCodeSet = False
+    while not regConCodeSet:
+        try:
+            newRCC = EmailConfirmation(uid_id=userID,
+                                       regConCode=randomAlphanumericString(length=25))
+            newRCC.save()
+            regConCodeSet = True
+            return newRCC
+        except:
+            pass
+
+#To confirm an account using a registration confirmation code
+def confirmAccount(regConCode):
+    query = None
+    try:
+        query = EmailConfirmation.objects.get(regConCode=regConCode)
+    except:
+        pass
+    if query == None:
+        #The given confirmation code does not exist
+        return False
+    else:
+        #If the given confirmation code is found, activate the account
+        user = User.objects.get(id=query.uid_id)
+        user.is_active = True
+        user.save()
+        #Delete the regConCode, as it is no longer needed
+        query.delete()
+        return True
