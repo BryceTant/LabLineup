@@ -10,11 +10,13 @@ from app.models import Request
 from django.contrib.auth.models import User
 
 import requests
+from datetime import datetime
 
 
 API='https://api.mailgun.net/v3/notify.lablineup.com/messages'
 API_KEY='8417d7db91e6ff4430906312affaf067-816b23ef-53a937ca'
 FROM = "LabLineup <no-reply@lablineup.com>"
+BASEURL = '127.0.0.1:8000'
 
 def sendEmailPlaintext(emails, subject, text):
     """Takes in list of emails, a subject, and text and sends the email"""
@@ -36,7 +38,7 @@ def sendEmail(emails, subject, template, variables):
     return requests.post(API,auth=('api',API_KEY),data=message)
 
 
-def sendNewRequest(lid):
+def sendNewRequestPlaintext(lid):
     labName = Lab.objects.get(lid=lid).name
     subject = labName + " has received a new request"
     request = getLastRequest(lid)
@@ -51,7 +53,7 @@ def sendNewRequest(lid):
 
     sendEmailPlaintext(getEmailsToNotifyNew(lid), subject, text)
 
-def sendThreshold(lid, currentCount):
+def sendThresholdPlaintext(lid, currentCount):
     labName = Lab.objects.get(lid=lid).name
     subject = labName + " currently has " + str(currentCount) + " requests"
 
@@ -67,7 +69,33 @@ def sendAllRequest(lid, currentCount):
 
 def sendPasswordReset(user, prc):
     """Takes a user object and prc code and send the password reset link"""
-    baseURL = '127.0.0.1:8000'
-    resetLink = baseURL + "/account/resetPassword/" + str(prc)
+    resetLink = BASEURL + "/account/resetPassword/" + str(prc)
     vars = "{\"prcLink\": \"" + resetLink + "\", \"username\": \"" + str(user.username) + "\"}"
     sendEmail([user.email], "Password Reset Link", template="passwordreset", variables=vars)
+
+def sendNewRequest(lid):
+    labName = Lab.objects.get(lid=lid).name
+    subject = labName + " has received a new request"
+    request = getLastRequest(lid)
+    student = User.objects.get(id=request.uid_id)
+    studentName = student.first_name + " " + student.last_name
+    dateSubmitted = request.submitted.strftime("%m/%d/%Y %I:%M:%S %p")
+
+    vars = "{\"labName\": \"" + labName + "\","
+    vars = vars + "\"student\": \"" + studentName + "\","
+    vars = vars + "\"station\": \"" + request.station + "\","
+    vars = vars + "\"submitted\": \"" + dateSubmitted + "\","
+    vars = vars + "\"description\": \"" + request.description + "\","
+    vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
+
+    sendEmail(getEmailsToNotifyNew(lid), subject, template="newrequest", variables=vars)
+
+def sendThreshold(lid, currentCount):
+    labName = Lab.objects.get(lid=lid).name
+    subject = labName + " currently has " + str(currentCount) + " requests"
+
+    vars = "{\"labName\": \"" + labName + "\","
+    vars = vars + "\"numRequests\": \"" + str(currentCount) + "\","
+    vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
+
+    sendEmail(getEmailsToNotifyThreshold(lid, currentCount), subject, variables=vars)
