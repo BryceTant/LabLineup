@@ -40,6 +40,7 @@ from app.modelFunc import resetPasswordFunc
 from app.modelFunc import getNotificationSettings
 from app.modelFunc import generateRegConCode
 from app.modelFunc import confirmAccount
+from app.modelFunc import getAverageWait
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -272,7 +273,34 @@ def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""
     # Should only render if user's role is TA or professor
     assert isinstance(request, HttpRequest)
-    pass
+    currentLID = request.session.get('currentLab')
+    lab = Lab.objects.get(lid=currentLID)
+    role = getRole(userID=request.user, labID = currentLID)
+    if (role == 'p' or role == 't'):
+        #User is a prof or TA and should have access
+        return render(
+            request,
+            'app/queue.html',
+            {
+                'title': lab.name,
+                'message': 'Queue',
+                'year': datetime.now().year,
+                'role': role,
+                'requestCount': str(getRequestCount(currentLID)),
+                'averageWait': str(getAverageWait(currentLID))
+            }
+        )
+    else:
+        #User is a student, render access denied
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
 
 def labManage(request):
     """Renders manage lab page for professors and TAs (pages will be different)"""
@@ -438,11 +466,6 @@ def manageAccount(request):
 
 def currentRequest(request):
     """Renders page to edit account settings"""
-    assert isinstance(request, HttpRequest)
-    pass
-
-def notifications(request):
-    """Renders page to edit notification settings for lab"""
     assert isinstance(request, HttpRequest)
     pass
 
