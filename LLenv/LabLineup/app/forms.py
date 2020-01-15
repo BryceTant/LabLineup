@@ -186,8 +186,9 @@ class SubmitRequestForm(forms.Form):
                                     'class':'form-control',
                                     'placeholder':'Station'}))
     description = forms.CharField(required=True, max_length=250,
-                                widget=forms.TextInput({
+                                widget=forms.Textarea({
                                     'class':'form-control',
+                                    'rows' : 6,
                                     'placeholder':'Problem Description'}))
 
     def save(self):
