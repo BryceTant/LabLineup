@@ -41,6 +41,7 @@ from app.modelFunc import getNotificationSettings
 from app.modelFunc import generateRegConCode
 from app.modelFunc import confirmAccount
 from app.modelFunc import getAvgWait
+from app.modelFunc import getNextRequest
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -467,6 +468,32 @@ def manageAccount(request):
 def currentRequest(request):
     """Renders page to edit account settings"""
     assert isinstance(request, HttpRequest)
+    currentLID = request.session.get('currentLab')
+    userID = request.user
+    role = getRole(userID=request.user, labID=currentLID)
+    if (role == 'p' or role == 't'):
+        #User is a prof or TA and should have access
+        return render(
+            request,
+            'app/currentRequest.html',
+            {
+                'title': 'Current Request',
+                'description' : str(getNextRequest(currentLID)),
+                'averageWait' : str(getAvgWait(currentLID)),
+                'requests' : str(getRequestCount(currentLID))
+            }
+        )
+    else:
+        #User is a student, render access denied
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
     pass
 
 def professor(request):
