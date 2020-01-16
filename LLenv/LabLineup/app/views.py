@@ -469,7 +469,6 @@ def currentRequest(request):
     """Renders page to edit account settings"""
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
-    userID = request.user
     role = getRole(userID=request.user, labID=currentLID)
     if (role == 'p' or role == 't'):
         #User is a prof or TA and should have access
@@ -479,7 +478,7 @@ def currentRequest(request):
             {
                 'title': 'Current Request',
                 'description' : str(getNextRequest(currentLID)),
-                'averageWait' : str(getAvgWait(currentLID)),
+                'averageWait' : "10 minutes",
                 'requests' : str(getRequestCount(currentLID))
             }
         )
