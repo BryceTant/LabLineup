@@ -40,7 +40,7 @@ from app.modelFunc import resetPasswordFunc
 from app.modelFunc import getNotificationSettings
 from app.modelFunc import generateRegConCode
 from app.modelFunc import confirmAccount
-from app.modelFunc import getAverageWait
+from app.modelFunc import getAvgWait
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -287,7 +287,7 @@ def labQueue(request):
                 'year': datetime.now().year,
                 'role': role,
                 'requestCount': str(getRequestCount(currentLID)),
-                'averageWait': str(getAverageWait(currentLID))
+                'averageWait': str(getAvgWait(currentLID))
             }
         )
     else:
