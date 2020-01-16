@@ -41,7 +41,6 @@ from app.modelFunc import getNotificationSettings
 from app.modelFunc import generateRegConCode
 from app.modelFunc import confirmAccount
 from app.modelFunc import getAverageWait
-
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
 from app.SendEmail import sendRegistrationConfirmation
