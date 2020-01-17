@@ -5,29 +5,43 @@
 <h2>{{ title }}</h2>
 
 <div class="row">
-    <div class="col-md-8">
-        <div class="col-md-10">
-            <h4>Description</h4>
-            {{ description }}
-            <!-- Solid divider -->
-            <hr class="solid">
-        </div>
-        <div class="col-md-10">
-            <h4>Average Wait</h4>
-            {{ averageWait }}
-            <!-- Solid divider -->
-            <hr class="solid">
-        </div>
-        <div class="col-md-10">
-            <h4>Request Count</h4>
-            {{ requests }}
-            <!-- Solid divider -->
-            <hr class="solid">
-        </div>
-        <div class="col-md-10">
+    <h3>Next Request</h3>
+    <div class="col-md-10">
+        <h4>User</h4>
+        {{ nameOfUser }}
+    </div>
+    <div class="col-md-10">
+        <h4>Station</h4>
+        {{ station }}
+    </div>
+    <div class="col-md-10">
+        <h4>Description</h4>
+        {{ description }}
+    </div>
+    <div class="col-md-10">
+        <h4>Submitted</h4>
+        {{ requestSubmitted }}
+    </div>
+    <div class="col-md-10">
+        <br />
+    </div>
+    <div class="col-md-10">
         <input type="submit" value="Mark Request Complete" class="btn btn-default" />
-        </div>
-
+    </div>
+    <div class="col-md-10">
+        <!-- Solid divider -->
+        <hr class="solid">
+    </div>
+</div>
+<div class="row">
+    <h3>All Requests</h3>
+    <div class="col-md-10">
+        <h4>Requests in Queue</h4>
+        {{ requests }}
+    </div>
+    <div class="col-md-10">
+        <h4>Average Wait</h4>
+        {{ averageWait }}
     </div>
 </div>
 
@@ -35,5 +49,7 @@
 
 
 {% block scripts %}
+    {% load staticfiles %}
+    <script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
 
 {% endblock %}

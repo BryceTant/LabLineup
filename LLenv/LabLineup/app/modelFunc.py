@@ -106,13 +106,13 @@ def getCompletedRequests(labID):
             requests.append(request)
     return requests
 
-#To get the oldest request in the queue
+#To get the oldest request in the queue with no helper assigned
 def getNextRequest(labID):
-    return Request.objects.filter(lid_id=labID).latest('timeSubmitted')
+    return Request.objects.filter(lid_id=labID, huid_id=None).earliest('timeSubmitted')
 
 #To get the most recent request in the queue
 def getLastRequest(labID):
-    return Request.objects.filter(lid_id=labID).earliest('timeSubmitted')
+    return Request.objects.filter(lid_id=labID).latest('timeSubmitted')
 
 #To get a list of all users in a lab (as a list of tuples containing (UserObject, role)
 def getLabUsers(labID):
@@ -320,3 +320,26 @@ def confirmAccount(regConCode):
         #Delete the regConCode, as it is no longer needed
         query.delete()
         return True
+
+#To get the first a last name of a user
+def getNameOfUser(userID):
+    query = None
+    name = ""
+    try:
+        query = User.objects.get(id=userID)
+        name = query.first_name + " " + query.last_name
+    except:
+        pass
+    if (query != None):
+        return name
+    else:
+        return None
+
+#To get a request that is assigned but not completed in a lab
+def getOutstandingRequest(labID, userID):
+    query = None
+    try:
+        query = Request.objects.get(lid_id=labID, huid_id=userID)
+    except:
+        pass
+    return query

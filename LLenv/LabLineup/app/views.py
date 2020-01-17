@@ -42,6 +42,8 @@ from app.modelFunc import generateRegConCode
 from app.modelFunc import confirmAccount
 from app.modelFunc import getAvgWait
 from app.modelFunc import getNextRequest
+from app.modelFunc import getNameOfUser
+from app.modelFunc import getOutstandingRequest
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -470,18 +472,28 @@ def currentRequest(request):
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
     role = getRole(userID=request.user, labID=currentLID)
-    nextRequest = getNextRequest(currentLID)
-
     if (role == 'p' or role == 't'):
         #User is a prof or TA and should have access
+        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
+        nextRequest = None
+        if openRequest != None:
+            nextRequest = openRequest
+        else:
+            nextRequest = getNextRequest(currentLID)
+        nextRequest.huid = request.user
+        nextRequest.save()
         return render(
             request,
             'app/currentRequest.html',
             {
                 'title': 'Current Request',
-                'description' : nextRequest.description,
+                'nameOfUser': getNameOfUser(nextRequest.suid_id),
+                'station': nextRequest.station,
+                'description': nextRequest.description,
+                'requestSubmitted': str(nextRequest.timeSubmitted),
                 'averageWait' : "10 minutes",
-                'requests' : str(getRequestCount(currentLID))
+                'requests' : str(getRequestCount(currentLID)),
+                'year': datetime.now().year
             }
         )
     else:
@@ -495,7 +507,6 @@ def currentRequest(request):
                 'year': datetime.now().year
             }
         )
-    pass
 
 def professor(request):
     """Renders page to allow professors to navigate"""
