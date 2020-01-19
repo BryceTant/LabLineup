@@ -77,9 +77,9 @@ def sendNewRequest(lid):
     labName = Lab.objects.get(lid=lid).name
     subject = labName + " has received a new request"
     request = getLastRequest(lid)
-    student = User.objects.get(id=request.uid_id)
+    student = User.objects.get(id=request.suid_id)
     studentName = student.first_name + " " + student.last_name
-    dateSubmitted = request.submitted.strftime("%m/%d/%Y %I:%M:%S %p")
+    dateSubmitted = request.timeSubmitted.strftime("%m/%d/%Y %I:%M:%S %p")
 
     vars = "{\"labName\": \"" + labName + "\","
     vars = vars + "\"student\": \"" + studentName + "\","
@@ -98,7 +98,7 @@ def sendThreshold(lid, currentCount):
     vars = vars + "\"numRequests\": \"" + str(currentCount) + "\","
     vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
 
-    sendEmail(getEmailsToNotifyThreshold(lid, currentCount), subject, variables=vars)
+    sendEmail(getEmailsToNotifyThreshold(lid, currentCount), subject, template="thresholdrequest", variables=vars)
 
 def sendRegistrationConfirmation(user, regConCode):
     subject = "LabLineup Account Confirmation"

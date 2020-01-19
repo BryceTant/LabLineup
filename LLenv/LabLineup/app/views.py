@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.views.generic import CreateView
 from django.contrib.auth import update_session_auth_hash
+from pytz import utc as utc
 
 from app.forms import BootstrapRegisterForm
 from app.forms import AddLabForm
@@ -201,7 +202,7 @@ def selectLab(request):
             {
                 'title': 'Select Lab',
                 'message': 'Select a lab',
-                'year': datetime.now().year,
+                'year': datetime.now(utc).year,
                 'labsWhereStudent': labsWhereStudent,
                 'labsWhereTA': labsWhereTA,
                 'labsWhereProfessor': labsWhereProfessor
@@ -491,9 +492,9 @@ def currentRequest(request):
                 'station': nextRequest.station,
                 'description': nextRequest.description,
                 'requestSubmitted': str(nextRequest.timeSubmitted),
-                'averageWait' : "10 minutes",
+                'averageWait' : getAvgWait(currentLID),
                 'requests' : str(getRequestCount(currentLID)),
-                'year': datetime.now().year
+                'year': datetime.now(utc).year
             }
         )
     else:

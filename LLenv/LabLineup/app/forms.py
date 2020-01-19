@@ -14,6 +14,7 @@ from app.models import Lab
 from app.models import Request
 from app.models import Notify
 import datetime
+from pytz import utc as utc
 
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -196,7 +197,7 @@ class SubmitRequestForm(forms.Form):
         labID = self.lid
         newStation = self.cleaned_data['station']
         newDescription = self.cleaned_data['description']
-        newRequest = Request(station=newStation, description=newDescription, timeSubmitted=datetime.datetime.now(),
+        newRequest = Request(station=newStation, description=newDescription, timeSubmitted=datetime.datetime.now(utc),
                        timeCompleted=None, feedback=None, huid_id=None, lid_id=labID, suid_id=userID)
         newRequest.save()
         return newRequest.rid #Must return rid to be set to session variable

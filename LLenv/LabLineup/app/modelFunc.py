@@ -15,6 +15,7 @@ from random import randint
 from django.db.models import Avg
 import datetime
 from statistics import mean
+from pytz import utc as utc
 
 
 #Generates and saves a LabCode for the specified lab and role and returns the code
@@ -144,7 +145,7 @@ def getEmailsToNotifyNew(labID):
 #To get a list of users to email when the number of requests is currentCount in lab labID
 def getEmailsToNotifyThreshold(labID, currentCount):
     users = []
-    queryUsers = Notify.objects.filter(notifyThreshold <= currentCount, lid_id = labID)
+    queryUsers = Notify.objects.filter(notifyThreshold = currentCount, lid_id = labID)
     if queryUsers:
         for user in queryUsers:
             users.append(User.objects.get(id=user.uid_id))
@@ -154,7 +155,7 @@ def getEmailsToNotifyThreshold(labID, currentCount):
 def getAvgWait(labID):
     waitTimes = []
     avgWaitTime = []
-    query = Request.objects.filter(lid_id=labID)
+    query = Request.objects.filter(lid_id=labID, rid=18)
     if query:
         for request in query:
             timeCompleted = 0
@@ -163,14 +164,14 @@ def getAvgWait(labID):
                 timeCompleted = request.timeCompleted
             else:
                 #If the request has not been completed, use current time
-                timeCompleted = datetime.datetime.now()
+                timeCompleted = datetime.datetime.now(utc)
             timeSubmitted = request.timeSubmitted
             timeTaken = (timeCompleted - timeSubmitted).seconds
             waitTimes.append(timeTaken)
         avgWaitTime = divmod(mean(waitTimes), 60)
     else:
         avgWaitTime = [0,0]
-    return str(avgWaitTime[0]) + ":" + str(round(avgWaitTime[1],2)) #returns minutes:seconds
+    return str(int(avgWaitTime[0])) + ":" + str(int(round(avgWaitTime[1],0))) #returns minutes:seconds
 
 
 #To get the average wait time as a string of minutes:seconds for a lab for a specific helper
@@ -186,14 +187,14 @@ def getAvgWaitTA(labID, helperID):
                 timeCompleted = request.timeCompleted
             else:
                 #If the request has not been completed, use current time
-                timeCompleted = datetime.datetime.now()
+                timeCompleted = datetime.datetime.now(utc)
             timeSubmitted = request.timeSubmitted
             timeTaken = (timeCompleted - timeSubmitted).seconds
             waitTimes.append(timeTaken)
         avgWaitTime = divmod(mean(waitTimes), 60)
     else:
         avgWaitTime = [0,0]
-    return str(avgWaitTime[0]) + ":" + str(round(avgWaitTime[1],2)) #returns minutes:seconds
+    return str(int(avgWaitTime[0])) + ":" + str(int(round(avgWaitTime[1],0))) #returns minutes:seconds
 
 #To get the average feedback for a lab as an int
 def getAvgFeedback(labID):
