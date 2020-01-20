@@ -1,0 +1,60 @@
+{% block content %}
+
+<script>
+    function setUserToRemove(userIDToRemove) {
+        document.forms["userToRemoveForm"].elements["userIDRemove"].value = userIDToRemove;
+        document.getElementById("userToRemoveForm").submit();
+    }
+</script>
+
+<form id="userToRemoveForm" action="." method="post" prefix="userToRemoveForm">
+    {% csrf_token %}
+    <input type="hidden" name="userIDRemove" value=0 />
+</form>
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>Teaching Assistants</h3>
+        {%for ta in tas %}
+        <div class="panel panel-default" id="userList">
+            <div class="card-body">
+                <table style="width:100%">
+                    <tr>
+                        <td align="left" width="40%">{{ta.first_name}} {{ta.last_name}}</td>
+                        <td align="left" width="40%">{{ta.email}}</td>
+                        <td align="right"><button type="button" class="btn btn-danger" onclick="javascript:setUserToRemove('{{ta.id}}')">X</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>Students</h3>
+        {%for student in students %}
+            <div class="panel panel-default" id="userList">
+                <div class="card-body">
+                    <table style="width:100%">
+                        <tr>
+                            <td align="left" width="40%">{{student.first_name}} {{student.last_name}}</td>
+                            <td align="left" width="40%">{{student.email}}</td>
+                            <td align="right"><button type="button" class="btn btn-danger" onclick="javascript:setUserToRemove('{{student.id}}')">X</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+
+{% endblock %}

@@ -46,6 +46,7 @@ from app.modelFunc import getNextRequest
 from app.modelFunc import getNameOfUser
 from app.modelFunc import getOutstandingRequest
 from app.modelFunc import removeLabFromAccount
+from app.modelFunc import getLabUsersWithRole
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -364,6 +365,22 @@ def labManage(request):
                 if notificationForm.is_valid():
                     notificationForm.save()
                     return redirect('/lab/manageLab')
+            elif 'userIDRemove' in request.POST:  # If a user was removed
+                userToRemove = request.POST.get("userIDRemove", None)
+                removed = removeLabFromAccount(userID=userToRemove, labID=currentLID)
+                if removed:
+                    #Removed successfully
+                    return redirect('/lab/manageLab')
+                else:
+                    return render(
+                        request,
+                        'app/error.html',
+                        {
+                            'title': "Error",
+                            'message': "The user was not removed. Please contact us",
+                            'year': datetime.now(utc).year
+                        }
+                    )
             else:  # Either create or delete lab code
                 labCodeToRemove = request.POST.get("labCodeToRemove", "")
                 createLabCodeRole = request.POST.get("role", "")
@@ -381,6 +398,8 @@ def labManage(request):
                                                           initial=initialData)
             studentLabCode = getLabCode(currentLID, 's')
             taLabCode = getLabCode(currentLID, 't')
+            students = getLabUsersWithRole(labID=currentLID, role='s')
+            tas = getLabUsersWithRole(labID=currentLID, role='t')
             return render(
                 request,
                 'app/manageLab.html',
@@ -391,7 +410,9 @@ def labManage(request):
                     'detailsForm': form,
                     'notificationForm': notificationForm,
                     'studentLabCode': studentLabCode,
-                    'taLabCode': taLabCode
+                    'taLabCode': taLabCode,
+                    'students': students,
+                    'tas': tas
                 }
             )
     #If the user if a TA for the current lab
