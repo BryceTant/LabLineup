@@ -14,11 +14,19 @@
         document.forms["selectLabForm"].elements["labID"].value = selectedLabID;
         document.getElementById("selectLabForm").submit();
     }
+    function setLabRemove(selectedLabIDRemove, role) {
+        document.forms["selectLabRemoveForm"].elements["labIDRemove"].value = selectedLabIDRemove;
+        document.getElementById("selectLabRemoveForm").submit();
+    }
 </script>
 
 <form id="selectLabForm" action="." method="post">
     {% csrf_token %}
     <input type="hidden" name="labID" value=0 />
+</form>
+<form id="selectLabRemoveForm" action="." method="post">
+    {% csrf_token %}
+    <input type="hidden" name="labIDRemove" value=0 />
 </form>
 
 <div class="row">
@@ -28,9 +36,18 @@
             <h3>Student</h3>
             {% endif %}
             {% for lab in labsWhereStudent %}
-            <div onclick="javascript:setLab({{lab.lid}})">
-                {% include 'app/selectLabpartial.html' %}
-            </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div onclick="javascript:setLab({{lab.lid}})">
+                            {% include 'app/selectLabpartial.html' %}
+                        </div>
+                    </div>
+                    <div class="col-md-2" align="right" id="selectLabRemove">
+                        <div onclick="javascript:setLabRemove({{lab.lid}})">
+                            {% include 'app/removeLab.html' %}
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </section>
         <section id="labsAsTA">
@@ -38,9 +55,18 @@
             <h3>Teaching Assistant</h3>
             {% endif %}
             {% for lab in labsWhereTA %}
-            <div onclick="javascript:setLab({{lab.lid}})">
-                {% include 'app/selectLabpartial.html' %}
-            </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div onclick="javascript:setLab({{lab.lid}})">
+                            {% include 'app/selectLabpartial.html' %}
+                        </div>
+                    </div>
+                    <div class="col-md-2" align="right">
+                        <div onclick="javascript:setLabRemove({{lab.lid}})">
+                            {% include 'app/removeLab.html' %}
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </section>
         <section id="labsAsProfessor">
@@ -48,9 +74,18 @@
             <h3>Professor</h3>
             {% endif %}
             {% for lab in labsWhereProfessor %}
-            <div onclick="javascript:setLab({{lab.lid}})">
-                {% include 'app/selectLabpartial.html' %}
-            </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div onclick="javascript:setLab({{lab.lid}})">
+                            {% include 'app/selectLabpartial.html' %}
+                        </div>
+                    </div>
+                    <div class="col-md-2" align="right">
+                        <div onclick="javascript:setLabRemove({{lab.lid}})">
+                            {% include 'app/removeLab.html' %}
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </section>
     </div>

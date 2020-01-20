@@ -344,3 +344,16 @@ def getOutstandingRequest(labID, userID):
     except:
         pass
     return query
+
+#To remove a lab from an account (remove the role)
+def removeLabFromAccount(userID, labID):
+    query = None
+    try:
+        query = Role.objects.get(uid_id=userID, lid_id=labID)
+    except:
+        pass
+    if query != None:
+        query.delete()
+        return True
+    else:
+        return False

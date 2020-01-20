@@ -45,6 +45,7 @@ from app.modelFunc import getAvgWait
 from app.modelFunc import getNextRequest
 from app.modelFunc import getNameOfUser
 from app.modelFunc import getOutstandingRequest
+from app.modelFunc import removeLabFromAccount
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -184,13 +185,30 @@ def selectLab(request):
     """Renders main app page (select a lab)"""
     assert isinstance(request, HttpRequest)
     if request.method == 'POST':
-        selectedLabID = int(request.POST.get("labID", ""))
-        request.session["currentLab"] = selectedLabID
-        role = getRole(userID=request.user, labID=selectedLabID)
-        if role == 's':
-            return redirect('/student/request')
-        else:  # TA or professor
-            return redirect('/lab/queue')
+        selectedLabID = request.POST.get("labID", None)
+        selectedLabIDRemove = request.POST.get("labIDRemove", None)
+        if selectedLabID != None:
+            request.session["currentLab"] = selectedLabID
+            role = getRole(userID=request.user, labID=selectedLabID)
+            if role == 's':
+                return redirect('/student/request')
+            else:  # TA or professor
+                return redirect('/lab/queue')
+        if selectedLabIDRemove != None:
+            removed = removeLabFromAccount(userID=request.user, labID=selectedLabIDRemove)
+            if removed:
+                # Lab removed from account
+                return redirect('/app')
+            else:
+                return render(
+                    request,
+                    'app/error.html',
+                    {
+                        'title': "Error",
+                        'message': "The lab could not be removed from your account. Please contact us.",
+                        'year': datetime.now(utc).year
+                    }
+                )
     else:
         # Lists of lab objects for each role
         labsWhereStudent = getLabsWithRole(userID=request.user, role='s')
