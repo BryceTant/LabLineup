@@ -4,8 +4,11 @@
 
 <script>
     function setLabCodeToRemove(selectedLabCode) {
-        document.forms["removeLabCodeForm"].elements["labCodeToRemove"].value = selectedLabCode;
-        document.getElementById("removeLabCodeForm").submit();
+        confirmResponse = confirm("Are you sure you want to delete this lab code? The users will not be removed, but you cannot use this code again.")
+        if (confirmResponse) {
+            document.forms["removeLabCodeForm"].elements["labCodeToRemove"].value = selectedLabCode;
+            document.getElementById("removeLabCodeForm").submit();
+        }
     }
     function createLabCode(role) {
         document.forms["createLabCodeForm"].elements["role"].value = role;

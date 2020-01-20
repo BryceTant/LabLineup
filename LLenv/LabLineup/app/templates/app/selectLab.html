@@ -15,8 +15,11 @@
         document.getElementById("selectLabForm").submit();
     }
     function setLabRemove(selectedLabIDRemove, role) {
-        document.forms["selectLabRemoveForm"].elements["labIDRemove"].value = selectedLabIDRemove;
-        document.getElementById("selectLabRemoveForm").submit();
+        confirmResponse = confirm("Are you sure you want to remove this lab from your account?")
+        if (confirmResponse) {
+            document.forms["selectLabRemoveForm"].elements["labIDRemove"].value = selectedLabIDRemove;
+            document.getElementById("selectLabRemoveForm").submit();
+        }
     }
 </script>
 

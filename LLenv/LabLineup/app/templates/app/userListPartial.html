@@ -2,8 +2,11 @@
 
 <script>
     function setUserToRemove(userIDToRemove) {
-        document.forms["userToRemoveForm"].elements["userIDRemove"].value = userIDToRemove;
-        document.getElementById("userToRemoveForm").submit();
+        confirmResponse = confirm("Are you sure you want to remove this user?")
+        if (confirmResponse) {
+            document.forms["userToRemoveForm"].elements["userIDRemove"].value = userIDToRemove;
+            document.getElementById("userToRemoveForm").submit();
+        }
     }
 </script>
 
