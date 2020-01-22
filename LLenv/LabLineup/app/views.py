@@ -268,10 +268,24 @@ def studentRequest(request):
 
 def studentRequestSubmitted(request):
     """Renders pages for lab/{labID}/student."""
-    # Should only render if user's role is student
     # Blank Request Form => Request Waiting Form => Feedback Form
     assert isinstance(request, HttpRequest)
-    pass
+    currentLID = request.session.get('currentLab')
+    avgWait = getAvgWait(currentLID)
+    # Should only render if user's role is student
+    if (getRole(userID=request.user, labID=currentLID) == 's'):
+        return render(
+            request,
+            'app/studentRequestSubmitted.html',
+            {
+                'title': 'Request Submitted',
+                'message': 'Your request has been submitted',
+                'year': datetime.now().year,
+                'avgWait': avgWait
+            }
+        )
+    else:
+        pass
 
 def studentRequestFeedback(request):
     """Renders pages for lab/{labID}/student."""
