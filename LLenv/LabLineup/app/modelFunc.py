@@ -346,6 +346,7 @@ def getOutstandingRequest(labID, userID):
     return query
 
 #To remove a lab from an account (remove the role)
+
 def removeLabFromAccount(userID, labID):
     query = None
     try:

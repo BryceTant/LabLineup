@@ -520,7 +520,7 @@ def currentRequest(request):
             nextRequest = openRequest
         else:
             nextRequest = getNextRequest(currentLID)
-        nextRequest.huid = request.user
+        nextRequest.huid_id = request.user
         nextRequest.save()
         return render(
             request,
