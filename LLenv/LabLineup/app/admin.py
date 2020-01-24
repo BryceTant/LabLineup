@@ -3,7 +3,7 @@ from django.contrib import admin
 from app.models import Lab, Role, Request, LabCode, Notify, Subscription
 
 class LabAdmin(admin.ModelAdmin):
-    list_display=('lid','name', 'description')
+    list_display=('lid','name', 'description', 'active')
 
 class RoleAdmin(admin.ModelAdmin):
     list_display=('lid', 'uid', 'role')

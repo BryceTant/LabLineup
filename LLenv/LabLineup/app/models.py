@@ -6,9 +6,10 @@ from django.db import models
 from django.conf.global_settings import AUTH_USER_MODEL
 
 class Lab(models.Model):
-	lid = models.AutoField(primary_key=True)  #int(11), ~Null, PK, auto_inc
-	name = models.CharField(max_length=75)  #varchar(75), ~Null
-	description = models.CharField(max_length=150)  #varchar(150), ~Null
+    lid = models.AutoField(primary_key=True)  #int(11), ~Null, PK, auto_inc
+    name = models.CharField(max_length=75)  #varchar(75), ~Null
+    description = models.CharField(max_length=150)  #varchar(150), ~Null
+    active = models.BooleanField(default=True) # bool
 
 
 class Role(models.Model):

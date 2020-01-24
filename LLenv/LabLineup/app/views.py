@@ -47,6 +47,7 @@ from app.modelFunc import getNameOfUser
 from app.modelFunc import getOutstandingRequest
 from app.modelFunc import removeLabFromAccount
 from app.modelFunc import getLabUsersWithRole
+from app.modelFunc import setLabInactive
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -395,6 +396,27 @@ def labManage(request):
                             'year': datetime.now(utc).year
                         }
                     )
+            elif 'deleteLab' in request.POST:  # If a lab was deleted
+                deleteLabConfirmation = request.POST.get("deleteLab", False)
+                if deleteLabConfirmation == "true":
+                    deleteLabConfirmation = True
+                if deleteLabConfirmation:
+                    removed = setLabInactive(labID=currentLID)
+                    removed = removed and removeLabFromAccount(labID=currentLID, userID=request.user)
+                    if removed:
+                    #Removed successfully
+                        return redirect('/app')
+                    else:
+                        return render(
+                            request,
+                            'app/error.html',
+                            {
+                                'title': "Error",
+                                'message': "The lab was not deleted. Please contact us",
+                                'year': datetime.now(utc).year
+                            }
+                        )
+                return redirect('/lab/manageLab')
             else:  # Either create or delete lab code
                 labCodeToRemove = request.POST.get("labCodeToRemove", "")
                 createLabCodeRole = request.POST.get("role", "")
