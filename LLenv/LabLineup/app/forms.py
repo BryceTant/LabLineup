@@ -136,20 +136,32 @@ class AddLabForm(forms.Form):
         self.user = kwargs.pop('user', None)
         super(AddLabForm, self).__init__(*args, **kwargs)
 
+    def is_valid(self):
+        baseValid = super().is_valid()
+        #See if LabCode exists
+        queryLabCode = None
+        try:
+            queryLabCode = LabCode.objects.get(code=self.cleaned_data['labcode'])
+        except:
+            self.add_error(field="labcode", error="The lab code you enter does not exist")
+            baseValid = False
+            return baseValid
+        #See if the user already has a role in that lab
+        queryRole = None
+        try:
+            Role.objects.get(uid_id=self.user.id, lid_id=queryLabCode.lid_id)
+            self.add_error(field="labcode", error="You are already a member of this lab")
+            baseValid = False
+        except:
+            pass
+        return baseValid
+
+
     def save(self):
         userID = self.user.id
         labCode = LabCode.objects.get(code=self.cleaned_data['labcode'])
-        noRole = True
-        try:
-            Role.objects.get(uid_id=userID, lid_id=labCode.lid_id)
-            noRole = False
-        except:
-            pass  #Error handled in form Validation
-        if noRole:  #If the user doesn't already have a role for this lab
-            obj = Role(lid_id=labCode.lid_id, uid_id=userID, role=labCode.role) #Add the role
-            obj.save()
-        else:
-            raise forms.ValidationError(_('You are already a member of this lab'), code='invalid')
+        obj = Role(lid_id=labCode.lid_id, uid_id=userID, role=labCode.role) #Add the role
+        obj.save()
 
 class CreateLabForm(forms.Form):
     labName = forms.CharField(required=True, max_length=75,

@@ -180,6 +180,7 @@ def addLab(request):
         if form.is_valid():
             form.save()
             return redirect('/app')
+
     else:
         form = AddLabForm(user=request.user)
     return render(

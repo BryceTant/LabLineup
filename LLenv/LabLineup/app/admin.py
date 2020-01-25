@@ -6,7 +6,7 @@ class LabAdmin(admin.ModelAdmin):
     list_display=('lid','name', 'description', 'active')
 
 class RoleAdmin(admin.ModelAdmin):
-    list_display=('lid', 'uid', 'role')
+    list_display=('id', 'lid', 'uid', 'role')
 
 class RequestAdmin(admin.ModelAdmin):
     list_display=('rid','station','description','timeSubmitted',
@@ -16,10 +16,10 @@ class LabCodeAdmin(admin.ModelAdmin):
     list_display=('code','lid','role')
 
 class NotifyAdmin(admin.ModelAdmin):
-    list_display=('uid','lid','notifyNew','notifyThreshold')
+    list_display=('id', 'uid','lid','notifyNew','notifyThreshold')
 
 class SubscriptionAdmin(admin.ModelAdmin):
-    list_display=('uid','initialSub','subRenewal','labLimit')
+    list_display=('id', 'uid','initialSub','subRenewal','labLimit')
 
 
 admin.site.register(Lab, LabAdmin)

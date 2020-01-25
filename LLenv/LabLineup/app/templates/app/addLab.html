@@ -23,7 +23,10 @@
                     </div>
                 </div>
                 {% if form.errors %}
-                <p class="validation-summary-errors">The lab code you entered does not exist.</p>
+                    <p class="validation-summary-errors">You could not be added to the lab:</p>
+                    {%for error in form.errors.items %}
+                        {{error.1}}
+                    {% endfor %}
                 {% endif %}
             </form>
         </section>
