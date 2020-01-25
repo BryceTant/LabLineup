@@ -19,6 +19,7 @@ from app.forms import EditAccountDetailsForm
 from app.forms import ResetPasswordForm
 from app.forms import ForgotPasswordForm
 from app.forms import ManageLabNotificationsForm
+from app.forms import RequestEmailConfirmForm
 
 from app.models import Lab
 from app.models import Role
@@ -48,6 +49,7 @@ from app.modelFunc import getOutstandingRequest
 from app.modelFunc import removeLabFromAccount
 from app.modelFunc import getLabUsersWithRole
 from app.modelFunc import setLabInactive
+from app.modelFunc import deleteAccount
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -101,7 +103,15 @@ def register(request):
             output = form.save()
             rcc = generateRegConCode(output.id)
             sendRegistrationConfirmation(output, rcc.regConCode)
-            return redirect('/login')
+            return render(
+                    request,
+                    'app/message.html',
+                    {
+                        'title':"Welcome to LabLineup",
+                        'message': "Please check your email for a link to activate your account.",
+                        'year': datetime.now().year
+                    }
+                )
     else:
         form = BootstrapRegisterForm()
     return render(
@@ -524,6 +534,24 @@ def manageAccount(request):
             if form.is_valid():
                 form.save()
             return redirect('/account')
+        elif 'deleteAccount' in request.POST:
+            deleteResponse = request.POST.get('deleteAccount', False)
+            if deleteResponse == "true":
+                delete = deleteAccount(request.user.id)
+                if delete == True:
+                    return redirect('/')  # Account deleted
+                else:
+                    return render(
+                        request,
+                        'app/error.html',
+                        {
+                            'title': "Error",
+                            'message': str(delete[1]),
+                            'year':datetime.now().year
+                        }
+                    )
+            else:
+                return redirect('/account') # Unknown error. Should never reach
         else:
             print("Error")
             return redirect('/account')
@@ -701,3 +729,38 @@ def confirmAccountView(request, regConCode):
                 'accountConfirmed': False
             }
         )
+
+def requestEmailConfirmation(request):
+    assert isinstance(request, HttpRequest)
+    if request.method == 'POST':
+        form = RequestEmailConfirmForm(request.POST)
+        if form.is_valid():
+            output = form.save()
+            if output != None:
+                rcc = generateRegConCode(output.id)
+                sendRegistrationConfirmation(output, rcc.regConCode)
+                return render(
+                    request,
+                    'app/message.html',
+                    {
+                        'title':"Welcome to LabLineup",
+                        'message': "Please check your email for a link to activate your account.",
+                        'year': datetime.now().year
+                    }
+                )
+            else:
+                pass
+        else:
+            pass
+    else:
+        form = RequestEmailConfirmForm()
+    return render(
+        request,
+        'app/requestEmailConfirm.html',
+        {
+            'title': 'Confirm Registration',
+            'message:': 'Please enter your username below to send a new registration confirmation email',
+            'year': datetime.now().year,
+            'form': form
+        }
+    )

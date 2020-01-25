@@ -346,7 +346,6 @@ def getOutstandingRequest(labID, userID):
     return query
 
 #To remove a lab from an account (remove the role)
-
 def removeLabFromAccount(userID, labID):
     query = None
     try:
@@ -359,6 +358,7 @@ def removeLabFromAccount(userID, labID):
     else:
         return False
 
+#To set a lab to inactive (when a professor deletes the lab or their account)
 def setLabInactive(labID):
     query = None
     successful = False
@@ -370,3 +370,50 @@ def setLabInactive(labID):
     except:
         pass
     return successful
+
+#To delete an account (actually, deactivates)
+def deleteAccount(userID):
+    #Find account
+    queryAccount = None
+    try:
+        queryAccount = User.objects.filter(id=userID)
+    except:
+        return (False, "The account was not found")
+    #Set owned labs to inactive
+    labsOwned = getLabsWithRole(userID=userID, role='p')
+    for lab in labsOwned:
+        Lab.objects.filter(lid=lab.lid).update(active=False)
+    #Delete roles
+    queryRoles = None
+    try:
+        queryRoles = Role.objects.filter(uid_id=userID).delete()
+    except:
+        pass
+    #Delete notification settings
+    queryNotify = None
+    try:
+        queryNotify = Notify.objects.filter(uid_id=userID).delete()
+    except:
+        pass #No notification settings set
+    #Delete password reset codes
+    queryPRC = None
+    try:
+        queryPRC = PasswordResetCode.objects.filter(uid_id=userID).delete()
+    except:
+        pass
+    querySub = None
+    try:
+        querySub = Subscription.objects.filter(uid_id=userID).delete()
+    except:
+        pass
+    queryEmailConf = None
+    try:
+        queryEmailConf = EmailConfirmation.objects.filter(uid_id=userID).delete()
+    except:
+        pass
+    #Deactivate account
+    try:
+        queryAccount.update(email="None", is_active=False)
+    except:
+        return (False, "The account could not be deleted")
+    return True

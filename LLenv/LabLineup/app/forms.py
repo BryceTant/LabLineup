@@ -28,6 +28,23 @@ class BootstrapAuthenticationForm(AuthenticationForm):
                                    'class': 'form-control',
                                    'placeholder':'Password'}))
 
+    class Meta:
+        model = User
+        fields = ("username", "password")
+
+    def is_valid(self):
+        baseValid = super().is_valid()
+        queryUser = None
+        try:
+            queryUser = User.objects.get(username=self.cleaned_data["username"])
+            if queryUser.is_active == False:
+                baseValid = False
+                self.add_error(field="username", error="You have not confirmed your email")
+        except:
+            pass
+        return baseValid
+
+
 class ChangePasswordForm(PasswordChangeForm):
     """Form to change user password"""
     old_password = forms.CharField(label=_("Password"),
@@ -270,3 +287,17 @@ class ManageLabNotificationsForm(forms.Form):
 
         query = Notify.objects.filter(lid_id=currentLab.lid, uid_id=self.user)
         print (query)
+
+class RequestEmailConfirmForm(forms.Form):
+    username = forms.CharField(max_length=254,
+                               widget=forms.TextInput({
+                                   'class': 'form-control',
+                                   'placeholder': 'Username'}))
+
+    def save(self):
+        queryUser = None
+        try:
+            queryUser = User.objects.get(username=self.cleaned_data["username"])
+        except:
+            return None
+        return queryUser

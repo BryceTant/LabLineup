@@ -29,12 +29,17 @@
                     </div>
                 </div>
                 {% if form.errors %}
-                <p class="validation-summary-errors">Please enter a correct user name and password.</p>
+                    <p class="validation-summary-errors">One or more fields are invalid:</p>
+                    {% for field in form.errors.items %}
+                        {{field.1}}
+                    {% endfor %}
                 Forgot your username or password? <a href="{% url 'forgotPassword' %}">Reset it here</a>
+                <br />
+                New a new account confirmation email? <a href="{% url 'requestEmailConfirmation' %}">Request a new one here</a>
                 {% endif %}
             </form>
         </section>
-        Dont't have an account? <a href="{% url 'register' %}">Register here</a>
+        Don't have an account? <a href="{% url 'register' %}">Register here</a>
     </div>
 </div>
 

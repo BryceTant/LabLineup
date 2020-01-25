@@ -1,0 +1,57 @@
+
+{% block content %}
+
+<script>
+    function deleteAccount(username) {
+        confirmResponse = prompt("Type your username to delete your account. This action cannot be undone.");
+        if (confirmResponse.toLowerCase() === username) {
+            document.forms["deleteAccountForm"].elements["deleteAccount"].value = true;
+            document.getElementById("deleteAccountForm").submit();
+        }
+    }
+</script>
+
+<form id="deleteAccountForm" action="." method="post" prefix="deleteAccountForm">
+    {% csrf_token %}
+    <input type="hidden" name="deleteAccount" value=0 />
+</form>
+
+<div class="row">
+	<div class="col-md-8">
+        <br />
+        <h4>Deleting your account is a permanent action. <b>You will not be able to recover your account.</b></h4>
+        <ul>
+            <li><h4>Your account will be deactivated. You will not be able to recover your account.</h4></li>
+            <li>
+                <h4>
+                    If you are a professor, your labs will be marked as inactive.
+                    Students will still be able to see their request history but won't be able to submit new requests. 
+                    The lab will still exist, but you will not have access to it.
+                </h4>
+            </li>
+            <li>
+                <h4>Any requests you have submitted will remain, and professors and TA's will have access to them.</h4>
+            </li>
+            <li>
+                <h4>Your data, including all labs and requests, may be deleted at our discretion.</h4>
+            </li>
+        </ul>
+        <br />
+	</div>
+</div>
+<div class="row">
+    <div class="col-md-8" align="center">
+        <button type="button" class="btn btn-danger" onclick="javascript: deleteAccount('{{user.username}}')">Delete Account</button>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+    {% load staticfiles %}
+<script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
+
+{% endblock %}
