@@ -14,6 +14,13 @@
         document.forms["createLabCodeForm"].elements["role"].value = role;
         document.getElementById("createLabCodeForm").submit();
     }
+    function deleteLabFunc() {
+        confirmResponse = prompt("Type \"Delete\" to delete this lab. This action cannot be undone.");
+        if (confirmResponse.toLowerCase() === "delete") {
+            document.forms["deleteLabForm"].elements["deleteLab"].value = true;
+            document.getElementById("deleteLabForm").submit();
+        }
+    }
 </script>
 
 <form id="removeLabCodeForm" action="." method="post" prefix="removeLabCodeForm">
@@ -23,6 +30,10 @@
 <form id="createLabCodeForm" action="." method="post" prefix="createLabCodeForm">
     {% csrf_token %}
     <input type="hidden" name="role" value='' />
+</form>
+<form id="deleteLabForm" action="." method="post" prefix="deleteLabForm">
+    {% csrf_token %}
+    <input type="hidden" name="deleteLab" value='' />
 </form>
 
 
@@ -106,8 +117,15 @@
 
 {% include 'app/userListPartial.html' %}
 
-{% endblock %}
 
+<div class="row">
+    <div class="col-md-8">
+        <hr class="solid" />
+        <button type="button" class="btn btn-danger" onclick="javascript: deleteLabFunc();">Delete Lab</button>
+    </div>
+</div>
+
+{% endblock %}
 
 {% block scripts %}
 

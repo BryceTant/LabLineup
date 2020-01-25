@@ -358,3 +358,15 @@ def removeLabFromAccount(userID, labID):
         return True
     else:
         return False
+
+def setLabInactive(labID):
+    query = None
+    successful = False
+    try:
+        query = Lab.objects.filter(lid=labID)
+        query.update(active=False)
+        query
+        successful = True
+    except:
+        pass
+    return successful
