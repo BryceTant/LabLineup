@@ -89,7 +89,7 @@ def about(request):
         'app/about.html',
         {
             'title': 'About',
-            'message': 'What is LabLineup?',
+            'message': 'About LabLineup',
             'year': datetime.now().year,
         }
     )
