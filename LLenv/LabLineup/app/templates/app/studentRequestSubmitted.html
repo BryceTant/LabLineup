@@ -4,8 +4,18 @@
 
 <h2>{{ title }}</h2>
 
-<p>
-    Average Wait:
+<h4> Lab: {{ labID }}</h4>
+<h4> 
+    Station ID: 
+    <p style="display: inline-block;
+    width: 50px;
+    border: 1px solid #000;
+    text-align: center;"> {{ stationID }}</p>
+    
+
+</h4>
+
+    Estimated Wait:
     {{ avgWait }}
     <br>
     Number of Requests Before You:

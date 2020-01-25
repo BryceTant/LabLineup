@@ -272,6 +272,7 @@ def studentRequestSubmitted(request):
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
     avgWait = getAvgWait(currentLID)
+    stationID = request.session.get('station')
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
         return render(
@@ -281,7 +282,9 @@ def studentRequestSubmitted(request):
                 'title': 'Request Submitted',
                 'message': 'Your request has been submitted',
                 'year': datetime.now().year,
-                'avgWait': avgWait
+                'avgWait': avgWait,
+                'stationID': stationID,
+                'labID': currentLID
             }
         )
     else:
@@ -534,7 +537,7 @@ def currentRequest(request):
             nextRequest = openRequest
         else:
             nextRequest = getNextRequest(currentLID)
-        nextRequest.huid_id = request.user
+        nextRequest.huid = request.user
         nextRequest.save()
         return render(
             request,
