@@ -23,7 +23,10 @@
                     </div>
                 </div>
                 {% if form.errors %}
-                <p class="validation-summary-errors">Please contact us for assistance</p>
+                    <p class="validation-summary-errors">We were unable to send you a confirmation link. Please contact us for assistance.</p>
+                    {% for error in form.errors.items %}
+                        {{error.1}}
+                    {% endfor %}
                 {% endif %}
             </form>
         </section>

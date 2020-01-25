@@ -306,10 +306,16 @@ class RequestEmailConfirmForm(forms.Form):
                                    'class': 'form-control',
                                    'placeholder': 'Username'}))
 
-    def save(self):
+    def is_valid(self):
+        baseValid = super().is_valid()
         queryUser = None
         try:
             queryUser = User.objects.get(username=self.cleaned_data["username"])
         except:
-            return None
-        return queryUser
+            self.add_error(field="username", error="The username you entered does not exist")
+            baseValid = False
+        return baseValid
+        
+
+    def save(self):
+        return User.objects.get(username=self.cleaned_data["username"])

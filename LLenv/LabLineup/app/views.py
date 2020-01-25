@@ -740,20 +740,17 @@ def requestEmailConfirmation(request):
         form = RequestEmailConfirmForm(request.POST)
         if form.is_valid():
             output = form.save()
-            if output != None:
-                rcc = generateRegConCode(output.id)
-                sendRegistrationConfirmation(output, rcc.regConCode)
-                return render(
-                    request,
-                    'app/message.html',
-                    {
-                        'title':"Welcome to LabLineup",
-                        'message': "Please check your email for a link to activate your account.",
-                        'year': datetime.now().year
-                    }
-                )
-            else:
-                pass
+            rcc = generateRegConCode(output.id)
+            sendRegistrationConfirmation(output, rcc.regConCode)
+            return render(
+                request,
+                'app/message.html',
+                {
+                    'title':"Welcome to LabLineup",
+                    'message': "Please check your email for a link to activate your account.",
+                    'year': datetime.now().year
+                }
+            )
         else:
             pass
     else:
