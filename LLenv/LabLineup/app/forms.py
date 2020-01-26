@@ -319,3 +319,37 @@ class RequestEmailConfirmForm(forms.Form):
 
     def save(self):
         return User.objects.get(username=self.cleaned_data["username"])
+
+class AddTAForm(forms.Form):
+    username = forms.CharField(max_length=254,
+                               widget=forms.TextInput({
+                                   'class': 'form-control',
+                                   'placeholder': 'Username'}))
+
+    def __init__(self, *args, **kwargs):
+        self.lid = kwargs.pop('lid', None)
+        super(AddTAForm, self).__init__(*args, **kwargs)
+
+    def is_valid(self):
+        baseValid = super().is_valid()
+        #Check if user exists
+        queryUser = None
+        try:
+            queryUser = User.objects.get(username=self.cleaned_data["username"])
+        except:
+            self.add_error(field="username", error="The username you entered does not exist")
+            baseValid = False
+        #Check if user already has a role in the lab
+        queryRole = None
+        try:
+            queryRole = Role.objects.get(uid_id=queryUser.id, lid_id=self.lid)
+            self.add_error(field="username", error="The user is already a member of the lab")
+            baseValid = False
+        except:
+            pass
+        return baseValid
+
+    def save(self):
+        user = User.objects.get(username=self.cleaned_data["username"])
+        newRole = Role(uid_id=user.id, lid_id=self.lid, role = 't')
+        newRole.save()

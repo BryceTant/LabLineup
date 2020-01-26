@@ -19,6 +19,30 @@
     <div class="col-md-8">
         {% if tas %}
             <h3>Teaching Assistants</h3>
+            <section id="addTAForm">
+                <form action="." method="post" class="form-horizontal" prefix="addTAForm">
+                    {% csrf_token %}
+                    <hr />
+                    <div class="form-group">
+                        <label for="id_username" class="col-md-2 control-label">Username</label>
+                        <div class="col-md-8">
+                            {{ addTAform.username }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="hidden" name="addTAForm" value="/" />
+                            <input type="submit" value="Add TA" class="btn btn-default" />
+                        </div>
+                    </div>
+                    {% if addTAform.errors %}
+                        <p class="validation-summary-errors">The TA was not added</p>
+                        {% for error in addTAform.errors.items %}
+                            {{error.1}}
+                        {% endfor %}
+                    {% endif %}
+                </form>
+            </section>
             {%for ta in tas %}
             <div class="panel panel-default" id="userList">
                 <div class="card-body">

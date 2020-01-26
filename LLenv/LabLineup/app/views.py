@@ -20,6 +20,7 @@ from app.forms import ResetPasswordForm
 from app.forms import ForgotPasswordForm
 from app.forms import ManageLabNotificationsForm
 from app.forms import RequestEmailConfirmForm
+from app.forms import AddTAForm
 
 from app.models import Lab
 from app.models import Role
@@ -378,19 +379,24 @@ def labManage(request):
         initialData["notifyThreshold"] = userNotificationSettings.notifyThreshold
         # Load page to manage lab
         if request.method == 'POST':
-            if 'detailsForm' in request.POST:  # If the lab name/description was saved
-                form = ManageLabForm(request.POST,
+            form = ManageLabForm(request.POST,
                                      prefix='detailsForm',
                                      lid=currentLID,
                                      initial=initialData)
+            notificationForm = ManageLabNotificationsForm(request.POST,
+                                                              user=request.user,
+                                                              prefix='notificationForm',
+                                                              lid=currentLID)
+            studentLabCode = getLabCode(currentLID, 's')
+            taLabCode = getLabCode(currentLID, 't')
+            students = getLabUsersWithRole(labID=currentLID, role='s')
+            tas = getLabUsersWithRole(labID=currentLID, role='t')
+            addTAform = AddTAForm(request.POST, prefix='addTAForm', lid=currentLID)
+            if 'detailsForm' in request.POST:  # If the lab name/description was saved
                 if form.is_valid():
                     form.save()
                     return redirect('/lab/manageLab')
             elif 'notificationForm' in request.POST:  # If the notification settings were updated
-                notificationForm = ManageLabNotificationsForm(request.POST,
-                                                              user=request.user,
-                                                              prefix='notificationForm',
-                                                              lid=currentLID)
                 if notificationForm.is_valid():
                     notificationForm.save()
                     return redirect('/lab/manageLab')
@@ -431,6 +437,12 @@ def labManage(request):
                             }
                         )
                 return redirect('/lab/manageLab')
+            elif 'addTAForm' in request.POST:  # If a TA is added to the lab
+                if addTAform.is_valid():
+                    addTAform.save()
+                    return redirect('/lab/manageLab')
+                else:
+                    pass
             else:  # Either create or delete lab code
                 labCodeToRemove = request.POST.get("labCodeToRemove", "")
                 createLabCodeRole = request.POST.get("role", "")
@@ -450,21 +462,23 @@ def labManage(request):
             taLabCode = getLabCode(currentLID, 't')
             students = getLabUsersWithRole(labID=currentLID, role='s')
             tas = getLabUsersWithRole(labID=currentLID, role='t')
-            return render(
-                request,
-                'app/manageLab.html',
-                {
-                    'title': 'Manage Lab',
-                    'message': 'Edit lab settings',
-                    'year': datetime.now().year,
-                    'detailsForm': form,
-                    'notificationForm': notificationForm,
-                    'studentLabCode': studentLabCode,
-                    'taLabCode': taLabCode,
-                    'students': students,
-                    'tas': tas
-                }
-            )
+            addTAform = AddTAForm(prefix='addTAForm', lid=currentLID)
+        return render(
+            request,
+            'app/manageLab.html',
+            {
+                'title': 'Manage Lab',
+                'message': 'Edit lab settings',
+                'year': datetime.now().year,
+                'detailsForm': form,
+                'notificationForm': notificationForm,
+                'studentLabCode': studentLabCode,
+                'taLabCode': taLabCode,
+                'students': students,
+                'tas': tas,
+                'addTAform': addTAform
+            }
+        )
     #If the user if a TA for the current lab
     elif (getRole(userID=request.user, labID=currentLID) == 't'):
         userNotificationSettings = getNotificationSettings(userID=request.user, labID=currentLID)
