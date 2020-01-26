@@ -36,58 +36,64 @@
     <div class="col-md-8">
         <section id="labsAsStudent">
             {% if labsWhereStudent %}
-            <h3>Student</h3>
+                <h3>Student</h3>
+                {% for lab in labsWhereStudent %}
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div onclick="javascript:setLab({{lab.lid}})">
+                                {% include 'app/selectLabpartial.html' %}
+                            </div>
+                        </div>
+                        <div class="col-md-2" align="right" id="selectLabRemove">
+                            <div onclick="javascript:setLabRemove({{lab.lid}})">
+                                {% include 'app/removeLab.html' %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <a href="/student/requestHistory/">
+                    <button type="button" class="btn btn-default">
+                        View Request History
+                    </button>
+                </a>
             {% endif %}
-            {% for lab in labsWhereStudent %}
-                <div class="row">
-                    <div class="col-md-10">
-                        <div onclick="javascript:setLab({{lab.lid}})">
-                            {% include 'app/selectLabpartial.html' %}
-                        </div>
-                    </div>
-                    <div class="col-md-2" align="right" id="selectLabRemove">
-                        <div onclick="javascript:setLabRemove({{lab.lid}})">
-                            {% include 'app/removeLab.html' %}
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
         </section>
         <section id="labsAsTA">
             {% if labsWhereTA %}
-            <h3>Teaching Assistant</h3>
+                <h3>Teaching Assistant</h3>
+                {% for lab in labsWhereTA %}
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div onclick="javascript:setLab({{lab.lid}})">
+                                {% include 'app/selectLabpartial.html' %}
+                            </div>
+                        </div>
+                        <div class="col-md-2" align="right">
+                            <div onclick="javascript:setLabRemove({{lab.lid}})">
+                                {% include 'app/removeLab.html' %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             {% endif %}
-            {% for lab in labsWhereTA %}
-                <div class="row">
-                    <div class="col-md-10">
-                        <div onclick="javascript:setLab({{lab.lid}})">
-                            {% include 'app/selectLabpartial.html' %}
-                        </div>
-                    </div>
-                    <div class="col-md-2" align="right">
-                        <div onclick="javascript:setLabRemove({{lab.lid}})">
-                            {% include 'app/removeLab.html' %}
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
         </section>
         <section id="labsAsProfessor">
             {% if labsWhereProfessor %}
-            <h3>Professor</h3>
-            {% endif %}
-            {% for lab in labsWhereProfessor %}
-                <div class="row">
-                    <div class="col-md-10">
-                        <div onclick="javascript:setLab({{lab.lid}})">
-                            {% include 'app/selectLabpartial.html' %}
+                <h3>Professor</h3>
+                {% for lab in labsWhereProfessor %}
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div onclick="javascript:setLab({{lab.lid}})">
+                                {% include 'app/selectLabpartial.html' %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            {% endif %}
         </section>
     </div>
 </div>
+<br />
 <div class="row">
     <div class="col-md-8">
         <section id="createNewLab">

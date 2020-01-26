@@ -417,3 +417,31 @@ def deleteAccount(userID):
     except:
         return (False, "The account could not be deleted")
     return True
+
+#To get list of requests as dictionary for student for lab for requestHistory
+def getStudentRequestsHistory(userID, labID):
+    retList = []
+    queryRequests = None
+    try:
+        queryRequests = Request.objects.filter(suid_id=userID, lid_id=labID).order_by('-timeSubmitted')
+        for request in queryRequests:
+            genDict = {"timeSubmitted":request.timeSubmitted,
+                       "timeCompleted":request.timeCompleted,
+                       "station":request.station,
+                       "description":request.description,
+                       "help":getNameOfUser(request.huid_id),
+                       "feedback":request.feedback
+                      }
+            retList.append(genDict)
+    except:
+        pass
+    return retList
+
+
+#To get requestHistory
+def getRequestHistory(userID):
+    retDict = {}
+    listLabs = getLabsWithRole(userID, 's')
+    for lab in listLabs:
+        retDict[lab.name] = getStudentRequestsHistory(userID, labID=lab.lid)
+    return retDict

@@ -51,6 +51,7 @@ from app.modelFunc import removeLabFromAccount
 from app.modelFunc import getLabUsersWithRole
 from app.modelFunc import setLabInactive
 from app.modelFunc import deleteAccount
+from app.modelFunc import getRequestHistory
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -777,5 +778,19 @@ def requestEmailConfirmation(request):
             'message:': 'Please enter your username below to send a new registration confirmation email',
             'year': datetime.now().year,
             'form': form
+        }
+    )
+
+def requestHistory(request):
+    assert(isinstance(request, HttpRequest))
+    requestsDict = getRequestHistory(userID=request.user)
+    return render(
+        request,
+        'app/requestHistory.html',
+        {
+            'title': "Request History",
+            'message': "View request history",
+            'year': datetime.now().year,
+            'requests': requestsDict
         }
     )

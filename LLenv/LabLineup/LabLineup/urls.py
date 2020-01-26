@@ -35,6 +35,7 @@ urlpatterns = [
 	path('student/request/', views.studentRequest, name='studentRequest'),  #Student page for lab to submit a new request
 	path('student/requestSubmitted/', views.studentRequestSubmitted, name='studentRequestSubmitted'),  #Student page after request submitted (waiting page)
 	path('student/requestFeedback/', views.studentRequestFeedback, name='studentRequestFeedback'),  #Student page after request has been completed (feedback)
+    path('student/requestHistory/', views.requestHistory, name='requestHistory'), #To view submitted requests
 	path('lab/queue/', views.labQueue, name='labQueue'),  #TA/Professor queue for the lab
 	path('lab/queue/currentRequest', views.currentRequest, name='currentRequest'), #TA/Professor responding to request
 	path('lab/manageLab/', views.labManage, name='labManage'),  #Page to manage lab settings
