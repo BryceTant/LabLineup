@@ -535,7 +535,7 @@ def labFeedback(request):
     avgWait = getAvgWait(currentLID)
     avgFeedback = getAvgFeedback(currentLID)
     numRequestsComplete = getNumComplete(currentLID)
-    numOutstandingRequests = getNumOutstandingRequests(currentLID, userID=request.user)
+    numOutstandingRequests = getRequestCount(currentLID)
     if(role == 'p'):
         #User is a prof and should have access
         return render(
@@ -624,7 +624,7 @@ def manageAccount(request):
                 return redirect('/account') # Unknown error. Should never reach
         else:
             print("Error")
-            return redirect('/account')  
+            return redirect('/account')
     return render(
         request,
         'app/account.html',
