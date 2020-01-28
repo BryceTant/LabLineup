@@ -11,25 +11,21 @@
             <p style="display: inline-block;
             width: 50px;
             border: 1px solid #000;
-            text-align: center;"> {{ stationID }}</p>
-            
-        
+            text-align: center;">{{ stationID }}</p>
         </h4>
         <h4>
             Estimated Wait:
             {{ avgWait }}
-            <br>
+        </h4>
+        <h4>
             Number of Requests Before You:
             {{ numBefore }}
         </h4>
-
         </p>
-        <button>Cancel Request</button>
-        <meta http-equiv="refresh" content="10;url=/student/requestFeedback" />
+        <button class="btn btn-primary">Cancel Request</button>
+        <button class="btn btn-primary">I was never helped</button>
+        <meta http-equiv="refresh" content="600;url=/student/requestFeedback" />
     </div>
-    
-
 </div>
-
 
 {% endblock %}
