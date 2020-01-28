@@ -3,24 +3,29 @@
 {% block content %}
 
 <h2>{{ title }}</h2>
-
-<h4> Lab: {{ labID }}</h4>
-<h4> 
-    Station ID: 
-    <p style="display: inline-block;
-    width: 50px;
-    border: 1px solid #000;
-    text-align: center;"> {{ stationID }}</p>
-    
-
-</h4>
-
-    Estimated Wait:
-    {{ avgWait }}
-    <br>
-    Number of Requests Before You:
-    
-</p>
-<button>Cancel Request</button>
+<div class = row>
+    <div class="col-md-8">
+        <h4> Lab: {{ labID }}</h4>
+        <h4> 
+            Station ID: 
+            <p style="display: inline-block;
+            width: 50px;
+            border: 1px solid #000;
+            text-align: center;">{{ stationID }}</p>
+        </h4>
+        <h4>
+            Estimated Wait:
+            {{ avgWait }}
+        </h4>
+        <h4>
+            Number of Requests Before You:
+            {{ numBefore }}
+        </h4>
+        </p>
+        <button class="btn btn-primary">Cancel Request</button>
+        <button class="btn btn-primary">I was never helped</button>
+        <meta http-equiv="refresh" content="600;url=/student/requestFeedback" />
+    </div>
+</div>
 
 {% endblock %}
