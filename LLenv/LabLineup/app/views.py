@@ -46,12 +46,14 @@ from app.modelFunc import confirmAccount
 from app.modelFunc import getAvgWait
 from app.modelFunc import getNextRequest
 from app.modelFunc import getNameOfUser
-from app.modelFunc import getOutstandingRequest
+from app.modelFunc import getNumOutstandingRequests
 from app.modelFunc import removeLabFromAccount
 from app.modelFunc import getLabUsersWithRole
 from app.modelFunc import setLabInactive
 from app.modelFunc import deleteAccount
 from app.modelFunc import getRequestHistory
+from app.modelFunc import getNumComplete
+from app.modelFunc import getAvgFeedback
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -524,7 +526,40 @@ def labFeedback(request):
     """Renders feedback page for professors"""
     # Should only render if user's role is professor
     assert isinstance(request, HttpRequest)
-    pass
+    currentLID = request.session.get('currentLab')
+    role = getRole(userID=request.user, labID = currentLID)
+    avgWait = getAvgWait(currentLID)
+    avgFeedback = getAvgFeedback(currentLID)
+    numRequestsComplete = getNumComplete(currentLID)
+    numOutstandingRequests = getNumOutstandingRequests(currentLID, userID=request.user)
+    if(role == 'p'):
+        #User is a prof and should have access
+        return render(
+            request,
+            'app/labFeedback.html',
+            {
+                'title': 'Feedback',
+                'message': 'View feedback, wait time, and other lab metrics',
+                'year': datetime.now().year,
+                'role': role,
+                'avgWait': avgWait,
+                'avgFeedback': avgFeedback,
+                'numRequestsComplete': numRequestsComplete,
+                'numOutstandingRequests': numOutstandingRequests
+            }
+        )
+    else:
+        #User is not a professor, render access denied
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
+
 
 def labFeedbackHelper(request):
     """Renders feedback page for specific TA for specific lab"""

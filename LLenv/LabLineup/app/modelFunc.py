@@ -345,6 +345,11 @@ def getOutstandingRequest(labID, userID):
         pass
     return query
 
+#To get the number of requests that are assigned but not completed in a lab
+def getNumOutstandingRequests(labID, userID):
+    queryCount = Request.objects.filter(lid_id=labID, huid_id=userID).count()
+    return queryCount
+
 #To remove a lab from an account (remove the role)
 def removeLabFromAccount(userID, labID):
     query = None
