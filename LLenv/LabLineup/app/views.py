@@ -564,13 +564,20 @@ def labFeedback(request):
             }
         )
 
-
 def labFeedbackHelper(request):
     """Renders feedback page for specific TA for specific lab"""
     # Should only render if user's role is professor or the specified TA
     assert isinstance(request, HttpRequest)
     pass
 
+def manageAccountSetTab(tab):
+    """Function to set the active tab for the manageAccount page"""
+    retDict = {
+        'accountDetails': "",
+        'changePassword': ""
+        }
+    retDict[tab] = "in active"
+    return retDict
 def manageAccount(request):
     """Renders page to edit account settings"""
     assert isinstance(request, HttpRequest)
@@ -579,13 +586,18 @@ def manageAccount(request):
         'lastname': request.user.last_name,
         'email': request.user.email
     }
+    changePasswordForm = ChangePasswordForm(user=request.user)
+    editAccountDetailsForm = EditAccountDetailsForm(
+        user=request.user, initial=initialAccountDetails)
+    activeDict = manageAccountSetTab("accountDetails") # Default tab is accountDetails
     if request.method == 'POST':
         if 'changePassword' in request.POST:
-            form = ChangePasswordForm(data=request.POST, user=request.user)
-            if form.is_valid():
-                form.save()
-                update_session_auth_hash(request, form.user)
-            return redirect('/account')
+            changePasswordForm = ChangePasswordForm(data=request.POST, user=request.user)
+            activeDict = manageAccountSetTab("changePassword")
+            if changePasswordForm.is_valid():
+                changePasswordForm.save()
+                update_session_auth_hash(request, changePasswordForm.user)  #Update the session to keep the user logged in
+            #return redirect('/account')
         elif 'editAccountDetails' in request.POST:
             form = EditAccountDetailsForm(
                 data=request.POST, user=request.user, initial=initialAccountDetails)
@@ -612,22 +624,19 @@ def manageAccount(request):
                 return redirect('/account') # Unknown error. Should never reach
         else:
             print("Error")
-            return redirect('/account')
-    else:
-        changePasswordForm = ChangePasswordForm(user=request.user)
-        editAccountDetailsForm = EditAccountDetailsForm(
-            user=request.user, initial=initialAccountDetails)
-        return render(
-            request,
-            'app/account.html',
-            {
-                'title': 'Manage Account',
-                'message': 'Manage Account',
-                'year': datetime.now().year,
-                'changePasswordForm': changePasswordForm,
-                'editAccountDetailsForm': editAccountDetailsForm
-            }
-        )
+            return redirect('/account')  
+    return render(
+        request,
+        'app/account.html',
+        {
+            'title': 'Manage Account',
+            'message': 'Manage Account',
+            'year': datetime.now().year,
+            'changePasswordForm': changePasswordForm,
+            'editAccountDetailsForm': editAccountDetailsForm,
+            'active': activeDict
+        }
+    )
 
 def currentRequest(request):
     """Renders page to edit account settings"""

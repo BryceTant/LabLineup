@@ -442,7 +442,6 @@ def getStudentRequestsHistory(userID, labID):
         pass
     return retList
 
-
 #To get requestHistory
 def getRequestHistory(userID):
     retDict = {}
