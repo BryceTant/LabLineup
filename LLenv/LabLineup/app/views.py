@@ -46,6 +46,7 @@ from app.modelFunc import confirmAccount
 from app.modelFunc import getAvgWait
 from app.modelFunc import getNextRequest
 from app.modelFunc import getNameOfUser
+from app.modelFunc import getOutstandingRequest
 from app.modelFunc import getNumOutstandingRequests
 from app.modelFunc import removeLabFromAccount
 from app.modelFunc import getLabUsersWithRole
