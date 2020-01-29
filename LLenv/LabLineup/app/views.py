@@ -731,44 +731,33 @@ def resetPassword(request, prc):
         form = ResetPasswordForm(request.POST)
         if form.is_valid():
             new_password=form.save()
-            if new_password != False:
-                result = resetPasswordFunc(prc, new_password)
-                if result:
-                    return redirect('/login')
-                else:
-                    return render(
-                        request,
-                        'app/error.html',
-                        {
-                            'title': "Error",
-                            'message': 'The Password Reset Code was not found',
-                            'year': datetime.now().year
-                        }
-                    )
+            result = resetPasswordFunc(prc, new_password)
+            if result:
+                return redirect('/login')
             else:
                 return render(
                     request,
                     'app/error.html',
                     {
-                        'title': 'Error',
-                        'message': 'The passwords do not match. Please try again',
+                        'title': "Error",
+                        'message': 'The Password Reset Code was not found',
                         'year': datetime.now().year
                     }
                 )
         else:
-            return redirect('/')  #TODO: Change this
+            pass #Return with errors
     else:
         form = ResetPasswordForm()
-        return render(
-            request,
-            'app/resetPassword.html',
-            {
-                'title': 'Reset Password',
-                'message': 'Set a new password for your LabLineup account',
-                'year': datetime.now().year,
-                'form': form,
-            }
-        )
+    return render(
+        request,
+        'app/resetPassword.html',
+        {
+            'title': 'Reset Password',
+            'message': 'Set a new password for your LabLineup account',
+            'year': datetime.now().year,
+            'form': form,
+        }
+    )
 
 def confirmAccountView(request, regConCode):
     assert isinstance(request, HttpRequest)

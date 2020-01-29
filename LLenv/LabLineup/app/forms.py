@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 from app.models import Role
 from app.models import LabCode
 from app.models import Lab
@@ -44,7 +45,6 @@ class BootstrapAuthenticationForm(AuthenticationForm):
             pass
         return baseValid
 
-
 class ChangePasswordForm(PasswordChangeForm):
     """Form to change user password"""
     old_password = forms.CharField(label=_("Password"),
@@ -59,7 +59,6 @@ class ChangePasswordForm(PasswordChangeForm):
                                 widget=forms.PasswordInput({
                                     'class':'form-control',
                                     'placeholder':'New Password'}))
-
 
 class BootstrapRegisterForm(UserCreationForm):
     """User registration form that uses Bootstrap CSS"""
@@ -265,12 +264,23 @@ class ResetPasswordForm(forms.Form):
                                     widget=forms.PasswordInput({
                                     'class':'form-control',
                                     'placeholder':'Repeat New Password'}))
+    def is_valid(self):
+        baseValid = super().is_valid()
+        invalidPass = False
+        if self.cleaned_data["new_password1"] != self.cleaned_data["new_password2"]:
+            baseValid = False
+            self.add_error(field="new_password2", error="The passwords you entered don't match")
+        try:
+            invalidPass = validate_password(self.cleaned_data["new_password1"])
+        except:
+            pass
+        if invalidPass != None:
+            baseValid = False
+            self.add_error(field="new_password1", error="The password you entered doesn't meet the minimum requirements")
+        return baseValid
 
     def save(self):
-        if (self.cleaned_data["new_password1"] == self.cleaned_data["new_password2"]):
-            return self.cleaned_data["new_password1"]
-        else:
-            return False
+        return self.cleaned_data["new_password1"]
 
 class ForgotPasswordForm(forms.Form):
     """Form to send password reset link to email"""
@@ -292,13 +302,17 @@ class ManageLabNotificationsForm(forms.Form):
 
     notifyThreshold = forms.IntegerField(required = False)
 
+    def is_valid(self):
+        baseValid = super().is_valid()
+        if self.cleaned_data["notifyThreshold"] < 0:
+            baseValid = False
+            self.add_error(field="notifyThreshold", error="The threshold must be 0 or greater")
+        return baseValid
+
     def save(self):
         currentLab = Lab.objects.get(lid = self.lid)
         Notify.objects.filter(lid_id=currentLab.lid, uid_id=self.user).update(notifyNew = self.cleaned_data["notifyNew"],
                                                                               notifyThreshold = self.cleaned_data["notifyThreshold"])
-
-        query = Notify.objects.filter(lid_id=currentLab.lid, uid_id=self.user)
-        print (query)
 
 class RequestEmailConfirmForm(forms.Form):
     username = forms.CharField(max_length=254,

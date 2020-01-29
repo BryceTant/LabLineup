@@ -20,12 +20,12 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="hidden" name="next" value="/" />
+                        <input type="hidden" name="notificationForm" value="/" />
                         <input type="submit" value="Save Notification Settings" class="btn btn-default" name="notificationForm" />
                     </div>
                 </div>
-                {% if form.errors %}
-                <p class="validation-summary-errors">Error</p>
+                {% if notificationForm.errors %}
+                    <p class="validation-summary-errors">Error: The threshold must be 0 or greater</p>
                 {% endif %}
             </form>
         </section>
