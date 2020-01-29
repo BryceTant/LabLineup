@@ -30,6 +30,8 @@ To activate the virtualenv in Windows, go to the project dir, type .\LLenv\Scrip
 To run the app, use the Django command "python manage.py runserver"
 
 # Testing
-To run the tests, use the commands:
+To run the behavorial tests, use the command:
+- $ selenium-side-runner /LOCAL/PATH/TO/LabLineup/LLenv/LabLineup/app/tests/BehavTests.side
 
-Directory:
+To run the unit tests, use the command (from the dir containing manage.py):
+- $ ./manage.py test
