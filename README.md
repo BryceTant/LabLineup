@@ -33,5 +33,6 @@ To run the app, use the Django command "python manage.py runserver"
 To run the behavorial tests, use the command:
 - $ selenium-side-runner /LOCAL/PATH/TO/LabLineup/LLenv/LabLineup/app/tests/BehavTests.side
 
-To run the unit tests, use the command (from the dir containing manage.py):
-- $ ./manage.py test
+To run the unit tests:
+- Navigate to the LLenv/LabLineup/app/tests/ directory
+- $ python ../../manage.py test
