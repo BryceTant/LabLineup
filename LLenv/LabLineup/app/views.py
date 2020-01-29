@@ -55,6 +55,7 @@ from app.modelFunc import deleteAccount
 from app.modelFunc import getRequestHistory
 from app.modelFunc import getNumComplete
 from app.modelFunc import getAvgFeedback
+from app.modelFunc import getLastRequest
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -292,6 +293,7 @@ def studentRequestSubmitted(request):
     stationID = request.session.get('request')
     numBefore = getRequestCount(currentLID) - 1
     lab = Lab.objects.get(lid=currentLID)
+    currRequest = getLastRequest(currentLID)
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
         return render(
@@ -302,7 +304,7 @@ def studentRequestSubmitted(request):
                 'message': 'Your request has been submitted',
                 'year': datetime.now().year,
                 'avgWait': avgWait,
-                'stationID': stationID,
+                'stationID': currRequest.station,
                 'labID': lab.name,
                 'numBefore': numBefore
             }
