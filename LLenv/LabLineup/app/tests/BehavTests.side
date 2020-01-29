@@ -1,0 +1,103 @@
+{
+  "id": "db0ad194-1c90-415c-8e41-b3ac6e98184c",
+  "version": "2.0",
+  "name": "BehavTests",
+  "url": "https://lablineup.com/",
+  "tests": [{
+    "id": "80e7a2a2-3c46-4fc6-90f3-cbae95250610",
+    "name": "login",
+    "commands": [{
+      "id": "3e988013-ce31-40c1-9cbf-91496cc0d8d3",
+      "comment": "",
+      "command": "open",
+      "target": "https://lablineup.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4b37ee27-554f-48d2-a7dd-d0391c8e7ff8",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "927x1053",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0f811eb1-c33c-4e76-9cd0-9918fd1596cb",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Log in",
+      "targets": [
+        ["linkText=Log in", "linkText"],
+        ["css=.navbar-right a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log in')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login/')]", "xpath:href"],
+        ["xpath=//ul[2]/li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log in')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "63485ca2-1533-4a7f-88f0-805ff041a535",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a3d944f5-b7ea-4392-b8c4-dc871c18f1f3",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "testUser2"
+    }, {
+      "id": "78febe29-918a-4e6e-8960-15e8391ce5d5",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_password",
+      "targets": [
+        ["id=id_password", "id"],
+        ["name=password", "name"],
+        ["css=#id_password", "css:finder"],
+        ["xpath=//input[@id='id_password']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "LabLineup2"
+    }, {
+      "id": "5f1171a3-11e9-48b3-b474-379bedfb33ff",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Log in']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[3]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "d9080b00-4876-4d7b-ae9e-b67846de42e4",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["80e7a2a2-3c46-4fc6-90f3-cbae95250610"]
+  }],
+  "urls": ["https://lablineup.com/"],
+  "plugins": []
+}
