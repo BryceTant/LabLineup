@@ -9,6 +9,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from django.core.validators import EmailValidator
 from app.models import Role
 from app.models import LabCode
 from app.models import Lab
@@ -244,6 +245,18 @@ class EditAccountDetailsForm(forms.Form):
     email = forms.EmailField(required=False,
                                 widget=forms.TextInput({
                                     'class':'form-control'}))
+
+    def is_valid(self):
+        baseValid = super().is_valid()
+        emailValid = True
+        try:
+            emailValidator = EmailValidator(message="The email you entered is not valid")
+            emailValidator(self.cleaned_data["email"])
+        except:
+            emailValid = False
+        if (not emailValid):
+            baseValid = False
+        return baseValid
 
     def save(self):
         userID = self.user.id

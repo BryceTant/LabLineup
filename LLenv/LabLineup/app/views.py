@@ -601,11 +601,10 @@ def manageAccount(request):
                 update_session_auth_hash(request, changePasswordForm.user)  #Update the session to keep the user logged in
             #return redirect('/account')
         elif 'editAccountDetails' in request.POST:
-            form = EditAccountDetailsForm(
+            editAccountDetailsForm = EditAccountDetailsForm(
                 data=request.POST, user=request.user, initial=initialAccountDetails)
-            if form.is_valid():
-                form.save()
-            return redirect('/account')
+            if editAccountDetailsForm.is_valid():
+                editAccountDetailsForm.save()
         elif 'deleteAccount' in request.POST:
             deleteResponse = request.POST.get('deleteAccount', False)
             if deleteResponse == "true":

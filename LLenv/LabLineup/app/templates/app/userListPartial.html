@@ -38,7 +38,7 @@
                     {% if addTAform.errors %}
                         <p class="validation-summary-errors">The TA was not added</p>
                         {% for error in addTAform.errors.items %}
-                            {{error.1}}
+                            <p class="field-validation-error">{{error.1.0}}</p>
                         {% endfor %}
                     {% endif %}
                 </form>
