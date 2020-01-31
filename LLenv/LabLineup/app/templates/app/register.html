@@ -56,7 +56,7 @@
                 {% if form.errors %}
                 <p class="validation-summary-errors">One or more fields are invalid:</p>
                 {% for field in form.errors.items %}
-                    {{field.1}}
+                    <p class="field-validation-error">{{field.1.0}}</p>
                 {% endfor %}
                 {% endif %}
             </form>

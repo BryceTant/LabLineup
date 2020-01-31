@@ -386,26 +386,32 @@ def labManage(request):
             userNotificationSettings.save()
         initialData["notifyNew"] = userNotificationSettings.notifyNew
         initialData["notifyThreshold"] = userNotificationSettings.notifyThreshold
-        # Load page to manage lab
+        form = ManageLabForm(prefix='detailsForm',
+                                     lid=currentLID,
+                                     initial=initialData)
+        notificationForm = ManageLabNotificationsForm(user=request.user,
+                                                          prefix='notificationForm',
+                                                          lid=currentLID,
+                                                          initial=initialData)
+        studentLabCode = getLabCode(currentLID, 's')
+        taLabCode = getLabCode(currentLID, 't')
+        students = getLabUsersWithRole(labID=currentLID, role='s')
+        tas = getLabUsersWithRole(labID=currentLID, role='t')
+        addTAform = AddTAForm(prefix='addTAForm', lid=currentLID)
         if request.method == 'POST':
-            form = ManageLabForm(request.POST,
+            if 'detailsForm' in request.POST:  # If the lab name/description was saved
+                form = ManageLabForm(request.POST,
                                      prefix='detailsForm',
                                      lid=currentLID,
                                      initial=initialData)
-            notificationForm = ManageLabNotificationsForm(request.POST,
-                                                              user=request.user,
-                                                              prefix='notificationForm',
-                                                              lid=currentLID)
-            studentLabCode = getLabCode(currentLID, 's')
-            taLabCode = getLabCode(currentLID, 't')
-            students = getLabUsersWithRole(labID=currentLID, role='s')
-            tas = getLabUsersWithRole(labID=currentLID, role='t')
-            addTAform = AddTAForm(request.POST, prefix='addTAForm', lid=currentLID)
-            if 'detailsForm' in request.POST:  # If the lab name/description was saved
                 if form.is_valid():
                     form.save()
                     return redirect('/lab/manageLab')
             elif 'notificationForm' in request.POST:  # If the notification settings were updated
+                notificationForm = ManageLabNotificationsForm(request.POST,
+                                                              user=request.user,
+                                                              prefix='notificationForm',
+                                                              lid=currentLID)
                 if notificationForm.is_valid():
                     notificationForm.save()
                     return redirect('/lab/manageLab')
@@ -447,6 +453,7 @@ def labManage(request):
                         )
                 return redirect('/lab/manageLab')
             elif 'addTAForm' in request.POST:  # If a TA is added to the lab
+                addTAform = AddTAForm(request.POST, prefix='addTAForm', lid=currentLID)
                 if addTAform.is_valid():
                     addTAform.save()
                     return redirect('/lab/manageLab')
@@ -460,18 +467,6 @@ def labManage(request):
                 else:  # Create lab code
                     generateLabCode(labID=currentLID, role=createLabCodeRole)
                 return redirect('/lab/manageLab')
-        else:
-            form = ManageLabForm(prefix='detailsForm',
-                                 lid=currentLID, initial=initialData)
-            notificationForm = ManageLabNotificationsForm(prefix='notificationForm',
-                                                          user=request.user,
-                                                          lid=currentLID,
-                                                          initial=initialData)
-            studentLabCode = getLabCode(currentLID, 's')
-            taLabCode = getLabCode(currentLID, 't')
-            students = getLabUsersWithRole(labID=currentLID, role='s')
-            tas = getLabUsersWithRole(labID=currentLID, role='t')
-            addTAform = AddTAForm(prefix='addTAForm', lid=currentLID)
         return render(
             request,
             'app/manageLab.html',
@@ -503,21 +498,20 @@ def labManage(request):
             notificationForm = ManageLabNotificationsForm(request.POST, user=request.user, lid = currentLID)
             if notificationForm.is_valid():
                 notificationForm.save()
-                return redirect('/lab/manageLab')
         else:
             notificationForm = ManageLabNotificationsForm(user = request.user, lid = currentLID, initial=initialData)
-            return render(
-                request,
-                'app/manageLabTA.html',
-                {
-                    'title': 'Manage Lab',
-                    'message': 'Edit Lab Settings',
-                    'year': datetime.now().year,
-                    'notificationForm': notificationForm,
-                }
-            )
+        return render(
+            request,
+            'app/manageLabTA.html',
+            {
+                'title': 'Manage Lab',
+                'message': 'Edit Lab Settings',
+                'year': datetime.now().year,
+                'notificationForm': notificationForm,
+            }
+        )
     else:
-        # User is not the professor for the current lab (Do not load the page)
+        # User is not the professor or TA for the current lab (Do not load the page)
         return render(
             request,
             'app/permissionDenied.html',
@@ -601,11 +595,10 @@ def manageAccount(request):
                 update_session_auth_hash(request, changePasswordForm.user)  #Update the session to keep the user logged in
             #return redirect('/account')
         elif 'editAccountDetails' in request.POST:
-            form = EditAccountDetailsForm(
+            editAccountDetailsForm = EditAccountDetailsForm(
                 data=request.POST, user=request.user, initial=initialAccountDetails)
-            if form.is_valid():
-                form.save()
-            return redirect('/account')
+            if editAccountDetailsForm.is_valid():
+                editAccountDetailsForm.save()
         elif 'deleteAccount' in request.POST:
             deleteResponse = request.POST.get('deleteAccount', False)
             if deleteResponse == "true":
