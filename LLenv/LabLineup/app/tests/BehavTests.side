@@ -5,12 +5,12 @@
   "url": "https://lablineup.com/",
   "tests": [{
     "id": "80e7a2a2-3c46-4fc6-90f3-cbae95250610",
-    "name": "login",
+    "name": "validLogin",
     "commands": [{
       "id": "3e988013-ce31-40c1-9cbf-91496cc0d8d3",
       "comment": "",
       "command": "open",
-      "target": "https://lablineup.com/",
+      "target": "https://lablineup.com",
       "targets": [],
       "value": ""
     }, {
@@ -18,6 +18,27 @@
       "comment": "",
       "command": "setWindowSize",
       "target": "927x1053",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "267a7017-e52a-463b-ad51-ac56a4fd8740",
+      "comment": "Verifies home page rendered",
+      "command": "assertText",
+      "target": "xpath=//p[contains(.,'Welcome to LabLineup, a free and easy to use queuing system for handling requests for help in your academic labs.')]",
+      "targets": [],
+      "value": "Welcome to LabLineup, a free and easy to use queuing system for handling requests for help in your academic labs."
+    }, {
+      "id": "2557042a-f24c-4fda-9126-dc5dd51bb93c",
+      "comment": "Verifies home page rendered",
+      "command": "assertElementPresent",
+      "target": "xpath=//img[contains(@src,'https://storage.googleapis.com/lablineup-static/Logos/primary_logo.png')]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4dabb393-e79c-489f-a799-4043f358b782",
+      "comment": "",
+      "command": "verifyElementPresent",
+      "target": "linkText=Log in",
       "targets": [],
       "value": ""
     }, {
@@ -33,6 +54,13 @@
         ["xpath=//ul[2]/li/a", "xpath:position"],
         ["xpath=//a[contains(.,'Log in')]", "xpath:innerText"]
       ],
+      "value": ""
+    }, {
+      "id": "d0e083e3-192e-4799-a340-3c52e7cc1d16",
+      "comment": "Verify login page rendered",
+      "command": "assertElementPresent",
+      "target": "xpath=//section[@id='loginForm']/form",
+      "targets": [],
       "value": ""
     }, {
       "id": "63485ca2-1533-4a7f-88f0-805ff041a535",
@@ -88,6 +116,172 @@
         ["xpath=//input[2]", "xpath:position"]
       ],
       "value": ""
+    }, {
+      "id": "a5e6c00f-7471-4f12-9d96-ebbf1dc2d63b",
+      "comment": "Verifies user did log in based on \"Hello ... !\" href to /account",
+      "command": "assertElementPresent",
+      "target": "xpath=//a[contains(@href, '/account')]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9cd04ecc-9000-4deb-aa78-215c4b560d0f",
+      "comment": "Verifies that \"Log off\" button is present",
+      "command": "assertElementPresent",
+      "target": "linkText=Log off",
+      "targets": [
+        ["linkText=Log off", "linkText"],
+        ["css=.navbar-right > li > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log off')]", "xpath:link"],
+        ["xpath=//form[@id='logoutForm']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, \"javascript:document.getElementById('logoutForm').submit()\")]", "xpath:href"],
+        ["xpath=//form/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log off')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "c9438e72-aca6-472e-9f6e-7b91f7336a82",
+    "name": "invalidLogin",
+    "commands": [{
+      "id": "a638ec2d-00cd-45e9-b59e-a28c1b8620cf",
+      "comment": "",
+      "command": "open",
+      "target": "https://lablineup.com",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "411b23cb-2ff7-4325-9415-1ea08588bc84",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "927x1053",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "53025019-0aa9-4cfd-89ef-7585665333e0",
+      "comment": "Verifies home page rendered",
+      "command": "verifyText",
+      "target": "xpath=//p[contains(.,'Welcome to LabLineup, a free and easy to use queuing system for handling requests for help in your academic labs.')]",
+      "targets": [],
+      "value": "Welcome to LabLineup, a free and easy to use queuing system for handling requests for help in your academic labs."
+    }, {
+      "id": "f602b4e6-44f2-4cc8-b3e9-b7b99db84ceb",
+      "comment": "Verifies home page rendered",
+      "command": "verifyElementPresent",
+      "target": "xpath=//img[contains(@src,'https://storage.googleapis.com/lablineup-static/Logos/primary_logo.png')]",
+      "targets": [
+        ["css=.jumbotron > img", "css:finder"],
+        ["xpath=//img[contains(@src,'https://storage.googleapis.com/lablineup-static/Logos/primary_logo.png')]", "xpath:img"],
+        ["xpath=//div[4]/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "473a8658-e212-4fb0-90b2-43072ef83add",
+      "comment": "",
+      "command": "verifyElementPresent",
+      "target": "linkText=Log in",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ba8b9e39-20ad-4763-837c-52d10c8d5075",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Log in",
+      "targets": [
+        ["linkText=Log in", "linkText"],
+        ["css=.navbar-right a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log in')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login/')]", "xpath:href"],
+        ["xpath=//ul[2]/li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log in')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "e6bd7b74-e256-4d4f-82de-25683b535068",
+      "comment": "Verify login page rendered",
+      "command": "assertElementPresent",
+      "target": "xpath=//section[@id='loginForm']/form",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "74a96e04-aea6-4edf-929a-e5bf74bd45ae",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "76881660-e0f6-4fdb-9d21-3d58c815001d",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "abcd"
+    }, {
+      "id": "a0b23acc-adcb-4cb2-a03b-ea067000f2fa",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_password",
+      "targets": [
+        ["id=id_password", "id"],
+        ["name=password", "name"],
+        ["css=#id_password", "css:finder"],
+        ["xpath=//input[@id='id_password']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "abcd"
+    }, {
+      "id": "2d732c9d-6d30-45d8-856c-63623fd9af19",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Log in']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[3]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b8467b97-8340-4f48-85b0-a080dda4e7af",
+      "comment": "Verifies incorrect username/pwd msg displays",
+      "command": "verifyElementPresent",
+      "target": "css=.validation-summary-errors",
+      "targets": [
+        ["css=.validation-summary-errors", "css:finder"],
+        ["xpath=//section[@id='loginForm']/form/p", "xpath:idRelative"],
+        ["xpath=//p", "xpath:position"],
+        ["xpath=//p[contains(.,'Please enter a correct user name and password.')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "d5da849e-3d1a-4fde-a31c-2b5f1e50ca0b",
+      "comment": "Verifies that href to /login on \"Log in\" button is still present indicating user has not logged in",
+      "command": "verifyElementPresent",
+      "target": "xpath=//a[contains(@href, '/login/')]",
+      "targets": [
+        ["linkText=Log in", "linkText"],
+        ["css=.navbar-right a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log in')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login/')]", "xpath:href"],
+        ["xpath=//ul[2]/li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log in')]", "xpath:innerText"]
+      ],
+      "value": ""
     }]
   }],
   "suites": [{
@@ -96,7 +290,7 @@
     "persistSession": false,
     "parallel": false,
     "timeout": 300,
-    "tests": ["80e7a2a2-3c46-4fc6-90f3-cbae95250610"]
+    "tests": ["80e7a2a2-3c46-4fc6-90f3-cbae95250610", "c9438e72-aca6-472e-9f6e-7b91f7336a82"]
   }],
   "urls": ["https://lablineup.com/"],
   "plugins": []
