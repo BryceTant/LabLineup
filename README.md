@@ -15,6 +15,7 @@ Google Style Guide: https://google.github.io/styleguide/
 - Google Cloud Platform
 - MailGun
 - MySQL (CloudSQL)
+- Selenium IDE
 
 # Authors
 - Bryce Tant - bjtant@email.sc.edu
