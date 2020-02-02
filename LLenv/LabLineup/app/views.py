@@ -319,17 +319,28 @@ def studentRequestFeedback(request):
     currentLID = request.session.get('currentLab')
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
-        return render(
-        request,
-        'app/studentRequestFeedback.html',
-        {
-            'title': 'Feedback',
-            'message': 'Please submit feedback about the help you received',
-            'year': datetime.now().year
-        }
-    )
+        if request.method == 'POST':
+            return render(
+                request,
+                'app/studentRequestFeedback.html',
+                {
+                    'title': 'Feedback',
+                    'message': 'Please submit feedback about the help you received',
+                    'year': datetime.now().year
+                }
+            )
+        else:
+            pass
     else:
-        pass
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
 
 def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""

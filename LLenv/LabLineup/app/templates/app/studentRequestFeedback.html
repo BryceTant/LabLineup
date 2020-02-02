@@ -2,31 +2,28 @@
 
 {% block content %}
 
-<h2>{{ title }}</h2>
+<h2><strong>{{ title }}</strong></h2>
 <h3>{{ message }}</h3>
-<p>1) How do you rate the help that you received today? (1 being the lowest)</p>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-  <label class="form-check-label" for="inlineRadio1">1</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-  <label class="form-check-label" for="inlineRadio2">2</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-  <label class="form-check-label" for="inlineRadio3">3</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4">
-  <label class="form-check-label" for="inlineRadio4">4</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="option5">
-  <label class="form-check-label" for="inlineRadio5">5</label>
+<p>How well do you rate the help you received today? (1 being the lowest)</p>
+<div class="btn-group btn-group-toggle" data-toggle="buttons">
+  <label class="btn btn-secondary">
+    <input type="radio" name="options" id="option1" autocomplete="off">1
+  </label>
+  <label class="btn btn-secondary">
+    <input type="radio" name="options" id="option2" autocomplete="off">2
+  </label>
+  <label class="btn btn-secondary">
+    <input type="radio" name="options" id="option3" autocomplete="off">3
+  </label>
+  <label class="btn btn-secondary">
+    <input type="radio" name="options" id="option4" autocomplete="off">4
+  </label>
+  <label class="btn btn-secondary">
+    <input type="radio" name="options" id="option5" autocomplete="off">5
+  </label>
 </div>
 
 <p></p>
 
-<button type="submit" class="btn btn-primary">Submit</button>
+<a class="btn btn-primary" href="/app" role="button">Submit</a>
 {% endblock %}
