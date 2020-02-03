@@ -470,7 +470,6 @@ MigrationBackup/
 # End of https://www.gitignore.io/api/django,visualstudio
 LLenv/LabLineup/.vs/LabLineup/v16/.suo
 .vscode/
-LLenv/LabLineup/LabLineup/__init__.py
 *.pyc
 *.pyc
 *.pyc
