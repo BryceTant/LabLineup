@@ -469,6 +469,8 @@ MigrationBackup/
 
 # End of https://www.gitignore.io/api/django,visualstudio
 LLenv/LabLineup/.vs/LabLineup/v16/.suo
+.vscode/
+LLenv/LabLineup/LabLineup/__init__.py
 *.pyc
 *.pyc
 *.pyc
@@ -1920,3 +1922,4 @@ LLenv/Lib/__pycache__/_weakrefset.cpython-37.pyc
 LLenv/Lib/__pycache__/_collections_abc.cpython-37.pyc
 LLenv/Lib/__pycache__/_bootlocale.cpython-37.pyc
 LLenv/Lib/__pycache__/__future__.cpython-37.pyc
+LLenv/LabLineup/LabLineup/__init__.py
