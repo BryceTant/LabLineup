@@ -140,3 +140,18 @@ class ModelFuncTest(TestCase):
         self.assertEqual(5, mf.getLabLimit(self.User1.id))
         self.assertEqual(1, mf.getLabLimit(self.User2.id))
         self.assertEqual(321, mf.getLabLimit(self.User3.id))
+    
+    def test_getUserByEmail(self):
+        self.assertNotEqual(None, mf.getUserByEmail("test0@test.com"))
+        self.assertNotEqual(self.User1, mf.getUserByEmail("test0@test.com"))
+        self.assertNotEqual(None, mf.getUserByEmail("test1@test.com"))
+        self.assertNotEqual(self.User2, mf.getUserByEmail("test1@test.com"))
+        self.assertNotEqual(None, mf.getUserByEmail("test2@test.com"))
+        self.assertNotEqual(self.User3, mf.getUserByEmail("test2@test.com"))
+        self.assertNotEqual(None, mf.getUserByEmail("test3@test.com"))
+        self.assertNotEqual(self.User0, mf.getUserByEmail("test3@test.com"))
+
+        self.assertEqual(self.User0, mf.getUserByEmail("test0@test.com"))
+        self.assertEqual(self.User1, mf.getUserByEmail("test1@test.com"))
+        self.assertEqual(self.User2, mf.getUserByEmail("test2@test.com"))
+        self.assertEqual(self.User3, mf.getUserByEmail("test3@test.com"))
