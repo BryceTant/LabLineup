@@ -155,3 +155,14 @@ class ModelFuncTest(TestCase):
         self.assertEqual(self.User1, mf.getUserByEmail("test1@test.com"))
         self.assertEqual(self.User2, mf.getUserByEmail("test2@test.com"))
         self.assertEqual(self.User3, mf.getUserByEmail("test3@test.com"))
+    
+    def test_getNumComplete(self):
+        self.assertNotEqual(None, mf.getNumComplete(self.Lab0.lid))
+        self.assertNotEqual(-1, mf.getNumComplete(self.Lab0.lid))
+        self.assertNotEqual(None, mf.getNumComplete(self.Lab1.lid))
+        self.assertNotEqual(-1, mf.getNumComplete(self.Lab1.lid))
+
+        self.assertEqual(len(mf.getCompletedRequests(self.Lab0.lid)),
+                        mf.getNumComplete(self.Lab0.lid))
+        self.assertEqual(len(mf.getCompletedRequests(self.Lab1.lid)),
+                        mf.getNumComplete(self.Lab1.lid))
