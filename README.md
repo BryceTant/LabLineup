@@ -36,6 +36,13 @@ To run the app:
 # Testing
 To run the behavorial tests:
 - Run pip3 install -r LLenv/LabLineup/requirements.txt
+- Selenium Command-Line Runner requires the following dependencies:
+  - node (the Node.js programming language) : https://nodejs.org/en/download/
+- Selenium Command-Line Runner requires a browser driver
+  - Chrome: $ npm install -g chromedriver
+  - Edge: $ npm install -g edgedriver
+  - Firefox: $ npm install -g geckodriver
+  - Internet Explorer: $ npm install -g iedriver
 - Navigate to the LLenv/LabLineup/app/tests/ directory
 - $ selenium-side-runner BehavTests.side
 
