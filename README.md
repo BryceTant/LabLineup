@@ -28,13 +28,18 @@ The virtualenv name is LLenv.
 To activate the virtualenv in Windows, go to the project dir, type .\LLenv\Scripts\activate.bat
 
 # Running
-To run the app, use the Django command "python manage.py runserver"
+To run the app:
+- Clone the source code
+- Run pip3 install -r LLenv/LabLineup/requirements.txt
+- Run python manage.py runserver
 
 # Testing
 To run the behavorial tests:
+- Run pip3 install -r LLenv/LabLineup/requirements.txt
 - Navigate to the LLenv/LabLineup/app/tests/ directory
 - $ selenium-side-runner BehavTests.side
 
 To run the unit tests:
+- Run pip3 install -r LLenv/LabLineup/requirements.txt
 - Navigate to the LLenv/LabLineup/app/tests/ directory
 - $ python ../../manage.py test
