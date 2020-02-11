@@ -277,3 +277,15 @@ class ModelFuncTest(TestCase):
         self.assertEqual(1, mf.getNumCompleteTA(self.Lab0.lid, self.User1))
         self.assertEqual(2, mf.getNumCompleteTA(self.Lab1.lid, self.User2))
         self.assertEqual(1, mf.getNumCompleteTA(self.Lab1.lid, self.User3))
+    
+    def test_getNameOfUser(self):
+        self.assertNotEqual(None, mf.getNameOfUser(self.User0.id))
+        self.assertNotEqual(None, mf.getNameOfUser(self.User1.id))
+        self.assertNotEqual(None, mf.getNameOfUser(self.User2.id))
+        self.assertNotEqual(None, mf.getNameOfUser(self.User3.id))
+
+        self.assertEqual("Test First 0 Test Last 0", mf.getNameOfUser(self.User0.id))
+        self.assertEqual("Test First 1 Test Last 1", mf.getNameOfUser(self.User1.id))
+        self.assertEqual("Test First 2 Test Last 2", mf.getNameOfUser(self.User2.id))
+        self.assertEqual("Test First 3 Test Last 3", mf.getNameOfUser(self.User3.id))
+        
