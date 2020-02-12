@@ -46,6 +46,7 @@ from app.modelFunc import confirmAccount
 from app.modelFunc import getAvgWait
 from app.modelFunc import getNextRequest
 from app.modelFunc import getNameOfUser
+from app.modelFunc import getStudentCurrentRequest
 from app.modelFunc import getOutstandingRequest
 from app.modelFunc import getNumOutstandingRequests
 from app.modelFunc import removeLabFromAccount
@@ -210,6 +211,11 @@ def selectLab(request):
             request.session["currentLab"] = selectedLabID
             role = getRole(userID=request.user, labID=selectedLabID)
             if role == 's':
+                currReq = getStudentCurrentRequest(labID=selectedLabID, userID=request.user)
+                if currReq != None:
+                    #If the student has an open request
+                    request.session["currentRequest"] = currReq
+                    return redirect('/student/requestSubmitted')
                 return redirect('/student/request')
             else:  # TA or professor
                 return redirect('/lab/queue')

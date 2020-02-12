@@ -337,6 +337,15 @@ def getNameOfUser(userID):
     else:
         return None
 
+#To get an open request for a student for a lab (for the student view)
+def getStudentCurrentRequest(labID, userID):
+    query = None
+    try:
+        query = Request.objects.get(lid_id = labID, suid_id=userID, timeCompleted=None).rid
+    except:
+        pass
+    return query
+
 #To get a request that is assigned but not completed in a lab
 def getOutstandingRequest(labID, userID):
     query = None
