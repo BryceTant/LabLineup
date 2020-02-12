@@ -1,0 +1,38 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2><strong>{{ title }} for {{ nameOfTA }}</strong></h2>
+<h3>{{ message }}</h3>
+<br>
+<h4> Average Wait (minutes:seconds): <strong>{{ avgWaitTA }}</strong></h4>
+<br>
+<h4> Average Feedback (1-10): <strong>{{ avgFeedbackTA }}</strong></h4>
+<br>
+<h4> Number of requests closed: <strong>{{ numRequestsCompleteTA }}</strong></h4>
+<br>
+<h4> Number of outstanding requests: <strong>{{ numOutstandingRequestsTA }}</strong></h4>
+
+<br>
+<div class="row">
+    <div class="col-md-8">
+        <section id="BacktoProfPage">
+            <a href="/professor"><button class="btn btn-default">Back</button></a>
+        </section>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

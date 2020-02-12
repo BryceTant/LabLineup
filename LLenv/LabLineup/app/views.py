@@ -47,7 +47,6 @@ from app.modelFunc import getAvgWait
 from app.modelFunc import getNextRequest
 from app.modelFunc import getNameOfUser
 from app.modelFunc import getOutstandingRequest
-from app.modelFunc import getNumOutstandingRequests
 from app.modelFunc import removeLabFromAccount
 from app.modelFunc import getLabUsersWithRole
 from app.modelFunc import setLabInactive
@@ -56,6 +55,10 @@ from app.modelFunc import getRequestHistory
 from app.modelFunc import getNumComplete
 from app.modelFunc import getAvgFeedback
 from app.modelFunc import getLastRequest
+from app.modelFunc import getAvgWaitTA
+from app.modelFunc import getAvgFeedbackTA
+from app.modelFunc import getNumCompleteTA
+from app.modelFunc import getNumOutstandingRequestsTA
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -571,11 +574,45 @@ def labFeedback(request):
             }
         )
 
-def labFeedbackHelper(request):
+def labFeedbackHelper(request, userID):
     """Renders feedback page for specific TA for specific lab"""
     # Should only render if user's role is professor or the specified TA
     assert isinstance(request, HttpRequest)
-    pass
+    currentLID = request.session.get('currentLab')
+    role = getRole(userID=request.user, labID = currentLID)
+    nameOfTA = getNameOfUser(userID=request.user)
+    avgWaitTA = getAvgWaitTA(currentLID, helperID=request.user)
+    avgFeedbackTA = getAvgFeedbackTA(currentLID, helperID=request.user)
+    numRequestsCompleteTA = getNumCompleteTA(currentLID, helperID=request.user)
+    numOutstandingRequestsTA = getNumOutstandingRequestsTA(currentLID, helperID=request.user)
+    if (role == 'p' or role == 't'):
+        #User is a prof or TA and should have access
+        return render(
+            request,
+            'app/labFeedbackTA.html',
+            {
+                'title': 'Feedback',
+                'nameOfTA': nameOfTA,
+                'message': 'View feedback, wait time, and other lab metrics for this TA',
+                'year': datetime.now().year,
+                'role': role,
+                'avgWaitTA': avgWaitTA,
+                'avgFeedbackTA': avgFeedbackTA,
+                'numRequestsCompleteTA': numRequestsCompleteTA,
+                'numOutstandingRequestsTA': numOutstandingRequestsTA
+             }
+        )
+    else:
+        #User is not a professor or TA, render access denied
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
 
 def manageAccountSetTab(tab):
     """Function to set the active tab for the manageAccount page"""
