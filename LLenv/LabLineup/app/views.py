@@ -837,3 +837,15 @@ def requestHistory(request):
             'requests': requestsDict
         }
     )
+
+def pricing(request):
+    assert(isinstance(request, HttpRequest))
+    return render(
+        request,
+        'app/pricing.html',
+        {
+            'title': "Pricing",
+            'message': "Subscription Options",
+            'year': datetime.now().year,
+        }
+    )

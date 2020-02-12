@@ -48,4 +48,5 @@ urlpatterns = [
 	path('account/forgotPassword/', views.forgotPassword, name='forgotPassword'), #View to all user to enter user
     path('account/requestEmailConfirmation/', views.requestEmailConfirmation, name='requestEmailConfirmation'), #To request a new email confirm to be sent
     path('account/confirmAccount/<str:regConCode>/', views.confirmAccountView, name='confirmAccountView'), #View to confirm new account
+    path('pricing/', views.pricing, name='pricing'), #View to see pricing
 ]
