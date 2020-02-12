@@ -16,6 +16,7 @@ from django.db.models import Avg
 import datetime
 from statistics import mean
 from pytz import utc as utc
+from django.utils import timezone
 
 
 #Generates and saves a LabCode for the specified lab and role and returns the code
@@ -449,3 +450,10 @@ def getRequestHistory(userID):
     for lab in listLabs:
         retDict[lab.name] = getStudentRequestsHistory(userID, labID=lab.lid)
     return retDict
+
+def convertToLocal(utctime):
+    """This function copied from https://stackoverflow.com/questions/26812805/django-convert-utc-to-local-time-zone-in-views Created by: Stack Overflow User jakobdo"""
+    fmt = '%d/%m/%Y %H:%M'
+    utc = utctime.replace(tzinfo=pytz.UTC)
+    localtz = utc.astimezone(timezone.get_current_timezone())
+    return localtz.strftime(fmt)
