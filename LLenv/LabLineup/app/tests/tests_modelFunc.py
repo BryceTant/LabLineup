@@ -39,6 +39,17 @@ class ModelFuncTest(TestCase):
     Sub1 = None
     Sub2 = None
     Sub3 = None
+    #Request Objects
+    Request0 = None
+    Request1 = None
+    Request2 = None
+    Request3 = None
+    Request4 = None
+    Request5 = None
+    Request6 = None
+    Request7 = None
+    Request8 = None
+    Request9 = None
 
     def setUp(self):
         #  Set up Users  --------------------------------------------------
@@ -107,6 +118,98 @@ class ModelFuncTest(TestCase):
                                                 subRenewal = datetime.datetime.now(utc),
                                                 labLimit = 321)
 
+        #   Set up Requests
+        self.Request0 = Request.objects.create(rid = 1,
+                                               station = 000,
+                                               description = "Request description 0",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = None,
+                                               feedback = None,
+                                               suid = self.User0,
+                                               lid = self.Lab0,
+                                               huid = None)
+        self.Request1 = Request.objects.create(rid = 2,
+                                               station = 111,
+                                               description = "Request description 1",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = datetime.datetime.now(utc),
+                                               feedback = None,
+                                               suid = self.User0,
+                                               lid = self.Lab0,
+                                               huid = self.User1)
+        self.Request2 = Request.objects.create(rid = 3,
+                                               station = 222,
+                                               description = "Request description 2",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = datetime.datetime.now(utc),
+                                               feedback = None,
+                                               suid = self.User1,
+                                               lid = self.Lab1,
+                                               huid = self.User2)
+        self.Request3 = Request.objects.create(rid = 4,
+                                               station = 333,
+                                               description = "Request description 3",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = None,
+                                               feedback = None,
+                                               suid = self.User1,
+                                               lid = self.Lab1,
+                                               huid = None)
+        self.Request4 = Request.objects.create(rid = 5,
+                                               station = 444,
+                                               description = "Request description 4",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = datetime.datetime.now(utc),
+                                               feedback = None,
+                                               suid = self.User1,
+                                               lid = self.Lab1,
+                                               huid = self.User3)
+        self.Request5 = Request.objects.create(rid = 6,
+                                               station = 555,
+                                               description = "Request description 5",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = datetime.datetime.now(utc),
+                                               feedback = None,
+                                               suid = self.User1,
+                                               lid = self.Lab1,
+                                               huid = self.User2)
+        self.Request6 = Request.objects.create(rid = 7,
+                                               station = 665,
+                                               description = "Request description 6",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = None,
+                                               feedback = None,
+                                               suid = self.User1,
+                                               lid = self.Lab1,
+                                               huid = None)
+        self.Request7 = Request.objects.create(rid = 8,
+                                               station = 777,
+                                               description = "Request description 7",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = None,
+                                               feedback = None,
+                                               suid = self.User1,
+                                               lid = self.Lab1,
+                                               huid = None)
+        self.Request8 = Request.objects.create(rid = 9,
+                                               station = 888,
+                                               description = "Request description 8",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = None,
+                                               feedback = None,
+                                               suid = self.User1,
+                                               lid = self.Lab1,
+                                               huid = None)
+        self.Request9 = Request.objects.create(rid = 10,
+                                               station = 999,
+                                               description = "Request description 9",
+                                               timeSubmitted = datetime.datetime.now(utc),
+                                               timeCompleted = None,
+                                               feedback = None,
+                                               suid = self.User1,
+                                               lid = self.Lab1,
+                                               huid = None)
+
     def test_getLabCode(self):
         self.assertNotEqual("3ff93",
                             mf.getLabCode(self.Lab0.lid, 's'))
@@ -162,7 +265,27 @@ class ModelFuncTest(TestCase):
         self.assertNotEqual(None, mf.getNumComplete(self.Lab1.lid))
         self.assertNotEqual(-1, mf.getNumComplete(self.Lab1.lid))
 
-        self.assertEqual(len(mf.getCompletedRequests(self.Lab0.lid)),
-                        mf.getNumComplete(self.Lab0.lid))
-        self.assertEqual(len(mf.getCompletedRequests(self.Lab1.lid)),
-                        mf.getNumComplete(self.Lab1.lid))
+        self.assertEqual(1, mf.getNumComplete(self.Lab0.lid))
+        self.assertEqual(3, mf.getNumComplete(self.Lab1.lid))
+
+    def test_getNumCompleteTA(self):
+        self.assertNotEqual(None, mf.getNumCompleteTA(self.Lab0.lid, self.User1))
+        self.assertNotEqual(0, mf.getNumCompleteTA(self.Lab0.lid, self.User1))
+        self.assertNotEqual(None, mf.getNumCompleteTA(self.Lab1.lid, self.User2))
+        self.assertNotEqual(0, mf.getNumCompleteTA(self.Lab1.lid, self.User2))
+
+        self.assertEqual(1, mf.getNumCompleteTA(self.Lab0.lid, self.User1))
+        self.assertEqual(2, mf.getNumCompleteTA(self.Lab1.lid, self.User2))
+        self.assertEqual(1, mf.getNumCompleteTA(self.Lab1.lid, self.User3))
+    
+    def test_getNameOfUser(self):
+        self.assertNotEqual(None, mf.getNameOfUser(self.User0.id))
+        self.assertNotEqual(None, mf.getNameOfUser(self.User1.id))
+        self.assertNotEqual(None, mf.getNameOfUser(self.User2.id))
+        self.assertNotEqual(None, mf.getNameOfUser(self.User3.id))
+
+        self.assertEqual("Test First 0 Test Last 0", mf.getNameOfUser(self.User0.id))
+        self.assertEqual("Test First 1 Test Last 1", mf.getNameOfUser(self.User1.id))
+        self.assertEqual("Test First 2 Test Last 2", mf.getNameOfUser(self.User2.id))
+        self.assertEqual("Test First 3 Test Last 3", mf.getNameOfUser(self.User3.id))
+        
