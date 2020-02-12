@@ -46,6 +46,7 @@ from app.modelFunc import confirmAccount
 from app.modelFunc import getAvgWait
 from app.modelFunc import getNextRequest
 from app.modelFunc import getNameOfUser
+from app.modelFunc import getStudentCurrentRequest
 from app.modelFunc import getOutstandingRequest
 from app.modelFunc import removeLabFromAccount
 from app.modelFunc import getLabUsersWithRole
@@ -213,6 +214,11 @@ def selectLab(request):
             request.session["currentLab"] = selectedLabID
             role = getRole(userID=request.user, labID=selectedLabID)
             if role == 's':
+                currReq = getStudentCurrentRequest(labID=selectedLabID, userID=request.user)
+                if currReq != None:
+                    #If the student has an open request
+                    request.session["currentRequest"] = currReq
+                    return redirect('/student/requestSubmitted')
                 return redirect('/student/request')
             else:  # TA or professor
                 return redirect('/lab/queue')
@@ -872,5 +878,17 @@ def requestHistory(request):
             'message': "View request history",
             'year': datetime.now().year,
             'requests': requestsDict
+        }
+    )
+
+def pricing(request):
+    assert(isinstance(request, HttpRequest))
+    return render(
+        request,
+        'app/pricing.html',
+        {
+            'title': "Pricing",
+            'message': "Subscription Options",
+            'year': datetime.now().year,
         }
     )
