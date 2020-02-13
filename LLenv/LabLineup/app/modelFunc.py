@@ -460,6 +460,7 @@ def getRequestHistory(userID):
         retDict[lab.name] = getStudentRequestsHistory(userID, labID=lab.lid)
     return retDict
 
+#To convert UTC to local datetime
 def convertToLocal(utctime):
     """This function copied from https://stackoverflow.com/questions/26812805/django-convert-utc-to-local-time-zone-in-views Created by: Stack Overflow User jakobdo"""
     fmt = '%d/%m/%Y %H:%M'

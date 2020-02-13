@@ -50,8 +50,9 @@ class PasswordResetCode(models.Model):
 
 class Subscription(models.Model):
     uid = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE) #int(11)
-    initialSub = models.DateTimeField()
-    subRenewal = models.DateTimeField()
+    initialSub = models.DateTimeField(null=True, blank=True)
+    lastSub = models.DateTimeField(null=True, blank=True)
+    subRenewal = models.DateTimeField(null=True, blank=True)
     labLimit = models.IntegerField()
 
 class EmailConfirmation(models.Model):
