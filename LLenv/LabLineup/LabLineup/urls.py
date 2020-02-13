@@ -49,4 +49,5 @@ urlpatterns = [
     path('account/requestEmailConfirmation/', views.requestEmailConfirmation, name='requestEmailConfirmation'), #To request a new email confirm to be sent
     path('account/confirmAccount/<str:regConCode>/', views.confirmAccountView, name='confirmAccountView'), #View to confirm new account
     path('pricing/', views.pricing, name='pricing'), #View to see pricing
+    path('subscription/', views.subscription, name='subscription'), #View to see pricing
 ]

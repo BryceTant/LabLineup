@@ -855,3 +855,15 @@ def pricing(request):
             'year': datetime.now().year,
         }
     )
+
+def subscription(request):
+    assert(isinstance(request, HttpRequest))
+    return render(
+        request,
+        'app/subscription.html',
+        {
+            'title': "Subscription",
+            'message': "Manage Your Subscription",
+            'year': datetime.now().year,
+        }
+    )
