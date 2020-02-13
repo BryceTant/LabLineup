@@ -6,6 +6,11 @@ from square.client import Client
 
 from django.contrib.auth.models import User
 
+import datetime
+from pytz import utc as utc
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
+
 ACCESS_TOKEN = "EAAAEKhuO_dB5OIb_klu9b6LC4Z8kyyGVK6CF6oOXHFwYFe5vQHDcMWEM4DidtaB"
 ENV = "sandbox"
 LOCATION = "CJ5PA0KHCQEA0"
@@ -30,6 +35,7 @@ def createCustomer(userID):
 
 #To get a link for the user to use to pay
 def createCheckout(userID, subID, plan):
+    """Plans: 0=Free, 1=Silver, 2=Gold"""
     user = User.objects.get(id=userID)
     planName = "LabLineup"
     planPrice = 0
@@ -69,3 +75,37 @@ def createCheckout(userID, subID, plan):
         return None
     else:
         return None
+
+#To find the most recent payment for a subscription
+def findPayment(subID):
+    """Returns a tuple of product name and amount"""
+    now = datetime.datetime.now(utc)
+    result = sq.orders.search_orders(
+        body = {
+            "location_ids": [LOCATION],
+            "query": {
+                "filter": {
+                    "date_time_filter": {
+                        "created_at": {
+                            "start_at": str(now - relativedelta(years=2)),
+                            "end_at": str(now + relativedelta(days=1))
+                        }
+                    },
+                },
+                "sort": {
+                    "sort_field": "CREATED_AT",
+                    "sort_order": "DESC"
+                }
+            }
+        }
+    )
+
+    if result.is_success():
+        for order in results.body["orders"]:
+            if order["reference_id"] == subID:
+                orderAmt = order["tenders"][0]["amount_money"]["amount"]
+                if orderAmt != 0:
+                    return (order["line_items"][0]["name"], orderAmt)
+        return (None, 0)
+    elif result.is_error():
+        print(result.errors)

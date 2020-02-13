@@ -17,6 +17,7 @@ import datetime
 from statistics import mean
 from pytz import utc as utc
 from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 
 
 #Generates and saves a LabCode for the specified lab and role and returns the code
@@ -467,3 +468,37 @@ def convertToLocal(utctime):
     utc = utctime.replace(tzinfo=pytz.UTC)
     localtz = utc.astimezone(timezone.get_current_timezone())
     return localtz.strftime(fmt)
+
+#To update a user's subscription
+def updateSub(userID, plan):
+    """Yearly Plans: 0=Free, 1=Silver, 2=gold"""
+    planLimits = {0:1, 1:5, 2:20}
+    query = None
+    try:
+        query = Subscription.objects.filter(uid_id=userID)
+    except:
+        return False
+    query = query[0]
+    now = datetime.datetime.now(utc)
+    initialSub = query.initialSub
+    subRenewal = query.subRenewal
+    if query.labLimit == 1:
+        #This is a new premium subscription
+        initialSub = now
+        subRenewal = now
+    renewDate = subRenewal + relativedelta(years=1) # Add 1 year
+    Subscription.objects.filter(uid_id=userID).update(initialSub = initialSub,
+                                                      lastSub = now,
+                                                      subRenewal = renewDate,
+                                                      labLimit = planLimits[plan]
+                                                      )
+    return True
+
+#To get a user's subscription
+def getSub(userID):
+    query = None
+    try:
+        query = Subscription.objects.get(uid_id=userID)
+    except:
+        pass
+    return query
