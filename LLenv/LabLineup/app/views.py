@@ -58,6 +58,8 @@ from app.modelFunc import getNumComplete
 from app.modelFunc import getAvgFeedback
 from app.modelFunc import getLastRequest
 from app.modelFunc import updateSub
+from app.modelFunc import updateSubOrder
+from app.modelFunc import confirmNewSub
 from app.modelFunc import getSub
 
 from app.SendEmail import sendAllRequest
@@ -65,6 +67,8 @@ from app.SendEmail import sendPasswordReset
 from app.SendEmail import sendRegistrationConfirmation
 
 from app.Payment import createCheckout
+from app.Payment import findRecentPayment
+from app.Payment import findProductOrder
 
 
 def home(request):
@@ -101,7 +105,7 @@ def about(request):
         {
             'title': 'About',
             'message': 'About LabLineup',
-            'year': datetime.now().year,
+            'year': datetime.now().year
         }
     )
 
@@ -627,13 +631,20 @@ def manageAccount(request):
                 editAccountDetailsForm.save()
         elif 'subPlan' in request.POST:
             activeDict = manageAccountSetTab("subscription")
+            userSub = getSub(request.user.id)
+            if userSub == None:
+                userSub = Subscription(uid_id = request.user.id,
+                                       initialSub = None,
+                                       lastSub = None,
+                                       subRenewal = None,
+                                       labLimit = 1)
+                userSub.save()
             plan = int(request.POST.get("subPlan", 0))
-            #TODO
             checkoutLink = createCheckout(request.user.id, 
-                                          getSub(request.user.id), 
+                                          userSub.id, 
                                           plan)
             if checkoutLink != None:
-                redirect(checkoutLink)
+                return redirect(checkoutLink)
             else:
                 return render(
                         request,
@@ -803,7 +814,8 @@ def resetPassword(request, prc):
 def confirmAccountView(request, regConCode):
     assert isinstance(request, HttpRequest)
     if confirmAccount(regConCode=regConCode):
-        newSub = Subscription(initialSub = None,
+        newSub = Subscription(uid_id = request.user.id,
+                              initialSub = None,
                               lastSub = None,
                               subRenewal = None,
                               labLimit = 1)
@@ -886,6 +898,38 @@ def pricing(request):
         {
             'title': "Pricing",
             'message': "Subscription Options",
+            'year': datetime.now().year,
+        }
+    )
+
+def subThankYou(request):
+    assert(isinstance(request, HttpRequest))
+    products = {"LabLineup Silver": 1, "LabLineup Gold": 2, None:None}
+    subID = int(request.GET.get("referenceId"))
+    orderID = request.GET.get("transactionId")
+    valid = confirmNewSub(subID, orderID)
+    if valid:
+        product = products[findProductOrder(orderID)]
+        if product != None:
+            updateSub(subID, product)
+            updateSubOrder(subID, orderID)
+            return render(
+                request,
+                'app/subTY.html',
+                {
+                    'title': "Thank You!",
+                    'message': "Thank you for joining LabLineup Premium",
+                    'year': datetime.now().year,
+                }
+            )
+        else:
+            pass
+    return render(
+        request,
+        'app/error.html',
+        {
+            'title': "Error",
+            'message': "Your subscription could not be updated. Please contact us.",
             'year': datetime.now().year,
         }
     )

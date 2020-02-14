@@ -470,7 +470,7 @@ def convertToLocal(utctime):
     return localtz.strftime(fmt)
 
 #To update a user's subscription
-def updateSub(userID, plan):
+def updateUserSub(userID, plan):
     """Yearly Plans: 0=Free, 1=Silver, 2=gold"""
     planLimits = {0:1, 1:5, 2:20}
     query = None
@@ -493,6 +493,52 @@ def updateSub(userID, plan):
                                                       labLimit = planLimits[plan]
                                                       )
     return True
+
+#To update a user's subcription 
+def updateSub(subID, plan):
+    """Yearly Plans: 0=Free, 1=Silver, 2=gold"""
+    planLimits = {0:1, 1:5, 2:20}
+    query = None
+    try:
+        query = Subscription.objects.filter(id=subID)
+    except:
+        return False
+    query = query[0]
+    now = datetime.datetime.now(utc)
+    initialSub = query.initialSub
+    subRenewal = query.subRenewal
+    if query.labLimit == 1:
+        #This is a new premium subscription
+        initialSub = now
+        subRenewal = now
+    renewDate = subRenewal + relativedelta(years=1) # Add 1 year
+    Subscription.objects.filter(id=subID).update(initialSub = initialSub,
+                                                      lastSub = now,
+                                                      subRenewal = renewDate,
+                                                      labLimit = planLimits[plan]
+                                                      )
+    return True
+
+#To update a user's sub's orderID
+def updateSubOrder(subID, orderID):
+    query = None
+    try:
+        query = Subscription.objects.filter(id=subID).update(orderID=orderID)
+    except:
+        return False
+    return True
+
+#To confirm that an orderID has not already been used
+def confirmNewSub(subID, orderID):
+    query = None
+    try:
+        query = Subscription.objects.get(id=subID)
+        if orderID != query.orderID:
+            return True
+        else:
+            return False
+    except:
+        return False
 
 #To get a user's subscription
 def getSub(userID):
