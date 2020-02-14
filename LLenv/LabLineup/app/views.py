@@ -666,8 +666,9 @@ def currentRequest(request):
         nextRequest.huid = request.user
         nextRequest.save()
         if request.method == 'POST':
-            nextRequest.timeCompleted = datetime.now(utc).year
-            return redirect('/lab/queue')
+            nextRequest.timeCompleted = datetime.now(utc)
+            nextRequest.save()
+            return redirect('/lab/queue/')
         return render(
             request,
             'app/currentRequest.html',
