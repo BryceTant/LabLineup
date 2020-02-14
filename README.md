@@ -22,6 +22,7 @@ Google Style Guide: https://google.github.io/styleguide/
 - Graham McDonald - mcdonag@email.sc.edu
 - Landon Everhart - lte@email.sc.edu
 - Reed Segars - jrsegars@email.sc.edu
+- Nick Knight - nrknight@email.sc.edu
 
 # Editing
 The virtualenv name is LLenv.
