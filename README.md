@@ -16,6 +16,7 @@ Google Style Guide: https://google.github.io/styleguide/
 - MailGun
 - MySQL (CloudSQL)
 - Selenium IDE
+- Square API / Checkout
 
 # Authors
 - Bryce Tant - bjtant@email.sc.edu
