@@ -21,7 +21,7 @@ class NotifyAdmin(admin.ModelAdmin):
     list_display=('id', 'uid','lid','notifyNew','notifyThreshold')
 
 class SubscriptionAdmin(admin.ModelAdmin):
-    list_display=('id', 'uid','initialSub','subRenewal','labLimit')
+    list_display=('id', 'uid','initialSub', 'lastSub', 'subRenewal','labLimit', 'orderID')
 
 class LogEntryAdmin(admin.ModelAdmin):
     list_display=("object_id", "content_type","action_flag","user","action_time")

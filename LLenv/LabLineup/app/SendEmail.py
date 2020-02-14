@@ -108,3 +108,7 @@ def sendRegistrationConfirmation(user, regConCode):
     vars = vars + "\"regConLink\": \"" + regConLink + "\"}"
 
     sendEmail([user.email], subject, template="accountconfirm", variables=vars)
+
+def sendNeverHelped():
+    pass
+    #TODO
