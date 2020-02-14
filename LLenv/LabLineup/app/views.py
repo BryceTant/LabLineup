@@ -336,7 +336,15 @@ def studentRequestFeedback(request):
                 }
             )
         else:
-            pass
+            return render(
+                request,
+                'app/studentRequestFeedback.html',
+                {
+                    'title': 'Feedback',
+                    'message': 'Please submit feedback about the help you received',
+                    'year': datetime.now().year
+                }
+            )
     else:
         return render(
             request,
