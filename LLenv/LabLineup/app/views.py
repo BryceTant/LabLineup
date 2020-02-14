@@ -361,7 +361,7 @@ def labQueue(request):
             request,
             'app/queue.html',
             {
-                'title': lab.name,
+                'title' : lab.name,
                 'message': 'Queue',
                 'year': datetime.now().year,
                 'role': role,
@@ -665,6 +665,9 @@ def currentRequest(request):
             nextRequest = getNextRequest(currentLID)
         nextRequest.huid = request.user
         nextRequest.save()
+        if request.method == 'POST':
+            nextRequest.timeCompleted = datetime.now(utc).year
+            return redirect('/lab/queue')
         return render(
             request,
             'app/currentRequest.html',
