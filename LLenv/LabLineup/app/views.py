@@ -700,7 +700,8 @@ def currentRequest(request):
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
     role = getRole(userID=request.user, labID=currentLID)
-    if (role == 'p' or role == 't'):
+    request = getRequestCount(labId=currentLID)
+    if (request != 0 and role == 'p' or role == 't'):
         #User is a prof or TA and should have access
         openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
         nextRequest = None
