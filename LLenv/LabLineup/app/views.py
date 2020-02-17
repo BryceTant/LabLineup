@@ -316,7 +316,15 @@ def studentRequestSubmitted(request):
             }
         )
     else:
-        pass
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
 
 def studentRequestFeedback(request):
     """Renders pages for lab/{labID}/student."""
