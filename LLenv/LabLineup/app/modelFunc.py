@@ -17,6 +17,7 @@ import datetime
 from statistics import mean
 from pytz import utc as utc
 from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 
 
 #Generates and saves a LabCode for the specified lab and role and returns the code
@@ -460,9 +461,90 @@ def getRequestHistory(userID):
         retDict[lab.name] = getStudentRequestsHistory(userID, labID=lab.lid)
     return retDict
 
+#To convert UTC to local datetime
 def convertToLocal(utctime):
     """This function copied from https://stackoverflow.com/questions/26812805/django-convert-utc-to-local-time-zone-in-views Created by: Stack Overflow User jakobdo"""
     fmt = '%d/%m/%Y %H:%M'
     utc = utctime.replace(tzinfo=pytz.UTC)
     localtz = utc.astimezone(timezone.get_current_timezone())
     return localtz.strftime(fmt)
+
+#To update a user's subscription
+def updateUserSub(userID, plan):
+    """Yearly Plans: 0=Free, 1=Silver, 2=gold"""
+    planLimits = {0:1, 1:5, 2:20}
+    query = None
+    try:
+        query = Subscription.objects.filter(uid_id=userID)
+    except:
+        return False
+    query = query[0]
+    now = datetime.datetime.now(utc)
+    initialSub = query.initialSub
+    subRenewal = query.subRenewal
+    if query.labLimit == 1:
+        #This is a new premium subscription
+        initialSub = now
+        subRenewal = now
+    renewDate = subRenewal + relativedelta(years=1) # Add 1 year
+    Subscription.objects.filter(uid_id=userID).update(initialSub = initialSub,
+                                                      lastSub = now,
+                                                      subRenewal = renewDate,
+                                                      labLimit = planLimits[plan]
+                                                      )
+    return True
+
+#To update a user's subcription 
+def updateSub(subID, plan):
+    """Yearly Plans: 0=Free, 1=Silver, 2=gold"""
+    planLimits = {0:1, 1:5, 2:20}
+    query = None
+    try:
+        query = Subscription.objects.filter(id=subID)
+    except:
+        return False
+    query = query[0]
+    now = datetime.datetime.now(utc)
+    initialSub = query.initialSub
+    subRenewal = query.subRenewal
+    if query.labLimit == 1:
+        #This is a new premium subscription
+        initialSub = now
+        subRenewal = now
+    renewDate = subRenewal + relativedelta(years=1) # Add 1 year
+    Subscription.objects.filter(id=subID).update(initialSub = initialSub,
+                                                      lastSub = now,
+                                                      subRenewal = renewDate,
+                                                      labLimit = planLimits[plan]
+                                                      )
+    return True
+
+#To update a user's sub's orderID
+def updateSubOrder(subID, orderID):
+    query = None
+    try:
+        query = Subscription.objects.filter(id=subID).update(orderID=orderID)
+    except:
+        return False
+    return True
+
+#To confirm that an orderID has not already been used
+def confirmNewSub(subID, orderID):
+    query = None
+    try:
+        query = Subscription.objects.get(id=subID)
+        if orderID != query.orderID:
+            return True
+        else:
+            return False
+    except:
+        return False
+
+#To get a user's subscription
+def getSub(userID):
+    query = None
+    try:
+        query = Subscription.objects.get(uid_id=userID)
+    except:
+        pass
+    return query

@@ -1,0 +1,25 @@
+{% block content %}
+
+<script>
+    function selectSub(selectedPlan) {
+        document.forms["selectSubForm"].elements["subPlan"].value = selectedPlan;
+        document.getElementById("selectSubForm").submit();
+    }
+</script>
+
+<form id="selectSubForm" action="." method="post" prefix="subscription">
+    {% csrf_token %}
+    <input type="hidden" name="subPlan" value=0 />
+</form>
+
+<div class="row">
+    <div class="col-md-2">
+        <button type="button" class="btn btn-default" onclick="javascript:selectSub({{1}})">Silver Plan</button>
+    </div>
+    <div class="col-md-2">
+        <button type="button" class="btn btn-default" onclick="javascript:selectSub({{2}})">Gold Plan</button>
+    </div>
+</div>
+
+
+{% endblock %}

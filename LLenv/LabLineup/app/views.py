@@ -57,10 +57,18 @@ from app.modelFunc import getRequestHistory
 from app.modelFunc import getNumComplete
 from app.modelFunc import getAvgFeedback
 from app.modelFunc import getLastRequest
+from app.modelFunc import updateSub
+from app.modelFunc import updateSubOrder
+from app.modelFunc import confirmNewSub
+from app.modelFunc import getSub
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
 from app.SendEmail import sendRegistrationConfirmation
+
+from app.Payment import createCheckout
+from app.Payment import findRecentPayment
+from app.Payment import findProductOrder
 
 
 def home(request):
@@ -97,7 +105,7 @@ def about(request):
         {
             'title': 'About',
             'message': 'About LabLineup',
-            'year': datetime.now().year,
+            'year': datetime.now().year
         }
     )
 
@@ -333,18 +341,7 @@ def studentRequestFeedback(request):
     currentLID = request.session.get('currentLab')
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
-        if request.method == 'POST':
-            return render(
-                request,
-                'app/studentRequestFeedback.html',
-                {
-                    'title': 'Feedback',
-                    'message': 'Please submit feedback about the help you received',
-                    'year': datetime.now().year
-                }
-            )
-        else:
-            return render(
+        return render(
                 request,
                 'app/studentRequestFeedback.html',
                 {
@@ -603,7 +600,8 @@ def manageAccountSetTab(tab):
     """Function to set the active tab for the manageAccount page"""
     retDict = {
         'accountDetails': "",
-        'changePassword': ""
+        'changePassword': "",
+        'subscription': ""
         }
     retDict[tab] = "in active"
     return retDict
@@ -618,20 +616,51 @@ def manageAccount(request):
     changePasswordForm = ChangePasswordForm(user=request.user)
     editAccountDetailsForm = EditAccountDetailsForm(
         user=request.user, initial=initialAccountDetails)
-    activeDict = manageAccountSetTab("accountDetails") # Default tab is accountDetails
+    # Default tab is accountDetails
+    activeDict = manageAccountSetTab("accountDetails") 
     if request.method == 'POST':
         if 'changePassword' in request.POST:
-            changePasswordForm = ChangePasswordForm(data=request.POST, user=request.user)
+            changePasswordForm = ChangePasswordForm(data=request.POST,
+                                                   user=request.user)
             activeDict = manageAccountSetTab("changePassword")
             if changePasswordForm.is_valid():
                 changePasswordForm.save()
-                update_session_auth_hash(request, changePasswordForm.user)  #Update the session to keep the user logged in
+                #Update the session to keep the user logged in
+                update_session_auth_hash(request, changePasswordForm.user) 
             #return redirect('/account')
         elif 'editAccountDetails' in request.POST:
-            editAccountDetailsForm = EditAccountDetailsForm(
-                data=request.POST, user=request.user, initial=initialAccountDetails)
+            editAccountDetailsForm = EditAccountDetailsForm(data=request.POST,
+                user=request.user, 
+                initial=initialAccountDetails)
             if editAccountDetailsForm.is_valid():
                 editAccountDetailsForm.save()
+        elif 'subPlan' in request.POST:
+            activeDict = manageAccountSetTab("subscription")
+            userSub = getSub(request.user.id)
+            if userSub == None:
+                userSub = Subscription(uid_id = request.user.id,
+                                       initialSub = None,
+                                       lastSub = None,
+                                       subRenewal = None,
+                                       labLimit = 1)
+                userSub.save()
+            plan = int(request.POST.get("subPlan", 0))
+            checkoutLink = createCheckout(request.user.id, 
+                                          userSub.id, 
+                                          plan)
+            if checkoutLink != None:
+                return redirect(checkoutLink)
+            else:
+                return render(
+                        request,
+                        'app/error.html',
+                        {
+                            'title': "Error",
+                            'message': "Checkout failed. Please contact us.",
+                            'year':datetime.now().year
+                        }
+                    )
+            #Check if payment recieved. If so, updateSub(userID, plan#)
         elif 'deleteAccount' in request.POST:
             deleteResponse = request.POST.get('deleteAccount', False)
             if deleteResponse == "true":
@@ -794,6 +823,12 @@ def resetPassword(request, prc):
 def confirmAccountView(request, regConCode):
     assert isinstance(request, HttpRequest)
     if confirmAccount(regConCode=regConCode):
+        newSub = Subscription(uid_id = request.user.id,
+                              initialSub = None,
+                              lastSub = None,
+                              subRenewal = None,
+                              labLimit = 1)
+        newSub.save()
         #Code is found, account is activated
         return render(
             request,
@@ -872,6 +907,38 @@ def pricing(request):
         {
             'title': "Pricing",
             'message': "Subscription Options",
+            'year': datetime.now().year,
+        }
+    )
+
+def subThankYou(request):
+    assert(isinstance(request, HttpRequest))
+    products = {"LabLineup Silver": 1, "LabLineup Gold": 2, None:None}
+    subID = int(request.GET.get("referenceId"))
+    orderID = request.GET.get("transactionId")
+    valid = confirmNewSub(subID, orderID)
+    if valid:
+        product = products[findProductOrder(orderID)]
+        if product != None:
+            updateSub(subID, product)
+            updateSubOrder(subID, orderID)
+            return render(
+                request,
+                'app/subTY.html',
+                {
+                    'title': "Thank You!",
+                    'message': "Thank you for joining LabLineup Premium",
+                    'year': datetime.now().year,
+                }
+            )
+        else:
+            pass
+    return render(
+        request,
+        'app/error.html',
+        {
+            'title': "Error",
+            'message': "Your subscription could not be updated. Please contact us.",
             'year': datetime.now().year,
         }
     )
