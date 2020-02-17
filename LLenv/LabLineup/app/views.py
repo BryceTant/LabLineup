@@ -333,18 +333,7 @@ def studentRequestFeedback(request):
     currentLID = request.session.get('currentLab')
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
-        if request.method == 'POST':
-            return render(
-                request,
-                'app/studentRequestFeedback.html',
-                {
-                    'title': 'Feedback',
-                    'message': 'Please submit feedback about the help you received',
-                    'year': datetime.now().year
-                }
-            )
-        else:
-            return render(
+        return render(
                 request,
                 'app/studentRequestFeedback.html',
                 {
