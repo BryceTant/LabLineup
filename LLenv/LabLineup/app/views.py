@@ -351,9 +351,9 @@ def studentRequestFeedback(request):
                     'year': datetime.now().year
                 }
         )
-        else:
-            return render(
-                request,
+    else:
+        return render(
+            request,
                 'app/permissionDenied.html',
                 {
                     'title': 'Permission Denied',
@@ -362,13 +362,13 @@ def studentRequestFeedback(request):
                 }
             )
     # Check post for score
-    if request.method == 'POST':
+     if request.method == 'POST':
         if 'score' in request.POST:
-            # do something
-        else:
-            # user forgot to select a score before hitting submit
-    else:
-        pass
+             # do something
+         else:
+             # user forgot to select a score before hitting submit
+     else:
+         pass
 
 def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""
@@ -378,6 +378,15 @@ def labQueue(request):
     lab = Lab.objects.get(lid=currentLID)
     role = getRole(userID=request.user, labID = currentLID)
     if (role == 'p' or role == 't'):
+        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
+        nextRequest = None
+        if openRequest != None:
+            nextRequest = openRequest
+        else:
+            nextRequest = getNextRequest(currentLID)
+        if request.method == 'POST':
+            nextRequest.huid = request.user
+            nextRequest.save()
         #User is a prof or TA and should have access
         return render(
             request,
@@ -724,7 +733,7 @@ def currentRequest(request):
         if request.method == 'POST':
             nextRequest.timeCompleted = datetime.now(utc)
             nextRequest.save()
-            return redirect('/lab/queue/')
+            return redirect('/lab/queue/currentRequest')
         return render(
             request,
             'app/currentRequest.html',
@@ -733,6 +742,7 @@ def currentRequest(request):
                 'nameOfUser': getNameOfUser(nextRequest.suid_id),
                 'station': nextRequest.station,
                 'description': nextRequest.description,
+                'completed' : nextRequest.timeCompleted,
                 'requestSubmitted': str(nextRequest.timeSubmitted),
                 'averageWait' : getAvgWait(currentLID),
                 'requests' : str(getRequestCount(currentLID)),
