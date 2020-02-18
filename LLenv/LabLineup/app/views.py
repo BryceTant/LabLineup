@@ -699,17 +699,17 @@ def currentRequest(request):
     """Renders page to edit account settings"""
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
-    role = getRole(userID=request.user, labID=currentLID)
-    request = getRequestCount(labId=currentLID)
+    role = getRole(userID=request.user.id, labID=currentLID)
+    request = getRequestCount(labID=currentLID)
     if (request != 0 and role == 'p' or role == 't'):
         #User is a prof or TA and should have access
-        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
+        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user.id)
         nextRequest = None
         if openRequest != None:
             nextRequest = openRequest
         else:
             nextRequest = getNextRequest(currentLID)
-        nextRequest.huid = request.user
+        nextRequest.huid = request.user.id
         nextRequest.save()
         if request.method == 'POST':
             nextRequest.timeCompleted = datetime.now(utc)
@@ -737,7 +737,7 @@ def currentRequest(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now(utc).year
             }
         )
 
