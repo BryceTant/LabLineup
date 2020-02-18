@@ -111,7 +111,7 @@ def getCompletedRequests(labID):
 
 #To get the oldest request in the queue with no helper assigned
 def getNextRequest(labID):
-    return Request.objects.filter(lid_id=labID, huid_id=None).earliest('timeSubmitted')
+    return Request.objects.filter(lid_id=labID, timeCompleted=None).earliest('timeSubmitted')
 
 #To get the most recent request in the queue
 def getLastRequest(labID):
