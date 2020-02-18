@@ -61,6 +61,7 @@ from app.modelFunc import updateSub
 from app.modelFunc import updateSubOrder
 from app.modelFunc import confirmNewSub
 from app.modelFunc import getSub
+from app.modelFunc import convertToLocal
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -324,7 +325,15 @@ def studentRequestSubmitted(request):
             }
         )
     else:
-        pass
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
 
 def studentRequestFeedback(request):
     """Renders pages for lab/{labID}/student."""
@@ -616,6 +625,14 @@ def manageAccount(request):
     changePasswordForm = ChangePasswordForm(user=request.user)
     editAccountDetailsForm = EditAccountDetailsForm(
         user=request.user, initial=initialAccountDetails)
+    userSub = getSub(request.user.id)
+    if userSub == None:
+            userSub = Subscription(uid_id = request.user.id,
+                                   initialSub = None,
+                                   lastSub = None,
+                                   subRenewal = None,
+                                   labLimit = 1)
+            userSub.save()
     # Default tab is accountDetails
     activeDict = manageAccountSetTab("accountDetails") 
     if request.method == 'POST':
@@ -636,14 +653,7 @@ def manageAccount(request):
                 editAccountDetailsForm.save()
         elif 'subPlan' in request.POST:
             activeDict = manageAccountSetTab("subscription")
-            userSub = getSub(request.user.id)
-            if userSub == None:
-                userSub = Subscription(uid_id = request.user.id,
-                                       initialSub = None,
-                                       lastSub = None,
-                                       subRenewal = None,
-                                       labLimit = 1)
-                userSub.save()
+            
             plan = int(request.POST.get("subPlan", 0))
             checkoutLink = createCheckout(request.user.id, 
                                           userSub.id, 
@@ -691,7 +701,8 @@ def manageAccount(request):
             'year': datetime.now().year,
             'changePasswordForm': changePasswordForm,
             'editAccountDetailsForm': editAccountDetailsForm,
-            'active': activeDict
+            'active': activeDict,
+            'userSub': userSub
         }
     )
 
@@ -700,7 +711,8 @@ def currentRequest(request):
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
     role = getRole(userID=request.user, labID=currentLID)
-    if (role == 'p' or role == 't'):
+    request = getRequestCount(labId=currentLID)
+    if (request != 0 and role == 'p' or role == 't'):
         #User is a prof or TA and should have access
         openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
         nextRequest = None

@@ -1,3 +1,5 @@
+{% load tz %}
+
 {% block content %}
 
 <script>
@@ -11,6 +13,13 @@
     {% csrf_token %}
     <input type="hidden" name="subPlan" value=0 />
 </form>
+
+<div class="row">
+    <div class="col-md-4">
+        <b>Subscription Expiration: </b>
+        {{userSub.subRenewal | date}}
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-2">
