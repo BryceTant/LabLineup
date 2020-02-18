@@ -548,3 +548,16 @@ def getSub(userID):
     except:
         pass
     return query
+
+def cancelRequest(req):
+    query = None
+    try:
+        query = Request.objects.get(rid = req)
+    except:
+        pass
+    if query != None:
+        query.delete()
+        return True
+    else:
+        return False
+    

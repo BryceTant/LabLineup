@@ -109,12 +109,14 @@ def sendRegistrationConfirmation(user, regConCode):
 
     sendEmail([user.email], subject, template="accountconfirm", variables=vars)
 
-def sendNeverHelped():
+def sendNeverHelped(lid, sid, rid):
     profEmail = "Get professor email for this"
-    subject = "A student was NOT helped in " + labName
     labName = Lab.objects.get(lid=lid).name
+    subject = "A student was NOT helped in " + labName
+    student = User.objects.get(uid_id=sid)
     studentName = student.first_name + " " + student.last_name
     station = None
+    request = Request.objects.get(rid=rid)
     dateSubmitted = request.timeSubmitted.strftime("%m/%d/%Y %I:%M:%S %p")
     description = None
     helperName = "TAFirst TA Last"
