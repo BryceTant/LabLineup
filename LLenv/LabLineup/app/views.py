@@ -699,17 +699,16 @@ def currentRequest(request):
     """Renders page to edit account settings"""
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
-    role = getRole(userID=request.user.id, labID=currentLID)
-    request = getRequestCount(labID=currentLID)
-    if (request != 0 and role == 'p' or role == 't'):
+    role = getRole(userID=request.user, labID=currentLID)
+    if (role == 'p' or role == 't'):
         #User is a prof or TA and should have access
-        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user.id)
+        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
         nextRequest = None
         if openRequest != None:
             nextRequest = openRequest
         else:
             nextRequest = getNextRequest(currentLID)
-        nextRequest.huid = request.user.id
+        nextRequest.huid = request.user
         nextRequest.save()
         if request.method == 'POST':
             nextRequest.timeCompleted = datetime.now(utc)
