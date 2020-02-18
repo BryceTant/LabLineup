@@ -61,6 +61,7 @@ from app.modelFunc import updateSub
 from app.modelFunc import updateSubOrder
 from app.modelFunc import confirmNewSub
 from app.modelFunc import getSub
+from app.modelFunc import cancelRequest
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -304,20 +305,36 @@ def studentRequestSubmitted(request):
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
     avgWait = getAvgWait(currentLID)
-    stationID = request.session.get('request')
     numBefore = getRequestCount(currentLID) - 1
     lab = Lab.objects.get(lid=currentLID)
     currRequest = getLastRequest(currentLID)
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
+        if True: #request.method == 'POST':
+            if 'cancelRequestForm' in request.POST:
+                cancelRequestConfirmation = request.POST.get("cancelRequest", False)
+                if cancelRequestConfirmation == "True":
+                    cancelled = cancelRequest(currRequest)
+                    if cancelled:
+                        return redirect('/app')
+                    else:
+                        return render(
+                            request,
+                            'app/error.html',
+                            {
+                                'title': "Error",
+                                'message': "Request was not deleted.",
+                                'year': datetime.now(utc).year
+                            }
+                        )
+                # return redirect('student/requestSubmitted')
         return render(
             request,
             'app/studentRequestSubmitted.html',
             {
                 'title': 'Request Submitted',
                 'message': 'Your request has been submitted',
-                'year': datetime.now().year,
-                'avgWait': avgWait,
+                'year': datetime.now().year,                    'avgWait': avgWait,
                 'stationID': currRequest.station,
                 'labID': lab.name,
                 'numBefore': numBefore
