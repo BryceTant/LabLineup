@@ -12,6 +12,11 @@
            aria-selected="true">Edit Account Details</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link" id="Subscription-tab" data-toggle="tab"
+           href="#Subscription" role="tab" aria-controls="Subscription"
+           aria-selected="false">Subscription</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" id="ChangePassword-tab" data-toggle="tab"
            href="#ChangePassword" role="tab" aria-controls="ChangePassword"
            aria-selected="false">Change Password</a>
@@ -27,6 +32,10 @@
     <div class="tab-pane fade {{active.accountDetails}}" id="AccountDetails" role="tabpanel"
          aria-labelledby="AccountDetails-tab">
         {% include "app/editAccountDetails.html" %}
+    </div>
+    <div class="tab-pane fade {{active.subcription}}" id="Subscription" role="tabpanel"
+         aria-labelledby="Subscription-tab">
+        {% include "app/subscription.html" %}
     </div>
     <div class="tab-pane fade {{active.changePassword}}" id="ChangePassword" role="tabpanel"
          aria-labelledby="ChangePassword-tab">

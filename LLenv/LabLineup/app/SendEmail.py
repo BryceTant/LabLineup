@@ -108,3 +108,25 @@ def sendRegistrationConfirmation(user, regConCode):
     vars = vars + "\"regConLink\": \"" + regConLink + "\"}"
 
     sendEmail([user.email], subject, template="accountconfirm", variables=vars)
+
+def sendNeverHelped(lid, sid, rid):
+    profEmail = "Get professor email for this"
+    labName = Lab.objects.get(lid=lid).name
+    subject = "A student was NOT helped in " + labName
+    student = User.objects.get(uid_id=sid)
+    studentName = student.first_name + " " + student.last_name
+    station = None
+    request = Request.objects.get(rid=rid)
+    dateSubmitted = request.timeSubmitted.strftime("%m/%d/%Y %I:%M:%S %p")
+    description = None
+    helperName = "TAFirst TA Last"
+
+    vars = "{\"labName\": \"" + labName + "\","
+    vars = vars + "\"student\": \"" + studentName + "\","
+    vars = vars + "\"station\": \"" + station + "\","
+    vars = vars + "\"submitted\": \"" + dateSubmitted + "\","
+    vars = vars + "\"description\": \"" + description + "\","
+    vars = vars + "\"helper\": \"" + helperName + "\","
+    vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
+
+    sendEmail(profEmail, subject, template="nothelped", variables=vars)

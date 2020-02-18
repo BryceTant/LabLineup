@@ -56,6 +56,12 @@ from app.modelFunc import getRequestHistory
 from app.modelFunc import getNumComplete
 from app.modelFunc import getAvgFeedback
 from app.modelFunc import getLastRequest
+from app.modelFunc import updateSub
+from app.modelFunc import updateSubOrder
+from app.modelFunc import confirmNewSub
+from app.modelFunc import getSub
+from app.modelFunc import cancelRequest
+from app.modelFunc import convertToLocal
 from app.modelFunc import getAvgWaitTA
 from app.modelFunc import getAvgFeedbackTA
 from app.modelFunc import getNumCompleteTA
@@ -64,6 +70,10 @@ from app.modelFunc import getNumOutstandingRequestsTA
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
 from app.SendEmail import sendRegistrationConfirmation
+
+from app.Payment import createCheckout
+from app.Payment import findRecentPayment
+from app.Payment import findProductOrder
 
 
 def home(request):
@@ -100,7 +110,7 @@ def about(request):
         {
             'title': 'About',
             'message': 'About LabLineup',
-            'year': datetime.now().year,
+            'year': datetime.now().year
         }
     )
 
@@ -299,47 +309,41 @@ def studentRequestSubmitted(request):
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
     avgWait = getAvgWait(currentLID)
-    stationID = request.session.get('request')
     numBefore = getRequestCount(currentLID) - 1
     lab = Lab.objects.get(lid=currentLID)
     currRequest = getLastRequest(currentLID)
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
+        if True: #request.method == 'POST':
+            if 'cancelRequestForm' in request.POST:
+                cancelRequestConfirmation = request.POST.get("cancelRequest", False)
+                if cancelRequestConfirmation == "True":
+                    cancelled = cancelRequest(currRequest)
+                    if cancelled:
+                        return redirect('/app')
+                    else:
+                        return render(
+                            request,
+                            'app/error.html',
+                            {
+                                'title': "Error",
+                                'message': "Request was not deleted.",
+                                'year': datetime.now(utc).year
+                            }
+                        )
+                # return redirect('student/requestSubmitted')
         return render(
             request,
             'app/studentRequestSubmitted.html',
             {
                 'title': 'Request Submitted',
                 'message': 'Your request has been submitted',
-                'year': datetime.now().year,
-                'avgWait': avgWait,
+                'year': datetime.now().year,                    'avgWait': avgWait,
                 'stationID': currRequest.station,
                 'labID': lab.name,
                 'numBefore': numBefore
             }
         )
-    else:
-        pass
-
-def studentRequestFeedback(request):
-    """Renders pages for lab/{labID}/student."""
-    # Blank Request Form => Request Waiting Form => Feedback Form
-    assert isinstance(request, HttpRequest)
-    currentLID = request.session.get('currentLab')
-    # Should only render if user's role is student
-    if (getRole(userID=request.user, labID=currentLID) == 's'):
-        if request.method == 'POST':
-            return render(
-                request,
-                'app/studentRequestFeedback.html',
-                {
-                    'title': 'Feedback',
-                    'message': 'Please submit feedback about the help you received',
-                    'year': datetime.now().year
-                }
-            )
-        else:
-            pass
     else:
         return render(
             request,
@@ -351,6 +355,41 @@ def studentRequestFeedback(request):
             }
         )
 
+def studentRequestFeedback(request):
+    """Renders pages for lab/{labID}/student."""
+    # Blank Request Form => Request Waiting Form => Feedback Form
+    assert isinstance(request, HttpRequest)
+    currentLID = request.session.get('currentLab')
+    # Should only render if user's role is student
+    if (getRole(userID=request.user, labID=currentLID) == 's'):
+        return render(
+            request,
+                'app/studentRequestFeedback.html',
+                {
+                    'title': 'Feedback',
+                    'message': 'Please submit feedback about the help you received',
+                    'year': datetime.now().year
+                }
+        )
+    else:
+        return render(
+            request,
+                'app/permissionDenied.html',
+                {
+                    'title': 'Permission Denied',
+                    'message': 'You do not have permission to view this page',
+                    'year': datetime.now().year
+                }
+            )
+    # Check post for score
+     if request.method == 'POST':
+        if 'score' in request.POST:
+             # do something
+         else:
+             # user forgot to select a score before hitting submit
+     else:
+         pass
+
 def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""
     # Should only render if user's role is TA or professor
@@ -359,12 +398,21 @@ def labQueue(request):
     lab = Lab.objects.get(lid=currentLID)
     role = getRole(userID=request.user, labID = currentLID)
     if (role == 'p' or role == 't'):
+        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
+        nextRequest = None
+        if openRequest != None:
+            nextRequest = openRequest
+        else:
+            nextRequest = getNextRequest(currentLID)
+        if request.method == 'POST':
+            nextRequest.huid = request.user
+            nextRequest.save()
         #User is a prof or TA and should have access
         return render(
             request,
             'app/queue.html',
             {
-                'title': lab.name,
+                'title' : lab.name,
                 'message': 'Queue',
                 'year': datetime.now().year,
                 'role': role,
@@ -624,7 +672,8 @@ def manageAccountSetTab(tab):
     """Function to set the active tab for the manageAccount page"""
     retDict = {
         'accountDetails': "",
-        'changePassword': ""
+        'changePassword': "",
+        'subscription': ""
         }
     retDict[tab] = "in active"
     return retDict
@@ -639,20 +688,52 @@ def manageAccount(request):
     changePasswordForm = ChangePasswordForm(user=request.user)
     editAccountDetailsForm = EditAccountDetailsForm(
         user=request.user, initial=initialAccountDetails)
-    activeDict = manageAccountSetTab("accountDetails") # Default tab is accountDetails
+    userSub = getSub(request.user.id)
+    if userSub == None:
+            userSub = Subscription(uid_id = request.user.id,
+                                   initialSub = None,
+                                   lastSub = None,
+                                   subRenewal = None,
+                                   labLimit = 1)
+            userSub.save()
+    # Default tab is accountDetails
+    activeDict = manageAccountSetTab("accountDetails")
     if request.method == 'POST':
         if 'changePassword' in request.POST:
-            changePasswordForm = ChangePasswordForm(data=request.POST, user=request.user)
+            changePasswordForm = ChangePasswordForm(data=request.POST,
+                                                   user=request.user)
             activeDict = manageAccountSetTab("changePassword")
             if changePasswordForm.is_valid():
                 changePasswordForm.save()
-                update_session_auth_hash(request, changePasswordForm.user)  #Update the session to keep the user logged in
+                #Update the session to keep the user logged in
+                update_session_auth_hash(request, changePasswordForm.user)
             #return redirect('/account')
         elif 'editAccountDetails' in request.POST:
-            editAccountDetailsForm = EditAccountDetailsForm(
-                data=request.POST, user=request.user, initial=initialAccountDetails)
+            editAccountDetailsForm = EditAccountDetailsForm(data=request.POST,
+                user=request.user,
+                initial=initialAccountDetails)
             if editAccountDetailsForm.is_valid():
                 editAccountDetailsForm.save()
+        elif 'subPlan' in request.POST:
+            activeDict = manageAccountSetTab("subscription")
+
+            plan = int(request.POST.get("subPlan", 0))
+            checkoutLink = createCheckout(request.user.id,
+                                          userSub.id,
+                                          plan)
+            if checkoutLink != None:
+                return redirect(checkoutLink)
+            else:
+                return render(
+                        request,
+                        'app/error.html',
+                        {
+                            'title': "Error",
+                            'message': "Checkout failed. Please contact us.",
+                            'year':datetime.now().year
+                        }
+                    )
+            #Check if payment recieved. If so, updateSub(userID, plan#)
         elif 'deleteAccount' in request.POST:
             deleteResponse = request.POST.get('deleteAccount', False)
             if deleteResponse == "true":
@@ -683,7 +764,8 @@ def manageAccount(request):
             'year': datetime.now().year,
             'changePasswordForm': changePasswordForm,
             'editAccountDetailsForm': editAccountDetailsForm,
-            'active': activeDict
+            'active': activeDict,
+            'userSub': userSub
         }
     )
 
@@ -702,6 +784,10 @@ def currentRequest(request):
             nextRequest = getNextRequest(currentLID)
         nextRequest.huid = request.user
         nextRequest.save()
+        if request.method == 'POST':
+            nextRequest.timeCompleted = datetime.now(utc)
+            nextRequest.save()
+            return redirect('/lab/queue/currentRequest')
         return render(
             request,
             'app/currentRequest.html',
@@ -710,6 +796,7 @@ def currentRequest(request):
                 'nameOfUser': getNameOfUser(nextRequest.suid_id),
                 'station': nextRequest.station,
                 'description': nextRequest.description,
+                'completed' : nextRequest.timeCompleted,
                 'requestSubmitted': str(nextRequest.timeSubmitted),
                 'averageWait' : getAvgWait(currentLID),
                 'requests' : str(getRequestCount(currentLID)),
@@ -724,7 +811,7 @@ def currentRequest(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now(utc).year
             }
         )
 
@@ -811,6 +898,12 @@ def resetPassword(request, prc):
 def confirmAccountView(request, regConCode):
     assert isinstance(request, HttpRequest)
     if confirmAccount(regConCode=regConCode):
+        newSub = Subscription(uid_id = request.user.id,
+                              initialSub = None,
+                              lastSub = None,
+                              subRenewal = None,
+                              labLimit = 1)
+        newSub.save()
         #Code is found, account is activated
         return render(
             request,
@@ -889,6 +982,38 @@ def pricing(request):
         {
             'title': "Pricing",
             'message': "Subscription Options",
+            'year': datetime.now().year,
+        }
+    )
+
+def subThankYou(request):
+    assert(isinstance(request, HttpRequest))
+    products = {"LabLineup Silver": 1, "LabLineup Gold": 2, None:None}
+    subID = int(request.GET.get("referenceId"))
+    orderID = request.GET.get("transactionId")
+    valid = confirmNewSub(subID, orderID)
+    if valid:
+        product = products[findProductOrder(orderID)]
+        if product != None:
+            updateSub(subID, product)
+            updateSubOrder(subID, orderID)
+            return render(
+                request,
+                'app/subTY.html',
+                {
+                    'title': "Thank You!",
+                    'message': "Thank you for joining LabLineup Premium",
+                    'year': datetime.now().year,
+                }
+            )
+        else:
+            pass
+    return render(
+        request,
+        'app/error.html',
+        {
+            'title': "Error",
+            'message': "Your subscription could not be updated. Please contact us.",
             'year': datetime.now().year,
         }
     )

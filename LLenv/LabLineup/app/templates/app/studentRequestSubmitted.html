@@ -2,29 +2,55 @@
 
 {% block content %}
 
+<script>
+    function cancelRequest() {
+        confirmResponse = confirm("Are you sure you want to cancel this request?");
+        if (confirmResponse) {
+            console.log("cancel");
+            document.forms["cancelRequestForm"].elements["cancelRequest"].value = "True";
+            document.getElementById("cancelRequestForm").submit();
+            console.log("cancel");
+        }
+    }
+
+    function neverHelped() {
+        
+    }
+</script>
+
+<form id="cancelRequestForm" action="." method="post" prefix="cancelRequestForm">
+    {% csrf_token %}
+    <input type = "hidden" name = "cancelRequest" value = ''/>
+</form>
+
 <h2>{{ title }}</h2>
 <div class = row>
     <div class="col-md-8">
-        <h4> Lab: {{ labID }}</h4>
-        <h4> 
-            Station ID: 
-            <p style="display: inline-block;
-            width: 50px;
-            border: 1px solid #000;
-            text-align: center;">{{ stationID }}</p>
-        </h4>
-        <h4>
-            Estimated Wait:
-            {{ avgWait }}
-        </h4>
-        <h4>
-            Number of Requests Before You:
-            {{ numBefore }}
-        </h4>
-        </p>
-        <div class="col-md-10">
-            <input type="submit" value="Cancel Request" class="btn btn-primary" />
-            <input type="submit" value="I was never helped" class="btn btn-primary" />
+        <form action="." method="post" class="form-horizontal" prefix="cancelRequestForm">
+            <h4> Lab: {{ labID }}</h4>
+            <h4> 
+                Station ID: 
+                <p style="display: inline-block;
+                width: 50px;
+                border: 1px solid #000;
+                text-align: center;">{{ stationID }}</p>
+            </h4>
+            <h4>
+                Estimated Wait:
+                {{ avgWait }}
+            </h4>
+            <h4>
+                Number of Requests Before You:
+                {{ numBefore }}
+            </h4>
+            </p>
+            <div class="col-md-10">
+                
+                    <button type="button" class="btn btn-primary" onclick= "javascript:cancelRequest();">Cancel Request</button>
+               
+                
+                <input type="submit" value="I was never helped" class="btn btn-primary" />
+            </form>        
         </div>
     </div>
 </div>

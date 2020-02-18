@@ -2,28 +2,45 @@
 
 {% block content %}
 
+<script>
+  function feedbackScore(score) {
+      document.forms["feedbackForm"].elements["score"].value = score;
+      document.getElementById("feedbackForm").submit();
+  }
+</script>
+
+<form id="feedbackForm" action="." method="post" prefix="score">
+  {% csrf_token %}
+  <input type="hidden" name="score" value=0 />
+</form>
+
 <h2><strong>{{ title }}</strong></h2>
 <h3>{{ message }}</h3>
 <p>How well do you rate the help you received today? (1 being the lowest)</p>
 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-  <label class="btn btn-secondary">
-    <input type="radio" name="options" id="option1" autocomplete="off">1
+  <label class="btn btn-secondary active">
+    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(1)">1</button>
   </label>
-  <label class="btn btn-secondary">
-    <input type="radio" name="options" id="option2" autocomplete="off">2
+
+  <label class="btn btn-secondary active">
+    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(2)">2</button>
   </label>
-  <label class="btn btn-secondary">
-    <input type="radio" name="options" id="option3" autocomplete="off">3
+
+  <label class="btn btn-secondary active">
+    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(3)">3</button>
   </label>
-  <label class="btn btn-secondary">
-    <input type="radio" name="options" id="option4" autocomplete="off">4
+
+  <label class="btn btn-secondary active">
+    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(4)">4</button>
   </label>
-  <label class="btn btn-secondary">
-    <input type="radio" name="options" id="option5" autocomplete="off">5
+
+  <label class="btn btn-secondary active">
+    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(5)">5</button>
   </label>
+
 </div>
 
 <p></p>
 
-<a class="btn btn-primary" href="/app" role="button">Submit</a>
+<a class="btn btn-primary" href="/student/request" role="button">Submit</a>
 {% endblock %}
