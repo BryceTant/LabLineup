@@ -61,6 +61,7 @@ from app.modelFunc import updateSub
 from app.modelFunc import updateSubOrder
 from app.modelFunc import confirmNewSub
 from app.modelFunc import getSub
+from app.modelFunc import convertToLocal
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -616,6 +617,14 @@ def manageAccount(request):
     changePasswordForm = ChangePasswordForm(user=request.user)
     editAccountDetailsForm = EditAccountDetailsForm(
         user=request.user, initial=initialAccountDetails)
+    userSub = getSub(request.user.id)
+    if userSub == None:
+            userSub = Subscription(uid_id = request.user.id,
+                                   initialSub = None,
+                                   lastSub = None,
+                                   subRenewal = None,
+                                   labLimit = 1)
+            userSub.save()
     # Default tab is accountDetails
     activeDict = manageAccountSetTab("accountDetails") 
     if request.method == 'POST':
@@ -636,14 +645,7 @@ def manageAccount(request):
                 editAccountDetailsForm.save()
         elif 'subPlan' in request.POST:
             activeDict = manageAccountSetTab("subscription")
-            userSub = getSub(request.user.id)
-            if userSub == None:
-                userSub = Subscription(uid_id = request.user.id,
-                                       initialSub = None,
-                                       lastSub = None,
-                                       subRenewal = None,
-                                       labLimit = 1)
-                userSub.save()
+            
             plan = int(request.POST.get("subPlan", 0))
             checkoutLink = createCheckout(request.user.id, 
                                           userSub.id, 
@@ -691,7 +693,8 @@ def manageAccount(request):
             'year': datetime.now().year,
             'changePasswordForm': changePasswordForm,
             'editAccountDetailsForm': editAccountDetailsForm,
-            'active': activeDict
+            'active': activeDict,
+            'userSub': userSub
         }
     )
 
