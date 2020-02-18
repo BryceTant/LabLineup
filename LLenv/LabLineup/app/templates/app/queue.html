@@ -2,20 +2,33 @@
 
 {% block content %}
 <h2>{{ title }}</h2>
-
 {% if role == 'p' %}
-<button type="button" class="btn btn-default">Edit Lab</button>
+<a class="btn btn-primary" href="/lab/manageLab/">Edit Lab Settings</a>
 {% endif %}
 
-{% if role == 't' or role == 's' %}
-<button type="button" class="btn btn-default">Edit Notifications</button>
+{% if role == 't' %}
+<a class="btn btn-primary" href="/lab/manageLab">Edit Notifications</a>
 {% endif %}
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>All Requests</h3>
+        <div class="col-md-10">
+            <h4>Requests in Queue</h4>
+            {{ requestCount }}
+        </div>
+        <div class="col-md-10">
+            <h4>Average Wait</h4>
+            {{ averageWait }}
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}
 
 {% block scripts %}
-    {% load staticfiles %}
-    <script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
+{% load staticfiles %}
+<script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
 
 {% endblock %}

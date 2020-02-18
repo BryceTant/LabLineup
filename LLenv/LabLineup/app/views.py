@@ -711,8 +711,7 @@ def currentRequest(request):
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
     role = getRole(userID=request.user, labID=currentLID)
-    request = getRequestCount(labId=currentLID)
-    if (request != 0 and role == 'p' or role == 't'):
+    if (role == 'p' or role == 't'):
         #User is a prof or TA and should have access
         openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
         nextRequest = None
@@ -748,7 +747,7 @@ def currentRequest(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now(utc).year
             }
         )
 
