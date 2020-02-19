@@ -1,7 +1,9 @@
 {% extends "app/layout.html" %}
 
 {% block content %}
-
+<head>
+    <meta http-equiv="refresh" content="5"> <!-- See the difference? -->
+</head>
 <script>
     function cancelRequest() {
         document.forms["cancelRequestForm"].elements["cancelRequest"].value = "true";
@@ -33,10 +35,18 @@
             <h4> 
                 Station ID: 
                 <p style="display: inline-block;
-                width: 150px;
+                width: 100px;
                 border: 1px solid #000;
+                border-radius: 5px;
                 text-align: center;">{{ stationID }}</p>
             </h4>
+            <h4> Description: </h4>
+            <p style="display: inline-block;
+            width: 250px;
+            height: 100px;
+            border: 1px solid #000;
+            border-radius: 5px;
+            text-align: center;"> {{ description }}</p>
             <h4>
                 Estimated Wait:
                 {{ avgWait }}
