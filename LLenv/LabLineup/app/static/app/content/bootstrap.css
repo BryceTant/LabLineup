@@ -6845,8 +6845,7 @@ td.visible-print {
 }
 
 section.pricing {
-  background: #007bff;
-  background: linear-gradient(to right, #0062E6, #33AEFF);
+  background: #ffffff;
 }
 
 .pricing .card {
@@ -6862,13 +6861,13 @@ section.pricing {
 
 .pricing .card-title {
   margin: 0.5rem 0;
-  font-size: 0.9rem;
+  font-size: 2.5rem;
   letter-spacing: .1rem;
   font-weight: bold;
 }
 
 .pricing .card-price {
-  font-size: 3rem;
+  font-size: 2rem;
   margin: 0;
 }
 
