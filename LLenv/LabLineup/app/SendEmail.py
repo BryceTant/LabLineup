@@ -7,6 +7,7 @@ from app.modelFunc import getLastRequest
 
 from app.models import Lab
 from app.models import Request
+from app.models import Role
 from django.contrib.auth.models import User
 
 import requests  #Note: this is for HTTP requests, not lab requests
@@ -110,7 +111,9 @@ def sendRegistrationConfirmation(user, regConCode):
     sendEmail([user.email], subject, template="accountconfirm", variables=vars)
 
 def sendNeverHelped(lid, sid, rid):
-    profEmail = 'nrknight@lablineup.com'
+    lab = Lab.objects.get(lid=lid)
+    profID = Role.objects.get(lid=lid, role = 'p').uid
+    profEmail = profID.email
     labName = Lab.objects.get(lid=lid).name
     subject = "A student was NOT helped in " + labName
     request = Request.objects.get(rid=rid)
@@ -118,11 +121,14 @@ def sendNeverHelped(lid, sid, rid):
     studentName = student.first_name + " " + student.last_name
     station = request.station
     description = request.description
-    # helper = request.hid
-    # helperName = helper.first_name + " " + helper.last_name
+    helper = request.huid
+    if helper == None:
+        helperName = "None"
+    else:
+        helperName = helper.first_name + " " + helper.last_name
     
     dateSubmitted = request.timeSubmitted.strftime("%m/%d/%Y %I:%M:%S %p")
-    helperName = "TAFirst TA Last"
+    # helperName = "TAFirst TA Last"
 
     vars = "{\"labName\": \"" + labName + "\","
     vars = vars + "\"student\": \"" + studentName + "\","
@@ -132,4 +138,4 @@ def sendNeverHelped(lid, sid, rid):
     vars = vars + "\"helper\": \"" + helperName + "\","
     vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
 
-    sendEmail(student.email, subject, template="nothelped", variables=vars)
+    sendEmail(profEmail, subject, template="nothelped", variables=vars)

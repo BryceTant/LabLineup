@@ -67,6 +67,7 @@ from app.modelFunc import getAvgFeedbackTA
 from app.modelFunc import getNumCompleteTA
 from app.modelFunc import getNumOutstandingRequestsTA
 from app.modelFunc import updateFeedback
+from app.modelFunc import getRequests
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -311,9 +312,15 @@ def studentRequestSubmitted(request):
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
     avgWait = getAvgWait(currentLID)
-    numBefore = getRequestCount(currentLID) - 1
+    numBefore = 0
     lab = Lab.objects.get(lid=currentLID)
-    currRequest = getLastRequest(currentLID)
+    currRequest = Request.objects.get(lid=currentLID, suid=request.user)
+    allRequests = getRequests(currentLID)
+    for req in allRequests:
+        if (req.suid != request.user):
+            numBefore += 1
+        else:
+            break
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
         if request.method == 'POST':
@@ -346,7 +353,8 @@ def studentRequestSubmitted(request):
                 'avgWait': avgWait,
                 'stationID': currRequest.station,
                 'labID': lab.name,
-                'numBefore': numBefore
+                'numBefore': numBefore,
+                'description': currRequest.description
             }
         )
     else:

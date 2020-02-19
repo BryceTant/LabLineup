@@ -157,7 +157,7 @@ def getEmailsToNotifyThreshold(labID, currentCount):
 def getAvgWait(labID):
     waitTimes = []
     avgWaitTime = []
-    query = Request.objects.filter(lid_id=labID, rid=18)
+    query = Request.objects.filter(lid_id=labID)
     if query:
         for request in query:
             timeCompleted = 0
