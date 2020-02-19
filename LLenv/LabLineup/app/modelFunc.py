@@ -548,3 +548,12 @@ def getSub(userID):
     except:
         pass
     return query
+
+#To update a request's feedback
+def updateFeedback(rid, feedback):
+    query = None
+    try:
+        query = Request.objects.filter(rid=rid).update(feedback = feedback)
+        return True
+    except:
+        return False
