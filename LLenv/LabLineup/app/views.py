@@ -67,6 +67,7 @@ from app.modelFunc import getAvgFeedbackTA
 from app.modelFunc import getNumCompleteTA
 from app.modelFunc import getNumOutstandingRequestsTA
 from app.modelFunc import updateFeedback
+from app.modelFunc import markRequestComplete
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -788,6 +789,7 @@ def currentRequest(request):
     currentLID = request.session.get('currentLab')
     role = getRole(userID=request.user, labID=currentLID)
     if (role == 'p' or role == 't'):
+        print ("HERE")
         #User is a prof or TA and should have access
         openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
         nextRequest = None
@@ -798,23 +800,24 @@ def currentRequest(request):
         nextRequest.huid = request.user
         nextRequest.save()
         if request.method == 'POST':
-            nextRequest.timeCompleted = datetime.now(utc)
-            nextRequest.save()
-            return redirect('/lab/queue/')
-        return render(
-            request,
-            'app/currentRequest.html',
-            {
-                'title': 'Current Request',
-                'nameOfUser': getNameOfUser(nextRequest.suid_id),
-                'station': nextRequest.station,
-                'description': nextRequest.description,
-                'requestSubmitted': str(nextRequest.timeSubmitted.date()) + " " + str(nextRequest.timeSubmitted.strftime("%X")),
-                'averageWait' : getAvgWait(currentLID),
-                'requests' : str(getRequestCount(currentLID)),
-                'year': datetime.now(utc).year
-            }
-        )
+            print (str(nextRequest.rid))
+            markRequestComplete(nextRequest.rid)
+            return redirect('/lab/queue')
+        else:
+            return render(
+                request,
+                'app/currentRequest.html',
+                {
+                    'title': 'Current Request',
+                    'nameOfUser': getNameOfUser(nextRequest.suid_id),
+                    'station': nextRequest.station,
+                    'description': nextRequest.description,
+                    'requestSubmitted': str(nextRequest.timeSubmitted.date()) + " " + str(nextRequest.timeSubmitted.strftime("%X")),
+                    'averageWait' : getAvgWait(currentLID),
+                    'requests' : str(getRequestCount(currentLID)),
+                    'year': datetime.now(utc).year
+                }
+            )
     else:
         #User is a student, render access denied
         return render(

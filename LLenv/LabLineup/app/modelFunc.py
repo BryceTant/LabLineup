@@ -558,7 +558,8 @@ def updateFeedback(rid, feedback):
         return True
     except:
         return False
-        
+
+#To cancel a request        
 def cancelRequest(req):
     query = None
     try:
@@ -570,4 +571,13 @@ def cancelRequest(req):
         return True
     else:
         return False
-    
+ 
+#To mark a request as complete by adding a timeCompleted
+def markRequestComplete(rid):
+    query = None
+    now = datetime.datetime.now(utc)
+    try:
+        query = Request.objects.filter(rid=rid).update(timeCompleted=now)
+        return True
+    except:
+        return False
