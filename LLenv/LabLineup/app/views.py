@@ -48,7 +48,6 @@ from app.modelFunc import getNextRequest
 from app.modelFunc import getNameOfUser
 from app.modelFunc import getStudentCurrentRequest
 from app.modelFunc import getOutstandingRequest
-from app.modelFunc import getNumOutstandingRequests
 from app.modelFunc import removeLabFromAccount
 from app.modelFunc import getLabUsersWithRole
 from app.modelFunc import setLabInactive
@@ -63,6 +62,11 @@ from app.modelFunc import confirmNewSub
 from app.modelFunc import getSub
 from app.modelFunc import cancelRequest
 from app.modelFunc import convertToLocal
+from app.modelFunc import getAvgWaitTA
+from app.modelFunc import getAvgFeedbackTA
+from app.modelFunc import getNumCompleteTA
+from app.modelFunc import getNumOutstandingRequestsTA
+from app.modelFunc import updateFeedback
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -361,37 +365,41 @@ def studentRequestFeedback(request):
     # Blank Request Form => Request Waiting Form => Feedback Form
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
+    currentRequest = request.session.get('currentRequest')
+    message = 'Please submit feedback about the help you received'
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
+        if request.method == 'POST':
+            if 'score' in request.POST:
+                score = int(request.POST.get('score', 0))
+                if(score == 0):
+                    message = 'You forgot to select a score'
+                    pass
+                else:
+                    updateFeedback(currentRequest, score)
+                    return redirect('/student/request')
+            else:
+                pass
         return render(
             request,
                 'app/studentRequestFeedback.html',
                 {
                     'title': 'Feedback',
-                    'message': 'Please submit feedback about the help you received',
+                    'message': message,
                     'year': datetime.now().year
                 }
         )
     else:
         return render(
             request,
-            'app/permissionDenied.html',
-            {
-                'title': 'Permission Denied',
-                'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
-            }
-        )
-    # Check post for score
-    if request.method == 'POST':
-        if 'score' in request.POST:
-            x = 0
-            # do something
-        else:
-            x = 0
-            # user forgot to select a score before hitting submit
-    else:
-        pass
+                'app/permissionDenied.html',
+                {
+                    'title': 'Permission Denied',
+                    'message': 'You do not have permission to view this page',
+                    'year': datetime.now().year
+                }
+            )
+    
 
 def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""
@@ -401,6 +409,15 @@ def labQueue(request):
     lab = Lab.objects.get(lid=currentLID)
     role = getRole(userID=request.user, labID = currentLID)
     if (role == 'p' or role == 't'):
+        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
+        nextRequest = None
+        if openRequest != None:
+            nextRequest = openRequest
+        else:
+            nextRequest = getNextRequest(currentLID)
+        if request.method == 'POST':
+            nextRequest.huid = request.user
+            nextRequest.save()
         #User is a prof or TA and should have access
         return render(
             request,
@@ -622,11 +639,45 @@ def labFeedback(request):
             }
         )
 
-def labFeedbackHelper(request):
+def labFeedbackHelper(request, userID):
     """Renders feedback page for specific TA for specific lab"""
     # Should only render if user's role is professor or the specified TA
     assert isinstance(request, HttpRequest)
-    pass
+    currentLID = request.session.get('currentLab')
+    role = getRole(userID=request.user, labID = currentLID)
+    nameOfTA = getNameOfUser(userID=request.user)
+    avgWaitTA = getAvgWaitTA(currentLID, helperID=request.user)
+    avgFeedbackTA = getAvgFeedbackTA(currentLID, helperID=request.user)
+    numRequestsCompleteTA = getNumCompleteTA(currentLID, helperID=request.user)
+    numOutstandingRequestsTA = getNumOutstandingRequestsTA(currentLID, helperID=request.user)
+    if (role == 'p' or role == 't'):
+        #User is a prof or TA and should have access
+        return render(
+            request,
+            'app/labFeedbackTA.html',
+            {
+                'title': 'Feedback',
+                'nameOfTA': nameOfTA,
+                'message': 'View feedback, wait time, and other lab metrics for this TA',
+                'year': datetime.now().year,
+                'role': role,
+                'avgWaitTA': avgWaitTA,
+                'avgFeedbackTA': avgFeedbackTA,
+                'numRequestsCompleteTA': numRequestsCompleteTA,
+                'numOutstandingRequestsTA': numOutstandingRequestsTA
+             }
+        )
+    else:
+        #User is not a professor or TA, render access denied
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
 
 def manageAccountSetTab(tab):
     """Function to set the active tab for the manageAccount page"""
@@ -657,7 +708,7 @@ def manageAccount(request):
                                    labLimit = 1)
             userSub.save()
     # Default tab is accountDetails
-    activeDict = manageAccountSetTab("accountDetails") 
+    activeDict = manageAccountSetTab("accountDetails")
     if request.method == 'POST':
         if 'changePassword' in request.POST:
             changePasswordForm = ChangePasswordForm(data=request.POST,
@@ -666,20 +717,20 @@ def manageAccount(request):
             if changePasswordForm.is_valid():
                 changePasswordForm.save()
                 #Update the session to keep the user logged in
-                update_session_auth_hash(request, changePasswordForm.user) 
+                update_session_auth_hash(request, changePasswordForm.user)
             #return redirect('/account')
         elif 'editAccountDetails' in request.POST:
             editAccountDetailsForm = EditAccountDetailsForm(data=request.POST,
-                user=request.user, 
+                user=request.user,
                 initial=initialAccountDetails)
             if editAccountDetailsForm.is_valid():
                 editAccountDetailsForm.save()
         elif 'subPlan' in request.POST:
             activeDict = manageAccountSetTab("subscription")
-            
+
             plan = int(request.POST.get("subPlan", 0))
-            checkoutLink = createCheckout(request.user.id, 
-                                          userSub.id, 
+            checkoutLink = createCheckout(request.user.id,
+                                          userSub.id,
                                           plan)
             if checkoutLink != None:
                 return redirect(checkoutLink)
@@ -734,8 +785,7 @@ def currentRequest(request):
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
     role = getRole(userID=request.user, labID=currentLID)
-    request = getRequestCount(labId=currentLID)
-    if (request != 0 and role == 'p' or role == 't'):
+    if (role == 'p' or role == 't'):
         #User is a prof or TA and should have access
         openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
         nextRequest = None
@@ -748,7 +798,7 @@ def currentRequest(request):
         if request.method == 'POST':
             nextRequest.timeCompleted = datetime.now(utc)
             nextRequest.save()
-            return redirect('/lab/queue/')
+            return redirect('/lab/queue/currentRequest')
         return render(
             request,
             'app/currentRequest.html',
@@ -757,6 +807,7 @@ def currentRequest(request):
                 'nameOfUser': getNameOfUser(nextRequest.suid_id),
                 'station': nextRequest.station,
                 'description': nextRequest.description,
+                'completed' : nextRequest.timeCompleted,
                 'requestSubmitted': str(nextRequest.timeSubmitted),
                 'averageWait' : getAvgWait(currentLID),
                 'requests' : str(getRequestCount(currentLID)),
@@ -771,7 +822,7 @@ def currentRequest(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now(utc).year
             }
         )
 

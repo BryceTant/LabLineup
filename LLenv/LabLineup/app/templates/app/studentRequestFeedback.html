@@ -9,38 +9,36 @@
   }
 </script>
 
-<form id="feedbackForm" action="." method="post" prefix="score">
-  {% csrf_token %}
-  <input type="hidden" name="score" value=0 />
-</form>
-
 <h2><strong>{{ title }}</strong></h2>
 <h3>{{ message }}</h3>
 <p>How well do you rate the help you received today? (1 being the lowest)</p>
 <div class="btn-group btn-group-toggle" data-toggle="buttons">
   <label class="btn btn-secondary active">
-    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(1)">1</button>
+    <button type="radio" class="btn btn-default" onclick="javascript:feedbackScore(1)">1</button>
   </label>
 
   <label class="btn btn-secondary active">
-    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(2)">2</button>
+    <button type="radio" class="btn btn-default" onclick="javascript:feedbackScore(2)">2</button>
   </label>
 
   <label class="btn btn-secondary active">
-    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(3)">3</button>
+    <button type="radio" class="btn btn-default" onclick="javascript:feedbackScore(3)">3</button>
   </label>
 
   <label class="btn btn-secondary active">
-    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(4)">4</button>
+    <button type="radio" class="btn btn-default" onclick="javascript:feedbackScore(4)">4</button>
   </label>
 
   <label class="btn btn-secondary active">
-    <input type="radio" class="btn btn-default" onclick="javascript:feedbackScore(5)">5</button>
+    <button type="radio" class="btn btn-default" onclick="javascript:feedbackScore(5)">5</button>
   </label>
 
 </div>
 
 <p></p>
 
-<a class="btn btn-primary" href="/student/request" role="button">Submit</a>
+<form id="feedbackForm" action="." method="post" >
+  {% csrf_token %}
+  <input type="hidden" name="score" value='0' />
+</form>
 {% endblock %}

@@ -5,45 +5,54 @@
 <h2>{{ title }}</h2>
 
 <div class="row">
-    <form action="." method="post" class="form-horizontal">
-    <h3>Next Request</h3>
-    <div class="col-md-10">
-        <h4>User</h4>
-        {{ nameOfUser }}
-    </div>
-    <div class="col-md-10">
-        <h4>Station</h4>
-        {{ station }}
-    </div>
-    <div class="col-md-10">
-        <h4>Description</h4>
-        {{ description }}
-    </div>
-    <div class="col-md-10">
-        <h4>Submitted</h4>
-        {{ requestSubmitted }}
-    </div>
-    <div class="col-md-10">
-        <br />
-    </div>
-    <div class="col-md-10">
-        <input type="submit" value="Mark Request Complete" class="btn btn-default" />
-    </div>
-    </form>
-    <div class="col-md-10">
-        <!-- Solid divider -->
-        <hr class="solid">
+    <div class="col-md-8">
+        <form action="." method="post" class="form-horizontal">
+            {% csrf_token %}
+            <h3>Next Request</h3>
+            <div class="col-md-10">
+                <h4>User</h4>
+                {{ nameOfUser }}
+            </div>
+            <div class="col-md-10">
+                <h4>Station</h4>
+                {{ station }}
+            </div>
+            <div class="col-md-10">
+                <h4>Description</h4>
+                {{ description }}
+            </div>
+            <div class="col-md-10">
+                <h4>Submitted</h4>
+                {{ requestSubmitted }}
+            </div>
+            <div class="col-md-10">
+                <h4>Completed</h4>
+                {{ completed }}
+            </div>
+            <div class="col-md-10">
+                <br />
+            </div>
+            <div class="col-md-10">
+                <input type="submit" value="Mark Request Complete" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
 </div>
+<div class="col-md-10">
+    <!-- Solid divider -->
+    <hr class="solid">
+</div>
 <div class="row">
-    <h3>All Requests</h3>
-    <div class="col-md-10">
-        <h4>Requests in Queue</h4>
-        {{ requests }}
-    </div>
-    <div class="col-md-10">
-        <h4>Average Wait</h4>
-        {{ averageWait }}
+    <div class="col-md-8">
+        <h3>All Requests</h3>
+        <div class="col-md-10">
+            <h4>Requests in Queue</h4>
+            {{ requests }}
+        </div>
+        <div class="col-md-10">
+            <h4>Average Wait</h4>
+            {{ averageWait }}
+        </div>
     </div>
 </div>
 

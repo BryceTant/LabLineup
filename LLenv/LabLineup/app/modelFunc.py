@@ -356,9 +356,9 @@ def getOutstandingRequest(labID, userID):
         pass
     return query
 
-#To get the number of requests that are assigned but not completed in a lab
-def getNumOutstandingRequests(labID, userID):
-    queryCount = Request.objects.filter(lid_id=labID, huid_id=userID).count()
+#To get the number of requests that are assigned but not completed in a lab for a specific helper
+def getNumOutstandingRequestsTA(labID, helperID):
+    queryCount = Request.objects.filter(lid_id=labID, huid_id=helperID).count()
     return queryCount
 
 #To remove a lab from an account (remove the role)
@@ -549,6 +549,16 @@ def getSub(userID):
         pass
     return query
 
+#To update a request's feedback
+def updateFeedback(rid, feedback):
+    query = None
+    try:
+        query = Request.objects.filter(rid=rid).update(feedback = feedback)
+        query.save()
+        return True
+    except:
+        return False
+        
 def cancelRequest(req):
     query = None
     try:

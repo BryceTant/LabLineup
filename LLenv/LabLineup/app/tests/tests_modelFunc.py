@@ -288,4 +288,10 @@ class ModelFuncTest(TestCase):
         self.assertEqual("Test First 1 Test Last 1", mf.getNameOfUser(self.User1.id))
         self.assertEqual("Test First 2 Test Last 2", mf.getNameOfUser(self.User2.id))
         self.assertEqual("Test First 3 Test Last 3", mf.getNameOfUser(self.User3.id))
+
+    def test_generatePasswordResetCode(self):
+        # generate code
+
+    def test_resetPasswordFunc(self):
+        #test reset
         
