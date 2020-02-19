@@ -554,6 +554,7 @@ def updateFeedback(rid, feedback):
     query = None
     try:
         query = Request.objects.filter(rid=rid).update(feedback = feedback)
+        query.save()
         return True
     except:
         return False

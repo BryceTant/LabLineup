@@ -66,6 +66,7 @@ from app.modelFunc import getAvgWaitTA
 from app.modelFunc import getAvgFeedbackTA
 from app.modelFunc import getNumCompleteTA
 from app.modelFunc import getNumOutstandingRequestsTA
+from app.modelFunc import updateFeedback
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -360,14 +361,27 @@ def studentRequestFeedback(request):
     # Blank Request Form => Request Waiting Form => Feedback Form
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
+    currentRequest = request.session.get('currentRequest')
+    message = 'Please submit feedback about the help you received'
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
+        if request.method == 'POST':
+            if 'score' in request.POST:
+                score = int(request.POST.get('score', 0))
+                if(score == 0):
+                    message = 'You forgot to select a score'
+                    pass
+                else:
+                    updateFeedback(currentRequest, score)
+                    return redirect('/student/request')
+            else:
+                pass
         return render(
             request,
                 'app/studentRequestFeedback.html',
                 {
                     'title': 'Feedback',
-                    'message': 'Please submit feedback about the help you received',
+                    'message': message,
                     'year': datetime.now().year
                 }
         )
@@ -381,14 +395,7 @@ def studentRequestFeedback(request):
                     'year': datetime.now().year
                 }
             )
-    # Check post for score
-     if request.method == 'POST':
-        if 'score' in request.POST:
-             # do something
-         else:
-             # user forgot to select a score before hitting submit
-     else:
-         pass
+    
 
 def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""
