@@ -809,8 +809,7 @@ def currentRequest(request):
                 'nameOfUser': getNameOfUser(nextRequest.suid_id),
                 'station': nextRequest.station,
                 'description': nextRequest.description,
-                'completed' : nextRequest.timeCompleted,
-                'requestSubmitted': str(nextRequest.timeSubmitted),
+                'requestSubmitted': str(nextRequest.timeSubmitted.date()) + " " + str(nextRequest.timeSubmitted.strftime("%X")),
                 'averageWait' : getAvgWait(currentLID),
                 'requests' : str(getRequestCount(currentLID)),
                 'year': datetime.now(utc).year
