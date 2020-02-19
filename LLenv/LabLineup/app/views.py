@@ -413,11 +413,13 @@ def labQueue(request):
         nextRequest = None
         if openRequest != None:
             nextRequest = openRequest
+            return redirect('/lab/queue/currentRequest')
         else:
             nextRequest = getNextRequest(currentLID)
         if request.method == 'POST':
             nextRequest.huid = request.user
             nextRequest.save()
+            return redirect('/lab/queue/currentRequest')
         #User is a prof or TA and should have access
         return render(
             request,
@@ -798,7 +800,7 @@ def currentRequest(request):
         if request.method == 'POST':
             nextRequest.timeCompleted = datetime.now(utc)
             nextRequest.save()
-            return redirect('/lab/queue/currentRequest')
+            return redirect('/lab/queue/')
         return render(
             request,
             'app/currentRequest.html',
