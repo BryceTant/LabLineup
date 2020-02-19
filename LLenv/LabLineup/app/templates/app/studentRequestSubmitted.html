@@ -4,16 +4,14 @@
 
 <script>
     function cancelRequest() {
-        confirmResponse = confirm("Are you sure you want to cancel this request?");
-        if (confirmResponse) {
-            console.log("cancel");
-            document.forms["cancelRequestForm"].elements["cancelRequest"].value = "True";
-            document.getElementById("cancelRequestForm").submit();
-            console.log("cancel");
-        }
+        document.forms["cancelRequestForm"].elements["cancelRequest"].value = "true";
+        document.getElementById("cancelRequestForm").submit();
     }
 
     function neverHelped() {
+        console.log("Never helped");
+        document.forms["neverHelpedForm"].elements["neverHelped"].value = "true";
+        document.getElementById("neverHelpedForm").submit();
         
     }
 </script>
@@ -22,16 +20,20 @@
     {% csrf_token %}
     <input type = "hidden" name = "cancelRequest" value = ''/>
 </form>
+<form id="neverHelpedForm" action="." method="post" prefix="neverHelpedForm">
+    {% csrf_token %}
+    <input type = "hidden" name = "neverHelped" value = ''/>
+</form>
 
 <h2>{{ title }}</h2>
 <div class = row>
     <div class="col-md-8">
-        <form action="." method="post" class="form-horizontal" prefix="cancelRequestForm">
+        
             <h4> Lab: {{ labID }}</h4>
             <h4> 
                 Station ID: 
                 <p style="display: inline-block;
-                width: 50px;
+                width: 150px;
                 border: 1px solid #000;
                 text-align: center;">{{ stationID }}</p>
             </h4>
@@ -45,12 +47,13 @@
             </h4>
             </p>
             <div class="col-md-10">
-                
-                    <button type="button" class="btn btn-primary" onclick= "javascript:cancelRequest();">Cancel Request</button>
-               
-                
-                <input type="submit" value="I was never helped" class="btn btn-primary" />
-            </form>        
+
+            <form action="." method="post" class="form-horizontal" prefix="cancelRequestForm">
+                <button type="button" class="btn btn-primary" onclick= "javascript:cancelRequest();">Cancel Request</button>
+            </form>
+            <form action="." method="post" class="form-horizontal" prefix="neverHelpedForm">
+                <button type="button" class="btn btn-primary" onclick= "javascript:neverHelped();">I was never helped</button>  
+            </form>      
         </div>
     </div>
 </div>

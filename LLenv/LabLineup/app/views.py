@@ -67,6 +67,7 @@ from app.modelFunc import convertToLocal
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
 from app.SendEmail import sendRegistrationConfirmation
+from app.SendEmail import sendNeverHelped
 
 from app.Payment import createCheckout
 from app.Payment import findRecentPayment
@@ -311,31 +312,34 @@ def studentRequestSubmitted(request):
     currRequest = getLastRequest(currentLID)
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
-        if True: #request.method == 'POST':
-            if 'cancelRequestForm' in request.POST:
-                cancelRequestConfirmation = request.POST.get("cancelRequest", False)
-                if cancelRequestConfirmation == "True":
-                    cancelled = cancelRequest(currRequest)
-                    if cancelled:
-                        return redirect('/app')
-                    else:
-                        return render(
-                            request,
-                            'app/error.html',
-                            {
-                                'title': "Error",
-                                'message': "Request was not deleted.",
-                                'year': datetime.now(utc).year
-                            }
-                        )
-                # return redirect('student/requestSubmitted')
+        if request.method == 'POST':
+            if 'neverHelped' in request.POST:
+                sendNeverHelped(currentLID, request.user, currRequest.rid)
+                return redirect('/app')
+            if 'cancelRequest' in request.POST:
+                # cancelRequestConfirmation = request.POST.get("cancelRequest", False)
+                # if cancelRequestConfirmation == "true":
+                cancelled = cancelRequest(currRequest)
+                if cancelled:
+                    return redirect('/app')
+                else:
+                    return render(                            request,
+                        'app/error.html',
+                        {
+                            'title': "Error",
+                            'message': "Request was not deleted.",
+                            'year': datetime.now(utc).year
+                           }
+                    )
+            return redirect('/student/requestSubmitted')
         return render(
             request,
             'app/studentRequestSubmitted.html',
             {
                 'title': 'Request Submitted',
                 'message': 'Your request has been submitted',
-                'year': datetime.now().year,                    'avgWait': avgWait,
+                'year': datetime.now().year,                    
+                'avgWait': avgWait,
                 'stationID': currRequest.station,
                 'labID': lab.name,
                 'numBefore': numBefore
@@ -368,21 +372,23 @@ def studentRequestFeedback(request):
                     'year': datetime.now().year
                 }
         )
-        else:
-            return render(
-                request,
-                'app/permissionDenied.html',
-                {
-                    'title': 'Permission Denied',
-                    'message': 'You do not have permission to view this page',
-                    'year': datetime.now().year
-                }
-            )
+    else:
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
     # Check post for score
     if request.method == 'POST':
         if 'score' in request.POST:
+            x = 0
             # do something
         else:
+            x = 0
             # user forgot to select a score before hitting submit
     else:
         pass

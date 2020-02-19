@@ -110,15 +110,18 @@ def sendRegistrationConfirmation(user, regConCode):
     sendEmail([user.email], subject, template="accountconfirm", variables=vars)
 
 def sendNeverHelped(lid, sid, rid):
-    profEmail = "Get professor email for this"
+    profEmail = 'nrknight@lablineup.com'
     labName = Lab.objects.get(lid=lid).name
     subject = "A student was NOT helped in " + labName
-    student = User.objects.get(uid_id=sid)
-    studentName = student.first_name + " " + student.last_name
-    station = None
     request = Request.objects.get(rid=rid)
+    student = User.objects.get(id=request.suid_id)
+    studentName = student.first_name + " " + student.last_name
+    station = request.station
+    description = request.description
+    # helper = request.hid
+    # helperName = helper.first_name + " " + helper.last_name
+    
     dateSubmitted = request.timeSubmitted.strftime("%m/%d/%Y %I:%M:%S %p")
-    description = None
     helperName = "TAFirst TA Last"
 
     vars = "{\"labName\": \"" + labName + "\","
@@ -129,4 +132,4 @@ def sendNeverHelped(lid, sid, rid):
     vars = vars + "\"helper\": \"" + helperName + "\","
     vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
 
-    sendEmail(profEmail, subject, template="nothelped", variables=vars)
+    sendEmail(student.email, subject, template="nothelped", variables=vars)

@@ -552,7 +552,7 @@ def getSub(userID):
 def cancelRequest(req):
     query = None
     try:
-        query = Request.objects.get(rid = req)
+        query = Request.objects.get(rid = req.rid)
     except:
         pass
     if query != None:
