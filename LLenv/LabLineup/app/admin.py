@@ -12,7 +12,7 @@ class RoleAdmin(admin.ModelAdmin):
 
 class RequestAdmin(admin.ModelAdmin):
     list_display=('rid','station','description','timeSubmitted',
-                  'timeCompleted','feedback','suid','lid','huid')
+                  'timeCompleted','feedback','suid','lid','huid','complete')
 
 class LabCodeAdmin(admin.ModelAdmin):
     list_display=('code','lid','role')
