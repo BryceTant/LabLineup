@@ -418,17 +418,6 @@ def labQueue(request):
     lab = Lab.objects.get(lid=currentLID)
     role = getRole(userID=request.user, labID = currentLID)
     if (role == 'p' or role == 't'):
-        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
-        nextRequest = None
-        if openRequest != None:
-            nextRequest = openRequest
-            return redirect('/lab/queue/currentRequest')
-        else:
-            nextRequest = getNextRequest(currentLID)
-        if request.method == 'POST':
-            nextRequest.huid = request.user
-            nextRequest.save()
-            return redirect('/lab/queue/currentRequest')
         #User is a prof or TA and should have access
         return render(
             request,
@@ -797,7 +786,6 @@ def currentRequest(request):
     currentLID = request.session.get('currentLab')
     role = getRole(userID=request.user, labID=currentLID)
     if (role == 'p' or role == 't'):
-        print ("HERE")
         #User is a prof or TA and should have access
         openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
         nextRequest = None
@@ -805,7 +793,7 @@ def currentRequest(request):
             nextRequest = openRequest
         else:
             nextRequest = getNextRequest(currentLID)
-        nextRequest.huid = request.user
+        nextRequest.huid_id = request.user.id
         nextRequest.save()
         if request.method == 'POST':
             print (str(nextRequest.rid))

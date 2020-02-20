@@ -342,7 +342,7 @@ def getNameOfUser(userID):
 def getStudentCurrentRequest(labID, userID):
     query = None
     try:
-        query = Request.objects.get(lid_id = labID, suid_id=userID, timeCompleted=None).rid
+        query = Request.objects.get(lid_id = labID, suid_id=userID, timeCompleted=None)
     except:
         pass
     return query
@@ -351,14 +351,17 @@ def getStudentCurrentRequest(labID, userID):
 def getOutstandingRequest(labID, userID):
     query = None
     try:
-        query = Request.objects.get(lid_id=labID, huid_id=userID)
+        query = Request.objects.get(lid_id=labID, huid_id=userID, complete=False)
     except:
         pass
     return query
 
 #To get the number of requests that are assigned but not completed in a lab for a specific helper
 def getNumOutstandingRequestsTA(labID, helperID):
-    queryCount = Request.objects.filter(lid_id=labID, huid_id=helperID).count()
+    queryCount = Request.objects.filter(lid_id=labID, 
+                                        huid_id=helperID, 
+                                        complete=False, 
+                                        timeCompleted=None).count()
     return queryCount
 
 #To remove a lab from an account (remove the role)
