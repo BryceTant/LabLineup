@@ -69,6 +69,7 @@ from app.modelFunc import getNumOutstandingRequestsTA
 from app.modelFunc import updateFeedback
 from app.modelFunc import markRequestComplete
 from app.modelFunc import getRequests
+from app.modelFunc import markRequestNotComplete
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -315,7 +316,7 @@ def studentRequestSubmitted(request):
     avgWait = getAvgWait(currentLID)
     numBefore = 0
     lab = Lab.objects.get(lid=currentLID)
-    currRequest = Request.objects.get(lid=currentLID, suid=request.user)
+    currRequest = Request.objects.get(lid=currentLID, suid=request.user, timeCompleted=None)
     allRequests = getRequests(currentLID)
     for req in allRequests:
         if (req.suid != request.user):
@@ -327,15 +328,15 @@ def studentRequestSubmitted(request):
         if request.method == 'POST':
             if 'neverHelped' in request.POST:
                 sendNeverHelped(currentLID, request.user, currRequest.rid)
+                markRequestNotComplete(rid=currRequest.rid)
                 return redirect('/app')
             if 'cancelRequest' in request.POST:
-                # cancelRequestConfirmation = request.POST.get("cancelRequest", False)
-                # if cancelRequestConfirmation == "true":
                 cancelled = cancelRequest(currRequest)
                 if cancelled:
                     return redirect('/app')
                 else:
-                    return render(                            request,
+                    return render(       
+                        request,
                         'app/error.html',
                         {
                             'title': "Error",
