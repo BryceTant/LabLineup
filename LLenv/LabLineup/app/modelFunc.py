@@ -577,7 +577,7 @@ def markRequestComplete(rid):
     query = None
     now = datetime.datetime.now(utc)
     try:
-        query = Request.objects.filter(rid=rid).update(timeCompleted=now)
+        query = Request.objects.filter(rid=rid).update(timeCompleted=now, complete=True)
         return True
     except:
         return False
