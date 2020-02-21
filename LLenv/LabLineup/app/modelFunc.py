@@ -607,6 +607,10 @@ def releaseRequest(rid):
     query = None
     try:
         query = Request.objects.filter(rid=rid).update(huid_id=None)
+        return True
+    except:
+        return False
+
 #To mark a request not complete but set timeCompleted
 def markRequestNotComplete(rid):
     query = None
