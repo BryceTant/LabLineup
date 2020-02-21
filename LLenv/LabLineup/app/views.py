@@ -69,6 +69,8 @@ from app.modelFunc import getNumOutstandingRequestsTA
 from app.modelFunc import updateFeedback
 from app.modelFunc import markRequestComplete
 from app.modelFunc import getRequests
+from app.modelFunc import assignRequest
+from app.modelFunc import releaseRequest
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -787,33 +789,64 @@ def currentRequest(request):
     role = getRole(userID=request.user, labID=currentLID)
     if (role == 'p' or role == 't'):
         #User is a prof or TA and should have access
-        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user)
-        nextRequest = None
-        if openRequest != None:
-            nextRequest = openRequest
-        else:
-            nextRequest = getNextRequest(currentLID)
-        nextRequest.huid_id = request.user.id
-        nextRequest.save()
         if request.method == 'POST':
-            print (str(nextRequest.rid))
-            markRequestComplete(nextRequest.rid)
-            return redirect('/lab/queue')
+            print (request.POST)
+            currentRID = request.session.get("currentRID")
+            if 'newHelperID' in request.POST:
+                newHelperID = int(request.POST.get("newHelperID", 0))
+                if newHelperID != 0:
+                    assignRequest(currentRID, newHelperID)
+                return redirect("/lab/queue")
+            elif 'markComplete' in request.POST:
+                #Mark the request as complete
+                markRequestComplete(currentRID)
+                return redirect('/lab/queue')
+            elif 'releaseRequest' in request.POST:
+                #Releasing the request (user is not helping right now)
+                releaseRequest(currentRID)
+                return redirect("/lab/queue")
+            else:
+                #This should never be reached
+                return render(request,
+                              'app/error.html',
+                              {
+                                  'title' : "Error",
+                                  'message': "An error occured",
+                                  'year': datetime.now(utc).year
+                              }
+                              )
         else:
-            return render(
-                request,
-                'app/currentRequest.html',
-                {
-                    'title': 'Current Request',
-                    'nameOfUser': getNameOfUser(nextRequest.suid_id),
-                    'station': nextRequest.station,
-                    'description': nextRequest.description,
-                    'requestSubmitted': str(nextRequest.timeSubmitted.date()) + " " + str(nextRequest.timeSubmitted.strftime("%X")),
-                    'averageWait' : getAvgWait(currentLID),
-                    'requests' : str(getRequestCount(currentLID)),
-                    'year': datetime.now(utc).year
-                }
-            )
+            #If not post, then assign a new request
+            openRequest = getOutstandingRequest(labID=currentLID, userID=request.user.id)
+            nextRequest = None
+            if openRequest != None:
+                nextRequest = openRequest
+            else:
+                nextRequest = getNextRequest(currentLID)
+            if nextRequest != None:
+                #If the lab has a request to show
+                assignRequest(nextRequest.rid, request.user.id)
+                request.session["currentRID"] = nextRequest.rid
+                requestSubmitted = str(nextRequest.timeSubmitted.date())
+                requestSubmitted = requestSubmitted + " " + str(nextRequest.timeSubmitted.strftime("%X"))
+                return render(
+                    request,
+                    'app/currentRequest.html',
+                    {
+                        'title': 'Current Request',
+                        'nameOfUser': getNameOfUser(nextRequest.suid_id),
+                        'station': nextRequest.station,
+                        'description': nextRequest.description,
+                        'requestSubmitted': requestSubmitted,
+                        'averageWait' : getAvgWait(currentLID),
+                        'requests' : str(getRequestCount(currentLID)),
+                        'labProfs': getLabUsersWithRole(labID=currentLID, role='p'),
+                        'labTAs': getLabUsersWithRole(labID=currentLID, role='t'),
+                        'year': datetime.now(utc).year
+                    }
+                )
+            else:
+                return redirect("/lab/queue")
     else:
         #User is a student, render access denied
         return render(

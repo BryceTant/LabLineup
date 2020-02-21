@@ -111,7 +111,15 @@ def getCompletedRequests(labID):
 
 #To get the oldest request in the queue with no helper assigned
 def getNextRequest(labID):
-    return Request.objects.filter(lid_id=labID, timeCompleted=None).earliest('timeSubmitted')
+    query = None
+    try:
+        query = Request.objects.filter(lid_id=labID,
+                                       timeCompleted=None,
+                                       complete=False,
+                                       huid_id=None).earliest('timeSubmitted')
+    except:
+        pass
+    return query
 
 #To get the most recent request in the queue
 def getLastRequest(labID):
@@ -581,6 +589,24 @@ def markRequestComplete(rid):
     now = datetime.datetime.now(utc)
     try:
         query = Request.objects.filter(rid=rid).update(timeCompleted=now, complete=True)
+        return True
+    except:
+        return False
+
+#To assign a request to a helper
+def assignRequest(rid, huid):
+    query = None
+    try:
+        query = Request.objects.filter(rid=rid).update(huid_id=huid)
+        return True
+    except:
+        return False
+
+#To remove a the huid from a request
+def releaseRequest(rid):
+    query = None
+    try:
+        query = Request.objects.filter(rid=rid).update(huid_id=None)
         return True
     except:
         return False
