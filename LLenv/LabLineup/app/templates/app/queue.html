@@ -25,9 +25,11 @@
             <div class="col-md-10">
                 <br />
             </div>
+        {% if requestCount != '0' %}
             <div class="col-md-10">
                 <a href="/lab/queue/currentRequest" class="btn btn-primary">Accept Next Request</a>
             </div>
+        {% endif %}
     </div>
 </div>
 
