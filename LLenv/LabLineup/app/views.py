@@ -422,7 +422,9 @@ def labQueue(request):
     lab = Lab.objects.get(lid=currentLID)
     role = getRole(userID=request.user, labID = currentLID)
     if (role == 'p' or role == 't'):
-        #User is a prof or TA and should have access
+        openRequest = getOutstandingRequest(labID=currentLID, userID=request.user.id)
+        if openRequest != None:
+            return redirect("/lab/queue/currentRequest")
         return render(
             request,
             'app/queue.html',
