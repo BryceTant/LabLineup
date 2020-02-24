@@ -4,7 +4,17 @@
 <div class="col-md-10">
 <h2>{{ title }}</h2>
 {% if role == 'p' %}
-<a class="btn btn-primary" href="/lab/manageLab/">Edit Lab Settings</a>
+<div class = "container">
+    <div class = "text-right">
+        <a class="btn btn-default" href="/lab/manageLab/" role="button">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </a>
+    </div>
+</div>
+
+<!-- <button type="button" class="btn btn-default" aria-label="Cog">
+    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+</button> -->
 {% endif %}
 
 {% if role == 't' %}
