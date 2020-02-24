@@ -72,6 +72,7 @@ from app.modelFunc import getRequests
 from app.modelFunc import assignRequest
 from app.modelFunc import releaseRequest
 from app.modelFunc import markRequestNotComplete
+from app.modelFunc import getFeedbackCount
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -337,7 +338,7 @@ def studentRequestSubmitted(request):
                 if cancelled:
                     return redirect('/app')
                 else:
-                    return render(       
+                    return render(
                         request,
                         'app/error.html',
                         {
@@ -353,7 +354,7 @@ def studentRequestSubmitted(request):
             {
                 'title': 'Request Submitted',
                 'message': 'Your request has been submitted',
-                'year': datetime.now().year,                    
+                'year': datetime.now().year,
                 'avgWait': avgWait,
                 'stationID': currRequest.station,
                 'labID': lab.name,
@@ -411,7 +412,7 @@ def studentRequestFeedback(request):
                     'year': datetime.now().year
                 }
             )
-    
+
 
 def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""
@@ -614,6 +615,12 @@ def labFeedback(request):
     avgFeedback = getAvgFeedback(currentLID)
     numRequestsComplete = getNumComplete(currentLID)
     numOutstandingRequests = getRequestCount(currentLID)
+    if request.method == 'POST':
+        print (request.POST)
+        currentHID = request.session.get("currentHelper")
+        if 'newHelperID' in request.POST:
+            newHelperID = int(request.POST.get("newHelperID", 1))
+            return redirect("/lab/feedback/helper/<int:helperID>")
     if(role == 'p'):
         #User is a prof and should have access
         return render(
@@ -627,7 +634,8 @@ def labFeedback(request):
                 'avgWait': avgWait,
                 'avgFeedback': avgFeedback,
                 'numRequestsComplete': numRequestsComplete,
-                'numOutstandingRequests': numOutstandingRequests
+                'numOutstandingRequests': numOutstandingRequests,
+                'labTAs': getLabUsersWithRole(labID=currentLID, role='t')
             }
         )
     else:
@@ -647,14 +655,16 @@ def labFeedbackHelper(request, userID):
     # Should only render if user's role is professor or the specified TA
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
+    currentHID = request.session.get('currentHelper')
     role = getRole(userID=request.user, labID = currentLID)
     nameOfTA = getNameOfUser(userID=request.user)
-    avgWaitTA = getAvgWaitTA(currentLID, helperID=request.user)
-    avgFeedbackTA = getAvgFeedbackTA(currentLID, helperID=request.user)
-    numRequestsCompleteTA = getNumCompleteTA(currentLID, helperID=request.user)
-    numOutstandingRequestsTA = getNumOutstandingRequestsTA(currentLID, helperID=request.user)
-    if (role == 'p' or role == 't'):
-        #User is a prof or TA and should have access
+    avgWaitTA = getAvgWaitTA(currentLID, currentHID)
+    avgFeedbackTA = getAvgFeedbackTA(currentLID, currentHID)
+    numRequestsCompleteTA = getNumCompleteTA(currentLID, currentHID)
+    numOutstandingRequestsTA = getNumOutstandingRequestsTA(currentLID, currentHID)
+    feedbackCount = getFeedbackCount(currentLID, userID=request.user)
+    if (role == 'p'):
+        #User is a prof, feedback should display immediately
         return render(
             request,
             'app/labFeedbackTA.html',
@@ -670,6 +680,40 @@ def labFeedbackHelper(request, userID):
                 'numOutstandingRequestsTA': numOutstandingRequestsTA
              }
         )
+    elif (role == 't' and feedbackCount < 3):
+        # User is a TA but does not have enough ratings to review feedback
+        return render(
+            request,
+            'app/labFeedbackTA.html',
+            {
+                'title': 'Feedback',
+                'nameOfTA': nameOfTA,
+                'message': 'View feedback, wait time, and other lab metrics for this TA',
+                'year': datetime.now().year,
+                'role': role,
+                'avgWaitTA': avgWaitTA,
+                'numRequestsCompleteTA': numRequestsCompleteTA,
+                'numOutstandingRequestsTA': numOutstandingRequestsTA
+             }
+        )
+    elif (role == 't' and feedbackCount >= 3):
+        # User is a TA and has received enough ratings to review feedback
+        return render(
+            request,
+            'app/labFeedbackTA.html',
+            {
+                'title': 'Feedback',
+                'nameOfTA': nameOfTA,
+                'message': 'View feedback, wait time, and other lab metrics for this TA',
+                'year': datetime.now().year,
+                'role': role,
+                'avgWaitTA': avgWaitTA,
+                'avgFeedbackTA': avgFeedbackTA,
+                'numRequestsCompleteTA': numRequestsCompleteTA,
+                'numOutstandingRequestsTA': numOutstandingRequestsTA
+             }
+        )
+
     else:
         #User is not a professor or TA, render access denied
         return render(

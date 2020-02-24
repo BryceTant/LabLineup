@@ -2,6 +2,15 @@
 
 {% block content %}
 
+<script>
+    function selectTA(newHelperID) {
+        document.forms["taForm"].elements["newHelperID"].value = newHelperID;
+    }
+    function submitTA() {
+        document.getElementById("taForm").submit();
+    }
+</script>
+
 <h2><strong>{{ title }}</strong></h2>
 <h3>{{ message }}</h3>
 <br>
@@ -14,14 +23,33 @@
 <h4> Number of outstanding requests: <strong>{{ numOutstandingRequests }}</strong></h4>
 
 <br>
+<h3><strong>View Feedback for a Specific TA: </strong></h3>
+
+<form id="taForm" action="." method="post">
+    {% csrf_token %}
+    <input type="hidden" name="newHelperID" value=1 />
+</form>
+
 <div class="row">
     <div class="col-md-8">
-        <section id="BacktoProfPage">
-            <a href="/professor"><button class="btn btn-default">Back</button></a>
-        </section>
+        <div class="col-md-8">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="selectedName">
+                    Choose TA...<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    {% if labTAs %}
+                    <li role="separator" class="divider"></li>
+                    {%for ta in labTAs %}
+                    <li><a onclick="javascript: selectTA({{ta.id}})">{{ta.first_name}} {{ta.last_name}}</a></li>
+                    {% endfor %}
+                    {% endif %}
+                </ul>
+                <button type="submit" onclick="javascript:submitTA()" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
     </div>
 </div>
-
 
 
 

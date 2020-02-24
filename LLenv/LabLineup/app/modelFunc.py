@@ -86,6 +86,11 @@ def getFeedbackForUser(userID, labID):
             feedback.append(entry.feedback)
     return feedback
 
+#To get the count of ratings for a TA or professor in a lab
+def getFeedbackCount(labID, userID):
+    feedbackCount = Request.objects.filter(huid_id=userID, lid_id=labID).count()
+    return feedbackCount
+
 #To get a list of the current requests (as a list of Request objects) in a lab
 def getRequests(labID):
     requests = []
@@ -366,9 +371,9 @@ def getOutstandingRequest(labID, userID):
 
 #To get the number of requests that are assigned but not completed in a lab for a specific helper
 def getNumOutstandingRequestsTA(labID, helperID):
-    queryCount = Request.objects.filter(lid_id=labID, 
-                                        huid_id=helperID, 
-                                        complete=False, 
+    queryCount = Request.objects.filter(lid_id=labID,
+                                        huid_id=helperID,
+                                        complete=False,
                                         timeCompleted=None).count()
     return queryCount
 
@@ -505,7 +510,7 @@ def updateUserSub(userID, plan):
                                                       )
     return True
 
-#To update a user's subcription 
+#To update a user's subcription
 def updateSub(subID, plan):
     """Yearly Plans: 0=Free, 1=Silver, 2=gold"""
     planLimits = {0:1, 1:5, 2:20}
@@ -570,7 +575,7 @@ def updateFeedback(rid, feedback):
     except:
         return False
 
-#To cancel a request        
+#To cancel a request
 def cancelRequest(req):
     query = None
     try:
@@ -582,7 +587,7 @@ def cancelRequest(req):
         return True
     else:
         return False
- 
+
 #To mark a request as complete by adding a timeCompleted
 def markRequestComplete(rid):
     query = None
