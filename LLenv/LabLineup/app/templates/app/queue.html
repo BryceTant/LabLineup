@@ -1,28 +1,15 @@
 {% extends "app/layout.html" %}
 
 {% block content %}
-<div class="col-md-10">
-<h2>{{ title }}</h2>
-{% if role == 'p' %}
-<div class = "container">
-    <div class = "text-right">
-        <a class="btn btn-default" href="/lab/manageLab/" role="button">
+
+<table style="width:100%">
+    <tr>
+        <td><h2 valign="middle">{{ title }}</h2></td>
+        <td align="right" valign="middle"><a class="btn btn-default" href="/lab/manageLab/" role="button">
             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-        </a>
-    </div>
-</div>
-
-<!-- <button type="button" class="btn btn-default" aria-label="Cog">
-    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-</button> -->
-{% endif %}
-
-{% if role == 't' %}
-<a class="btn btn-primary" href="/lab/manageLab">Edit Notifications</a>
-{% endif %}
-    <!-- Solid divider -->
-    <hr class="solid">
-</div>
+        </a></td>
+    </tr>
+</table>
 
 <div class="row">
     <div class="col-md-8">
