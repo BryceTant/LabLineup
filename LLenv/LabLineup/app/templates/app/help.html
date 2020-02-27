@@ -23,6 +23,12 @@
            aria-selected="true">Subscription</a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link active" id="FAQRequests-Tab" data-toggle="tab"
+           href="#FAQ-Requests" role="tab" aria-controls="FAQ-Requests"
+           aria-selected="true">Requests</a>
+    </li>
+
     
 </ul>
 
@@ -40,6 +46,11 @@
     <div class="tab-pane fade {{active.FAQSubscription}}" id="FAQ-Subscription" role="tabpanel"
          aria-labelledby="FAQSubscription-Tab">
         {% include "app/FAQSubscription.html" %}
+    </div>
+
+    <div class="tab-pane fade {{active.FAQRequests}}" id="FAQ-Requests" role="tabpanel"
+         aria-labelledby="FAQRequests-Tab">
+        {% include "app/FAQRequests.html" %}
     </div>
 </div>
 
