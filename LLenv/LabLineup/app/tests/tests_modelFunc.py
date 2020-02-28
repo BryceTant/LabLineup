@@ -290,7 +290,10 @@ class ModelFuncTest(TestCase):
         self.assertEqual("Test First 3 Test Last 3", mf.getNameOfUser(self.User3.id))
 
     def test_generatePasswordResetCode(self):
-        # generate code
+        self.assertNotEqual(None, mf.generatePasswordResetCode(self.User0.id))
+        self.assertNotEqual(None, mf.generatePasswordResetCode(self.User1.id))
+        self.assertNotEqual(None, mf.generatePasswordResetCode(self.User2.id))
+        self.assertNotEqual(None, mf.generatePasswordResetCode(self.User3.id))
 
     def test_resetPasswordFunc(self):
         #test reset

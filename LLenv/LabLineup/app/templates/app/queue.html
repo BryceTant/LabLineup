@@ -1,23 +1,18 @@
 {% extends "app/layout.html" %}
 
 {% block content %}
-<div class="col-md-10">
-<h2>{{ title }}</h2>
-{% if role == 'p' %}
-<a class="btn btn-primary" href="/lab/manageLab/">Edit Lab Settings</a>
-{% endif %}
 
-{% if role == 't' %}
-<a class="btn btn-primary" href="/lab/manageLab">Edit Notifications</a>
-{% endif %}
-    <!-- Solid divider -->
-    <hr class="solid">
-</div>
+<table style="width:100%">
+    <tr>
+        <td><h2 valign="middle">{{ title }}</h2></td>
+        <td align="right" valign="middle"><a class="btn btn-default" href="/lab/manageLab/" role="button">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </a></td>
+    </tr>
+</table>
 
 <div class="row">
     <div class="col-md-8">
-        <form action="." method="post" class="form-horizontal">
-            {% csrf_token %}
             <h3>All Requests</h3>
             <div class="col-md-10">
                 <h4>Requests in Queue</h4>
@@ -30,10 +25,11 @@
             <div class="col-md-10">
                 <br />
             </div>
+        {% if requestCount != '0' %}
             <div class="col-md-10">
-                <input type="submit" value="Accept Next Request" class="btn btn-primary" />
+                <a href="/lab/queue/currentRequest" class="btn btn-primary">Accept Next Request</a>
             </div>
-        </form>
+        {% endif %}
     </div>
 </div>
 
