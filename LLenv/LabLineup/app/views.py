@@ -620,7 +620,7 @@ def labFeedback(request):
         currentHID = request.session.get("currentHelper")
         if 'newHelperID' in request.POST:
             newHelperID = int(request.POST.get("newHelperID", 1))
-            return redirect("/lab/feedback/helper/<int:helperID>")
+            return redirect("helper/1/")
     if(role == 'p'):
         #User is a prof and should have access
         return render(
@@ -657,7 +657,7 @@ def labFeedbackHelper(request, userID):
     currentLID = request.session.get('currentLab')
     currentHID = request.session.get('currentHelper')
     role = getRole(userID=request.user, labID = currentLID)
-    nameOfTA = getNameOfUser(userID=request.user)
+    nameOfTA = getNameOfUser(userID=request.user.huid)
     avgWaitTA = getAvgWaitTA(currentLID, currentHID)
     avgFeedbackTA = getAvgFeedbackTA(currentLID, currentHID)
     numRequestsCompleteTA = getNumCompleteTA(currentLID, currentHID)
@@ -669,7 +669,7 @@ def labFeedbackHelper(request, userID):
             request,
             'app/labFeedbackTA.html',
             {
-                'title': 'Feedback',
+                'title': 'TA Feedback',
                 'nameOfTA': nameOfTA,
                 'message': 'View feedback, wait time, and other lab metrics for this TA',
                 'year': datetime.now().year,
