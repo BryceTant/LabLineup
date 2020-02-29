@@ -5,6 +5,7 @@ from square.configuration import Configuration
 from square.client import Client
 
 from django.contrib.auth.models import User
+from django.conf import settings
 
 import datetime
 from pytz import utc as utc
@@ -12,10 +13,10 @@ from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 import uuid
 
-ACCESS_TOKEN = "EAAAEKhuO_dB5OIb_klu9b6LC4Z8kyyGVK6CF6oOXHFwYFe5vQHDcMWEM4DidtaB"
-ENV = "sandbox"
-LOCATION = "CJ5PA0KHCQEA0"
-BASE_ADDR = "http://127.0.0.1:8000"
+ACCESS_TOKEN = "EAAAEKYGlhNeE5bozB2XB58MnNtQ34R5ctaRFhcozKCNSepkXOfhkUDy9HIipiE-"
+ENV = "production"
+LOCATION = "53F4A4TW4EXN5"
+BASE_ADDR = settings.BASE_URL
 
 sq = Client(access_token=ACCESS_TOKEN, environment=ENV)
 

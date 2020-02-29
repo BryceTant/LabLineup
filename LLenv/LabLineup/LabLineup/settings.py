@@ -116,3 +116,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
+
+#BASE_URL should be www.LabLineup.com for prod and 127.0.0.1:8000 for dev
+BASE_URL = "www.LabLineup.com"

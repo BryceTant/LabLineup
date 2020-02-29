@@ -9,6 +9,7 @@ from app.models import Lab
 from app.models import Request
 from app.models import Role
 from django.contrib.auth.models import User
+from django.conf import settings
 
 import requests  #Note: this is for HTTP requests, not lab requests
 from datetime import datetime
@@ -17,7 +18,7 @@ from datetime import datetime
 API='https://api.mailgun.net/v3/notify.lablineup.com/messages'
 API_KEY='8417d7db91e6ff4430906312affaf067-816b23ef-53a937ca'
 FROM = "LabLineup <no-reply@lablineup.com>"
-BASEURL = '127.0.0.1:8000'
+BASEURL = settings.BASE_URL
 
 def sendEmailPlaintext(emails, subject, text):
     """Takes in list of emails, a subject, and text and sends the email"""

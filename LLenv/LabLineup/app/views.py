@@ -987,12 +987,6 @@ def resetPassword(request, prc):
 def confirmAccountView(request, regConCode):
     assert isinstance(request, HttpRequest)
     if confirmAccount(regConCode=regConCode):
-        newSub = Subscription(uid_id = request.user.id,
-                              initialSub = None,
-                              lastSub = None,
-                              subRenewal = None,
-                              labLimit = 1)
-        newSub.save()
         #Code is found, account is activated
         return render(
             request,
