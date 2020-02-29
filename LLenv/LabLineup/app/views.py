@@ -618,7 +618,6 @@ def labFeedback(request):
     numRequestsComplete = getNumComplete(currentLID)
     numOutstandingRequests = getRequestCount(currentLID)
     if request.method == 'POST':
-        print (request.POST)
         currentHID = request.session.get("currentHelper")
         if 'newHelperID' in request.POST:
             newHelperID = int(request.POST.get("newHelperID", 1))
@@ -837,7 +836,6 @@ def currentRequest(request):
     if (role == 'p' or role == 't'):
         #User is a prof or TA and should have access
         if request.method == 'POST':
-            print (request.POST)
             currentRID = request.session.get("currentRID")
             if 'newHelperID' in request.POST:
                 newHelperID = int(request.POST.get("newHelperID", 0))
