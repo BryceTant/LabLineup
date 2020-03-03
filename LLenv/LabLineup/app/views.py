@@ -235,7 +235,7 @@ def selectLab(request):
                 currReq = getStudentCurrentRequest(labID=selectedLabID, userID=request.user)
                 if currReq != None:
                     #If the student has an open request
-                    request.session["currentRequest"] = currReq
+                    request.session["currentRequest"] = currReq.rid
                     return redirect('/student/requestSubmitted')
                 return redirect('/student/request')
             else:  # TA or professor
