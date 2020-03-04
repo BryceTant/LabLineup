@@ -324,15 +324,7 @@ def studentRequestSubmitted(request):
     except:
         currRequest = None
     if currRequest == None:
-        return render(
-            request,
-                'app/studentRequestFeedback.html',
-                {
-                    'title': 'Feedback',
-                    'message': 'Tell us how we did',
-                    'year': datetime.now().year
-                }
-        )
+        return redirect('/student/requestFeedback')
     allRequests = getRequests(currentLID)
     for req in allRequests:
         if (req.suid != request.user):
