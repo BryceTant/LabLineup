@@ -319,7 +319,12 @@ def studentRequestSubmitted(request):
     avgWait = getAvgWait(currentLID)
     numBefore = 0
     lab = Lab.objects.get(lid=currentLID)
-    currRequest = Request.objects.get(lid=currentLID, suid=request.user, timeCompleted=None)
+    try:
+        currRequest = Request.objects.get(lid=currentLID, suid=request.user, timeCompleted=None)
+    except:
+        currRequest = None
+    if currRequest == None:
+        return redirect('/student/requestFeedback')
     allRequests = getRequests(currentLID)
     for req in allRequests:
         if (req.suid != request.user):
