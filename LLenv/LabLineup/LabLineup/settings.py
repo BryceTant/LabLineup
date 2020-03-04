@@ -117,5 +117,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
 
-#BASE_URL should be www.LabLineup.com for prod and 127.0.0.1:8000 for dev
-BASE_URL = "www.LabLineup.com"
+#BASE_URL should be https://www.LabLineup.com for prod and http://127.0.0.1:8000 for dev
+BASE_URL = "https://www.LabLineup.com"

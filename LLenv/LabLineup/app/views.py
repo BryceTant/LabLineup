@@ -775,7 +775,6 @@ def manageAccount(request):
                 editAccountDetailsForm.save()
         elif 'subPlan' in request.POST:
             activeDict = manageAccountSetTab("subscription")
-
             plan = int(request.POST.get("subPlan", 0))
             checkoutLink = createCheckout(request.user.id,
                                           userSub.id,

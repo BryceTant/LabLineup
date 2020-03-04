@@ -71,7 +71,6 @@ def createCheckout(userID, subID, plan):
             "redirect_url": (BASE_ADDR + "/subscriptionConfirmation/")
         }
     )
-
     if result.is_success():
         return result.body["checkout"]["checkout_page_url"]
     elif result.is_error():
