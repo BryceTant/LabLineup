@@ -73,6 +73,7 @@ from app.modelFunc import assignRequest
 from app.modelFunc import releaseRequest
 from app.modelFunc import markRequestNotComplete
 from app.modelFunc import getFeedbackCount
+from app.modelFunc import taViewFeedback
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -464,7 +465,8 @@ def labManage(request):
     initialData = {
         'lid': currentLID,
         'labName': currentLab.name,
-        'labDescription': currentLab.description
+        'labDescription': currentLab.description,
+        'taViewFeedback': currentLab.taViewFeedback
     }
     # If the user is a professor for the current lab
     if (getRole(userID=request.user, labID=currentLID) == 'p'):
@@ -670,6 +672,8 @@ def labFeedbackHelper(request, userID):
     numRequestsCompleteTA = getNumCompleteTA(currentLID, currentHID)
     numOutstandingRequestsTA = getNumOutstandingRequestsTA(currentLID, currentHID)
     feedbackCount = getFeedbackCount(currentLID, userID=request.user)
+    taViewAllowed = taViewFeedback(currentLID)
+    print (str(taViewAllowed))
     if (role == 'p'):
         #User is a prof, feedback should display immediately
         return render(
@@ -687,7 +691,7 @@ def labFeedbackHelper(request, userID):
                 'numOutstandingRequestsTA': numOutstandingRequestsTA
              }
         )
-    elif (role == 't' and feedbackCount < 3):
+    elif (role == 't' and feedbackCount < 3 and taViewAllowed):
         # User is a TA but does not have enough ratings to review feedback
         return render(
             request,
@@ -703,7 +707,7 @@ def labFeedbackHelper(request, userID):
                 'numOutstandingRequestsTA': numOutstandingRequestsTA
              }
         )
-    elif (role == 't' and feedbackCount >= 3):
+    elif (role == 't' and feedbackCount >= 3 and taViewAllowed):
         # User is a TA and has received enough ratings to review feedback
         return render(
             request,

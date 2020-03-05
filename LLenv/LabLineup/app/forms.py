@@ -172,6 +172,7 @@ class CreateLabForm(forms.Form):
                                 widget=forms.TextInput({
                                     'class':'form-control',
                                     'placeholder':'Lab Description'}))
+    taViewFeedback = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -179,7 +180,9 @@ class CreateLabForm(forms.Form):
 
     def save(self):
         userID = self.user.id
-        newLab = Lab(name=self.cleaned_data['labName'], description=self.cleaned_data['labDescription'])
+        newLab = Lab(name=self.cleaned_data['labName'],
+                    description=self.cleaned_data['labDescription'],
+                    taViewFeedback=self.cleaned_data['taViewFeedback'])
         newLab.save()
         creatorRole = Role(lid_id=newLab.lid, uid_id=userID, role='p') #Add the professor role for the current user
         creatorRole.save()
@@ -196,6 +199,7 @@ class ManageLabForm(forms.Form):
     labDescription = forms.CharField(required=False, max_length=150,
                                 widget=forms.TextInput({
                                     'class':'form-control'}))
+    taViewFeedback = forms.BooleanField(required = False)
 
     def save(self):
         currentLab = Lab.objects.get(lid = self.lid)
@@ -204,6 +208,7 @@ class ManageLabForm(forms.Form):
 
         if (self.cleaned_data['labDescription'] != ""):  #If description updated
             Lab.objects.filter(lid=currentLab.lid).update(description=self.cleaned_data['labDescription'])
+        Lab.objects.filter(lid=currentLab.lid).update(taViewFeedback=self.cleaned_data['taViewFeedback'])
 
 class SubmitRequestForm(forms.Form):
     def __init__(self, *args, **kwargs):

@@ -625,3 +625,14 @@ def markRequestNotComplete(rid):
         return True
     except:
         return False
+
+#To see if the professor allows TA's to view feedback for a lab
+def taViewFeedback(lid):
+    query = None
+    try:
+        query = Lab.objects.get(lid=lid)
+        if query.taViewFeedback:
+            return True
+    except:
+        pass
+    return False
