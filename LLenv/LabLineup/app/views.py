@@ -76,6 +76,7 @@ from app.modelFunc import getFeedbackCount
 from app.modelFunc import taViewFeedback
 from app.modelFunc import getLabsWithRoleStudent
 from app.modelFunc import getLabsWithRoleHelper
+from app.modelFunc import userExists
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -173,6 +174,9 @@ def help(request):
 def createLab(request):
     """Renders the createLab page. """
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     labLimit = getLabLimit(userID=request.user)
     if (labLimit != None and getNumberOfLabs(userID=request.user) >= labLimit):
         return render(
@@ -207,6 +211,9 @@ def createLab(request):
 def addLab(request):
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     if request.method == 'POST':
         form = AddLabForm(request.POST, user=request.user)
         if form.is_valid():
@@ -229,6 +236,9 @@ def addLab(request):
 def selectLab(request):
     """Renders main app page (select a lab)"""
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     if request.method == 'POST':
         selectedLabID = request.POST.get("labID", None)
         selectedLabIDRemove = request.POST.get("labIDRemove", None)
@@ -282,6 +292,9 @@ def studentRequest(request):
     # Should only render if user's role is student
     # Blank Request Form => Request Waiting Form => Feedback Form
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
     if (getRole(userID=request.user, labID=currentLID) == 's'):
         if request.method == 'POST':
@@ -319,6 +332,9 @@ def studentRequestSubmitted(request):
     """Renders pages for lab/{labID}/student."""
     # Blank Request Form => Request Waiting Form => Feedback Form
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
     avgWait = getAvgWait(currentLID)
     numBefore = 0
@@ -386,6 +402,9 @@ def studentRequestFeedback(request):
     """Renders pages for lab/{labID}/student."""
     # Blank Request Form => Request Waiting Form => Feedback Form
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
     currentRequest = request.session.get('currentRequest')
     message = 'Please submit feedback about the help you received'
@@ -427,6 +446,9 @@ def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""
     # Should only render if user's role is TA or professor
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
     lab = Lab.objects.get(lid=currentLID)
     role = getRole(userID=request.user, labID = currentLID)
@@ -462,6 +484,9 @@ def labManage(request):
     """Renders manage lab page for professors and TAs (pages will be different)"""
     # Should only render if user's role is professor
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
     currentLab = Lab.objects.get(lid=currentLID)
     initialData = {
@@ -622,6 +647,9 @@ def labFeedback(request):
     """Renders feedback page for professors"""
     # Should only render if user's role is professor
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
     role = getRole(userID=request.user, labID = currentLID)
     avgWait = getAvgWait(currentLID)
@@ -666,6 +694,9 @@ def labFeedbackHelper(request, userID):
     """Renders feedback page for specific TA for specific lab"""
     # Should only render if user's role is professor or the specified TA
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
     currentHID = request.session.get('currentHelper')
     role = getRole(userID=request.user, labID = currentLID)
@@ -752,6 +783,9 @@ def manageAccountSetTab(tab):
 def manageAccount(request):
     """Renders page to edit account settings"""
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     initialAccountDetails = {
         'firstname': request.user.first_name,
         'lastname': request.user.last_name,
@@ -843,6 +877,9 @@ def manageAccount(request):
 def currentRequest(request):
     """Renders page to edit account settings"""
     assert isinstance(request, HttpRequest)
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
     currentUserID = userID = request.user.id
     role = getRole(userID=request.user, labID=currentLID)
@@ -917,16 +954,6 @@ def currentRequest(request):
                 'year': datetime.now(utc).year
             }
         )
-
-def professor(request):
-    """Renders page to allow professors to navigate"""
-    assert isinstance(request, HttpRequest)
-    pass
-
-def ta(request):
-    """Renders page to allow TA's to navigate"""
-    assert isinstance(request, HttpRequest)
-    pass
 
 def forgotPassword(request):
     """Renders the home page."""
@@ -1059,6 +1086,9 @@ def requestEmailConfirmation(request):
 
 def requestHistory(request):
     assert(isinstance(request, HttpRequest))
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     requestsDict = getRequestHistory(userID=request.user)
     return render(
         request,
