@@ -4,9 +4,9 @@
             <div class="panel-heading" style= "display:inline-block;"><b>{{lab.lab.name}}</b></div>
             <div class="panel-body" style= "display:inline-block; float: right" >
                 {% if lab.requestCount > 0 %}
-                    <span class="badge badge-primary">My Requests: {{lab.requestCount}}</span>
+                    <span class="badge badge-primary">{{lab.requestCount}}</span>
                 {% else %}
-                    <span class="badge badge-light">My Requests: {{lab.requestCount}}</span>
+                    <span class="badge badge-light">{{lab.requestCount}}</span>
                 {% endif %}
             </div>
             <div class="panel-body" >{{lab.lab.description}}</div>
