@@ -473,7 +473,7 @@ def getRequestHistory(userID):
     retDict = {}
     listLabs = getLabsWithRole(userID, 's')
     for lab in listLabs:
-        retDict[lab.name] = getStudentRequestsHistory(userID, labID=lab.lid)
+        retDict[lab.name] = {"lid": lab.lid, "requests": getStudentRequestsHistory(userID, labID=lab.lid)}
     return retDict
 
 #To convert UTC to local datetime
