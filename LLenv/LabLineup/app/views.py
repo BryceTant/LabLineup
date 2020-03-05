@@ -74,6 +74,8 @@ from app.modelFunc import releaseRequest
 from app.modelFunc import markRequestNotComplete
 from app.modelFunc import getFeedbackCount
 from app.modelFunc import taViewFeedback
+from app.modelFunc import getLabsWithRoleStudent
+from app.modelFunc import getLabsWithRoleHelper
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -258,10 +260,10 @@ def selectLab(request):
                     }
                 )
     else:
-        # Lists of lab objects for each role
-        labsWhereStudent = getLabsWithRole(userID=request.user, role='s')
-        labsWhereTA = getLabsWithRole(userID=request.user, role='t')
-        labsWhereProfessor = getLabsWithRole(userID=request.user, role='p')
+        # Lists of dictionaries of lab objects and count of open request(s)
+        labsWhereStudent = getLabsWithRoleStudent(userID=request.user)
+        labsWhereTA = getLabsWithRoleHelper(userID=request.user, role='t')
+        labsWhereProfessor = getLabsWithRoleHelper(userID=request.user, role='p')
         return render(
             request,
             'app/selectLab.html',

@@ -102,7 +102,7 @@ def getRequests(labID):
 
 #To get a count of current requests in a lab
 def getRequestCount(labID):
-    count = Request.objects.filter(lid_id=labID, timeCompleted__isnull=True).count()
+    count = Request.objects.filter(lid_id=labID, complete=False).count()
     return count
 
 #To get a list of completed requests for a lab (as a list of Request objects)
@@ -187,7 +187,6 @@ def getAvgWait(labID):
     else:
         avgWaitTime = [0,0]
     return str(int(avgWaitTime[0])) + ":" + str(int(round(avgWaitTime[1],0))) #returns minutes:seconds
-
 
 #To get the average wait time as a string of minutes:seconds for a lab for a specific helper
 def getAvgWaitTA(labID, helperID):
@@ -636,3 +635,28 @@ def taViewFeedback(lid):
     except:
         pass
     return False
+
+#To get a list of labs in which the userID is a student and mark labs with open request
+def getLabsWithRoleStudent(userID):
+    labs = []
+    query = Role.objects.filter(uid_id=userID, role='s')
+    if query:
+        for lidObj in query:
+            labID = lidObj.lid_id
+            openRequest = getStudentCurrentRequest(labID, userID)
+            isOpenRequest = 0
+            if openRequest != None:
+                isOpenRequest = 1
+            labs.append({'lab':Lab.objects.get(lid=labID), 'requestCount':isOpenRequest})
+    return labs
+
+#To get a list of labs in which the userID is a TA or prof and mark labs with open request
+def getLabsWithRoleHelper(userID, role):
+    labs = []
+    query = Role.objects.filter(uid_id=userID, role=role)
+    if query:
+        for lidObj in query:
+            labID = lidObj.lid_id
+            requestCount = getRequestCount(labID)
+            labs.append({'lab':Lab.objects.get(lid=labID), 'requestCount':requestCount})
+    return labs
