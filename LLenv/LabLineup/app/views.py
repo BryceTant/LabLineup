@@ -466,7 +466,8 @@ def labManage(request):
         'lid': currentLID,
         'labName': currentLab.name,
         'labDescription': currentLab.description,
-        'taViewFeedback': currentLab.taViewFeedback
+        'taViewFeedback': currentLab.taViewFeedback,
+        'open': currentLab.open
     }
     # If the user is a professor for the current lab
     if (getRole(userID=request.user, labID=currentLID) == 'p'):

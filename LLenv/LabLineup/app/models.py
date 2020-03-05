@@ -11,7 +11,7 @@ class Lab(models.Model):
     description = models.CharField(max_length=150)  #varchar(150), ~Null
     active = models.BooleanField(default=True) # bool
     taViewFeedback = models.BooleanField(default=True) # bool
-
+    open = models.BooleanField(default=True) #bool
 
 class Role(models.Model):
 	lid = models.ForeignKey('Lab',on_delete=models.CASCADE)  #int(11), ~Null, FK
