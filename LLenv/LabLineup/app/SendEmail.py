@@ -140,3 +140,24 @@ def sendNeverHelped(lid, sid, rid):
     vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
 
     sendEmail(profEmail, subject, template="nothelped", variables=vars)
+
+def sendTransferredRequest(lid, rid, previousUser):
+    labName = Lab.objects.get(lid=lid).name
+    subject = "A request has been assigned to you in " + labName
+    request = Request.objects.get(rid=rid)
+    student = User.objects.get(id=request.suid_id)
+    studentName = student.first_name + " " + student.last_name
+    previousHelper = User.objects.get(id=previousUser)
+    previousName = previousHelper.first_name + " " + previousHelper.last_name
+    dateSubmitted = request.timeSubmitted.strftime("%m/%d/%Y %I:%M:%S %p")
+    helperEmail = User.objects.get(id=request.huid_id).email
+
+    vars = "{\"labName\": \"" + labName + "\","
+    vars = vars + "\"student\": \"" + studentName + "\","
+    vars = vars + "\"station\": \"" + request.station + "\","
+    vars = vars + "\"submitted\": \"" + dateSubmitted + "\","
+    vars = vars + "\"previousHelper\": \"" + previousName + "\","
+    vars = vars + "\"description\": \"" + request.description + "\","
+    vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
+
+    sendEmail(helperEmail, subject, template="transferredrequest", variables=vars)

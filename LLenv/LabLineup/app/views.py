@@ -78,6 +78,7 @@ from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
 from app.SendEmail import sendRegistrationConfirmation
 from app.SendEmail import sendNeverHelped
+from app.SendEmail import sendTransferredRequest
 
 from app.Payment import createCheckout
 from app.Payment import findRecentPayment
@@ -836,6 +837,7 @@ def currentRequest(request):
     """Renders page to edit account settings"""
     assert isinstance(request, HttpRequest)
     currentLID = request.session.get('currentLab')
+    currentUserID = userID = request.user.id
     role = getRole(userID=request.user, labID=currentLID)
     if (role == 'p' or role == 't'):
         #User is a prof or TA and should have access
@@ -845,6 +847,7 @@ def currentRequest(request):
                 newHelperID = int(request.POST.get("newHelperID", 0))
                 if newHelperID != 0:
                     assignRequest(currentRID, newHelperID)
+                    sendTransferredRequest(currentLID, currentRID, currentUserID)
                 return redirect("/lab/queue")
             elif 'markComplete' in request.POST:
                 #Mark the request as complete
