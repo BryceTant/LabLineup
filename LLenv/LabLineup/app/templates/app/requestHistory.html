@@ -7,10 +7,10 @@
 <div class="row">
     <div class="col-md-10">
         {% for lab,listRequests in requests.items %}
-            <a class="btn btn-default" data-toggle="collapse" href="#collapseExample{{listRequests.lid}}" role="button" aria-expanded="false" aria-controls="collapseExample{{listRequests.lid}}">
+            <a class="btn btn-default" data-toggle="collapse" href="#collapseExample{{listRequests.lid}}" role="button" aria-expanded="false" aria-controls="collapseExample{{listRequests.lid}}" style= "padding-bottom=0px; border:none; font-size: 15px">
                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> {{lab}}
              </a>
-            <div class="collapse" id="collapseExample{{listRequests.lid}}">
+            <div class="collapse" id="collapseExample{{listRequests.lid}}" style="padding-left: 30px;">
             {% for request in listRequests.requests %}
                 <h4>{% include 'app/requestHistoryPartial.html' %}</h4>
             {% endfor %}
