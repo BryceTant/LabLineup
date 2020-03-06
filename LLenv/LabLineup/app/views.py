@@ -651,17 +651,32 @@ def labFeedback(request):
                       'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
     role = getRole(userID=request.user, labID = currentLID)
-    avgWait = getAvgWait(currentLID)
-    avgFeedback = getAvgFeedback(currentLID)
-    numRequestsComplete = getNumComplete(currentLID)
-    numOutstandingRequests = getRequestCount(currentLID)
-    if request.method == 'POST':
-        currentHID = request.session.get("currentHelper")
-        if 'newHelperID' in request.POST:
-            newHelperID = int(request.POST.get("newHelperID", 1))
-            return redirect("helper/1/")
     if(role == 'p'):
         #User is a prof and should have access
+        avgWait = getAvgWait(currentLID)
+        avgFeedback = getAvgFeedback(currentLID)
+        numRequestsComplete = getNumComplete(currentLID)
+        numOutstandingRequests = getRequestCount(currentLID)
+        helpers = [request.user]
+        labTAs = getLabUsersWithRole(labID=currentLID, role='t')
+        for ta in labTAs:
+            helpers.append(ta)
+        if request.method == 'POST':
+            currentHID = request.session.get("currentHelper")
+            if 'newHelperID' in request.POST:
+                newHelperID = int(request.POST.get("newHelperID", 0))
+                if newHelperID != 0:
+                    return redirect("helper/" + str(newHelperID) + "/")
+                else:
+                    pass
+            else:
+                return render(request,
+                              'app/error.html',
+                              {
+                                  'title': "Error!",
+                                  'message': "An unknown error has occurred"
+                              }
+                             )
         return render(
             request,
             'app/labFeedback.html',
@@ -671,10 +686,10 @@ def labFeedback(request):
                 'year': datetime.now().year,
                 'role': role,
                 'avgWait': avgWait,
-                'avgFeedback': avgFeedback,
+                'avgFeedback': round(avgFeedback,1),
                 'numRequestsComplete': numRequestsComplete,
                 'numOutstandingRequests': numOutstandingRequests,
-                'labTAs': getLabUsersWithRole(labID=currentLID, role='t')
+                'labTAs': helpers
             }
         )
     else:
@@ -697,18 +712,17 @@ def labFeedbackHelper(request, userID):
         return render(request,
                       'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
-    currentHID = request.session.get('currentHelper')
     role = getRole(userID=request.user, labID = currentLID)
-    nameOfTA = getNameOfUser(userID=request.user.huid)
-    avgWaitTA = getAvgWaitTA(currentLID, currentHID)
-    avgFeedbackTA = getAvgFeedbackTA(currentLID, currentHID)
-    numRequestsCompleteTA = getNumCompleteTA(currentLID, currentHID)
-    numOutstandingRequestsTA = getNumOutstandingRequestsTA(currentLID, currentHID)
-    feedbackCount = getFeedbackCount(currentLID, userID=request.user)
-    taViewAllowed = taViewFeedback(currentLID)
-    print (str(taViewAllowed))
-    if (role == 'p'):
+    nameOfTA = getNameOfUser(userID=userID)
+    avgWaitTA = getAvgWaitTA(currentLID, userID)
+    avgFeedbackTA = getAvgFeedbackTA(currentLID, userID)
+    numRequestsCompleteTA = getNumCompleteTA(currentLID, userID)
+    numOutstandingRequestsTA = getNumOutstandingRequestsTA(currentLID, userID)
+    feedbackCount = getFeedbackCount(currentLID, userID=userID)
+    taViewAllowed = taViewFeedback(currentLID) and role == 't' and request.user.id == userID
+    if role == 'p' or (taViewAllowed and feedbackCount >= 3):
         #User is a prof, feedback should display immediately
+        #Or User is a TA with permission, feedback should render
         return render(
             request,
             'app/labFeedbackTA.html',
@@ -719,47 +733,27 @@ def labFeedbackHelper(request, userID):
                 'year': datetime.now().year,
                 'role': role,
                 'avgWaitTA': avgWaitTA,
-                'avgFeedbackTA': avgFeedbackTA,
+                'avgFeedbackTA': round(avgFeedbackTA,1),
                 'numRequestsCompleteTA': numRequestsCompleteTA,
                 'numOutstandingRequestsTA': numOutstandingRequestsTA
              }
         )
-    elif (role == 't' and feedbackCount < 3 and taViewAllowed):
-        # User is a TA but does not have enough ratings to review feedback
+    elif taViewAllowed and feedbackCount < 3:
+        # User is a TA with permission,
+        # but does not have enough ratings to review feedback
         return render(
             request,
-            'app/labFeedbackTA.html',
+            'app/error.html',
             {
-                'title': 'Feedback',
-                'nameOfTA': nameOfTA,
-                'message': 'View feedback, wait time, and other lab metrics for this TA',
-                'year': datetime.now().year,
-                'role': role,
-                'avgWaitTA': avgWaitTA,
-                'numRequestsCompleteTA': numRequestsCompleteTA,
-                'numOutstandingRequestsTA': numOutstandingRequestsTA
-             }
-        )
-    elif (role == 't' and feedbackCount >= 3 and taViewAllowed):
-        # User is a TA and has received enough ratings to review feedback
-        return render(
-            request,
-            'app/labFeedbackTA.html',
-            {
-                'title': 'Feedback',
-                'nameOfTA': nameOfTA,
-                'message': 'View feedback, wait time, and other lab metrics for this TA',
-                'year': datetime.now().year,
-                'role': role,
-                'avgWaitTA': avgWaitTA,
-                'avgFeedbackTA': avgFeedbackTA,
-                'numRequestsCompleteTA': numRequestsCompleteTA,
-                'numOutstandingRequestsTA': numOutstandingRequestsTA
-             }
+                'title': "Permission Denied",
+                'message': "You have not received enough feedback to view your statistics",
+                'year': datetime.now(utc).year
+            }
         )
 
     else:
-        #User is not a professor or TA, render access denied
+        # User is not a professor or TA (or is a TA without permission),
+        # render access denied
         return render(
             request,
             'app/permissionDenied.html',

@@ -16,23 +16,18 @@
 <br>
 <div class="row">
     <div class="col-md-8">
-        <section id="BacktoFeedbackPage">
-            <a href="/lab/feedback"><button class="btn btn-default">Back</button></a>
+        <section id="goBack">
+            <button type="button" class="btn btn-default" onclick="goBack()">Back</button>
         </section>
     </div>
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
+<script>
+    function goBack() {
+        window.history.go(-1);
+    }
+</script>
 
 
 {% endblock %}

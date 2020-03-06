@@ -16,14 +16,14 @@
 <br>
 <h4> Average Wait (minutes:seconds): <strong>{{ avgWait }}</strong></h4>
 <br>
-<h4> Average Feedback (1-10): <strong>{{ avgFeedback }}</strong></h4>
+<h4> Average Feedback (1-5): <strong>{{ avgFeedback }}</strong></h4>
 <br>
 <h4> Number of requests closed: <strong>{{ numRequestsComplete }}</strong></h4>
 <br>
 <h4> Number of outstanding requests: <strong>{{ numOutstandingRequests }}</strong></h4>
 
 <br>
-<h3><strong>View Feedback for a Specific TA: </strong></h3>
+<h3><strong>View Feedback for a Specific Helper: </strong></h3>
 
 <form id="taForm" action="." method="post">
     {% csrf_token %}
@@ -31,23 +31,18 @@
 </form>
 
 <div class="row">
-    <div class="col-md-8">
-        <div class="col-md-8">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="selectedName">
-                    Choose TA...<span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    {% if labTAs %}
-                    <li role="separator" class="divider"></li>
-                    {%for ta in labTAs %}
-                    <li><a onclick="javascript: selectTA({{ta.id}})">{{ta.first_name}} {{ta.last_name}}</a></li>
-                    {% endfor %}
-                    {% endif %}
-                </ul>
-                <button type="submit" onclick="javascript:submitTA()" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
+    <div class="col-md-6">
+        {% if labTAs %}
+            {%for ta in labTAs %}
+                <a href="/lab/feedback/helper/{{ta.id}}/">
+                    <div class="panel panel-default" id="taList" style="min-height:35px">
+                        <div class="card-body">
+                            {{ta.first_name}} {{ta.last_name}}
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
 
