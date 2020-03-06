@@ -441,7 +441,6 @@ def studentRequestFeedback(request):
                 }
             )
 
-
 def labQueue(request):
     """Renders queue for lab (for TA's and professors)"""
     # Should only render if user's role is TA or professor
