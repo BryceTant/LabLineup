@@ -720,7 +720,7 @@ def labFeedbackHelper(request, userID):
     numOutstandingRequestsTA = getNumOutstandingRequestsTA(currentLID, userID)
     feedbackCount = getFeedbackCount(currentLID, userID=userID)
     taViewAllowed = taViewFeedback(currentLID) and role == 't' and request.user.id == userID
-    if role == 'p' or (taViewAllowed and feedbackCount >= 3):
+    if (role == 'p' or taViewAllowed) and feedbackCount >= 3:
         #User is a prof, feedback should display immediately
         #Or User is a TA with permission, feedback should render
         return render(
@@ -738,15 +738,15 @@ def labFeedbackHelper(request, userID):
                 'numOutstandingRequestsTA': numOutstandingRequestsTA
              }
         )
-    elif taViewAllowed and feedbackCount < 3:
-        # User is a TA with permission,
+    elif (role == 'p' or taViewAllowed) and feedbackCount < 3:
+        # User is a prof or TA with permission,
         # but does not have enough ratings to review feedback
         return render(
             request,
             'app/error.html',
             {
                 'title': "Permission Denied",
-                'message': "You have not received enough feedback to view your statistics",
+                'message': "This user has not received enough feedback to be viewed.",
                 'year': datetime.now(utc).year
             }
         )
