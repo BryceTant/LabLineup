@@ -660,3 +660,13 @@ def getLabsWithRoleHelper(userID, role):
             requestCount = getRequestCount(labID)
             labs.append({'lab':Lab.objects.get(lid=labID), 'requestCount':requestCount})
     return labs
+
+#To see if a user exists
+def userExists(userID):
+    query = None
+    try:
+        User.objects.get(id=userID)
+        return True
+    except:
+        pass
+    return False
