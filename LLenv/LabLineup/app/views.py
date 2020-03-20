@@ -745,7 +745,7 @@ def labFeedbackHelper(request, userID):
             request,
             'app/error.html',
             {
-                'title': "Permission Denied",
+                'title': "Not Enough Feedback",
                 'message': "This user has not received enough feedback to be viewed.",
                 'year': datetime.now(utc).year
             }
