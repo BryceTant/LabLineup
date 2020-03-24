@@ -36,6 +36,55 @@
     <input type="hidden" name="deleteLab" value='' />
 </form>
 
+<style>
+    .toggle {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 62px;
+        height: 32px;
+        display: inline-block;
+        position: relative;
+        border-radius: 50px;
+        overflow: hidden;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        background-color: lightgray;
+        transition: background-color ease 0.3s;
+    }
+
+    .toggle:before {
+        content: "on ";
+        display: block;
+        position: absolute;
+        z-index: 2;
+        width: 28px;
+        height: 28px;
+        background: #fff;
+        left: 2px;
+        top: 2px;
+        border-radius: 50%;
+        font: 10px/28px Helvetica;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-indent: -22px;
+        word-spacing: 37px;
+        color: #fff;
+        text-shadow: -1px -1px rgba(0,0,0,0.15);
+        white-space: nowrap;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
+    }
+
+    .toggle:checked {
+        background-color: #73000a;
+    }
+
+    .toggle:checked:before {
+        left: 32px;
+    }
+</style>
 
 <h2>{{ title }}</h2>
 <h3>{{ message }}</h3>
@@ -57,16 +106,17 @@
                         {{ detailsForm.labDescription }}
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="id_taViewFeedback" class="col-md-2 control-label">Allow TA's to View Feedback</label>
-                    <div class="col-md-10">
-                        {{ detailsForm.taViewFeedback }}
+                <div class="form-group" style="display: inline-block;">
+                    <label for="id_taViewFeedback" class="control-label" style="width: 200px; float:left; margin-left: 15px; margin-right: 50px;">Allow TA's to View Feedback</label>
+                    <div style="color:white; float:right; padding-top: 5px; margin-right: 10px;margin-left:auto">
+                        <input class="toggle" type="checkbox" {{ detailsForm.taViewFeedback }}/>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="id_open" class="col-md-2 control-label">Allow Users to Join Lab</label>
-                    <div class="col-md-10">
-                        {{ detailsForm.open }}
+                <br>
+                <div class="form-group" style="display: inline-block;">
+                    <label for="id_open" class="control-label" style="width: 200px; float:left; margin-left: 15px; margin-right: 50px;">Allow Users to Join Lab</label>
+                    <div style="color:white; float:right; padding-top:5px; margin-right: 10px;margin-left:auto">
+                        <input class="toggle" type="checkbox" {{ detailsForm.open }}/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -85,7 +135,7 @@
         <section id="LabCodes">
             <h3>TA Lab Code</h3>
             {% if taLabCode %}
-            <div class="panel panel-default">
+            <div class="panel panel-default" style="width:90%">
                 <div class="card-body">
                     <table style="width:100%">
                         <tr>
@@ -104,7 +154,7 @@
             {% endif %}
             <h3>Student Lab Code</h3>
             {% if studentLabCode %}
-            <div class="panel panel-default">
+            <div class="panel panel-default" style="width:90%">
                 <div class="card-body">
                     <table style="width:100%">
                         <tr>
