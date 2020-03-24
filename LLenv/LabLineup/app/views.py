@@ -21,6 +21,7 @@ from app.forms import ForgotPasswordForm
 from app.forms import ManageLabNotificationsForm
 from app.forms import RequestEmailConfirmForm
 from app.forms import AddTAForm
+from app.forms import ContactForm
 
 from app.models import Lab
 from app.models import Role
@@ -99,6 +100,14 @@ def home(request):
 def contact(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            human = True
+            output = form.save()
+            # CALL fxn to submit msg to LL email
+    else:
+        form = ContactForm()
     return render(
         request,
         'app/contact.html',
@@ -106,6 +115,7 @@ def contact(request):
             'title': 'Contact Us',
             'message': 'Please feel free to contact us with any suggestions or comments.',
             'year': datetime.now().year,
+            'form': form
         }
     )
 

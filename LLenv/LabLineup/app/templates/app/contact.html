@@ -5,15 +5,81 @@
 <h2>{{ title }}</h2>
 <h3>{{ message }}</h3>
 
-<!--<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>-->
-
 <address>
     <strong>General Inquiries:</strong> <a href="mailto:contact@lablineup.com">Contact@LabLineup.com</a>
 </address>
+
+<div class="row">
+    <div class="col-md-8">
+        <section id="ContactForm">
+            <form action="." method="post" class="form-horizontal">
+                {% csrf_token %}
+                <h4>Contact Us</h4>
+                <hr />
+                <div class="form-group">
+                    <label for="id_firstname" class="col-md-2 control-label">First Name</label>
+                    <div class="col-md-10">
+                        {{ form.firstname }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_lastname" class="col-md-2 control-label">Last Name</label>
+                    <div class="col-md-10">
+                        {{ form.lastname }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_email" class="col-md-2 control-label">Email</label>
+                    <div class="col-md-10">
+                        {{ form.email }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_phoneNum" class="col-md-2 control-label">Phone Number (optional)</label>
+                    <div class="col-md-10">
+                        {{ form.phoneNumber }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_message" class="col-md-2 control-label">Message</label>
+                    <div class="col-md-10">
+                        {{ form.message }}
+                    </div>
+                </div>
+
+                <!-- Add CAPTCHA here -->
+                <div class="form-group">
+                    <label for="id_captcha" class="col-md-2 control-label">CAPTCHA</label>
+                    <div class="col-md-10">
+                        {{ form.captcha }}
+                        <input type="submit" />
+                        <button class='js-captcha-refresh'></button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="hidden" name="next" value="/" />
+                        <input type="submit" value="Submit" class="btn btn-default" />
+                    </div>
+                </div>
+                {% if form.errors %}
+                <p class="validation-summary-errors">One or more fields are invalid:</p>
+                {% for field in contactForm.errors.items %}
+                    <p class="field-validation-error">{{field.1.0}}</p>
+                {% endfor %}
+                {% endif %}
+            </form>
+        </section>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+    {% load staticfiles %}
+<script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
 
 {% endblock %}

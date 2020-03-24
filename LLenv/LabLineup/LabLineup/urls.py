@@ -3,7 +3,7 @@ Definition of urls for LabLineup.
 """
 
 from datetime import datetime
-from django.urls import path
+from django.urls import path, include
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from app import forms, views
@@ -50,4 +50,5 @@ urlpatterns = [
     path('account/confirmAccount/<str:regConCode>/', views.confirmAccountView, name='confirmAccountView'), #View to confirm new account
     path('pricing/', views.pricing, name='pricing'), #View to see pricing
     path('subscriptionConfirmation/', views.subThankYou, name='subThankYou'), #View to confirm subscription
+    path(r'^captcha/', include('captcha.urls')),
 ]

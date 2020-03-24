@@ -3,6 +3,7 @@ Definition of forms.
 """
 
 from django import forms
+from captcha.fields import CaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm
@@ -342,7 +343,7 @@ class RequestEmailConfirmForm(forms.Form):
             self.add_error(field="username", error="The username you entered does not exist")
             baseValid = False
         return baseValid
-        
+
 
     def save(self):
         return User.objects.get(username=self.cleaned_data["username"])
@@ -380,3 +381,50 @@ class AddTAForm(forms.Form):
         user = User.objects.get(username=self.cleaned_data["username"])
         newRole = Role(uid_id=user.id, lid_id=self.lid, role = 't')
         newRole.save()
+
+class ContactForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(ContactForm, self).__init__(*args, **kwargs)
+
+    firstname = forms.CharField(required=True, max_length=254,
+                                widget=forms.TextInput({
+                                    'class':'form-control',
+                                    'placeholder':'First Name'}))
+    lastname = forms.CharField(required=True, max_length=254,
+                                widget=forms.TextInput({
+                                    'class':'form-control',
+                                    'placeholder':'Last Name'}))
+    email = forms.EmailField(required=True,
+                                widget=forms.TextInput({
+                                    'class':'form-control',
+                                    'placeholder':'Email'}))
+
+    # TODO: Modify for phone number field
+    phoneNumber = forms.CharField(required=False, max_length=16,
+                                widget=forms.TextInput({
+                                    'class':'form-control',
+                                    'placeholder':'Phone Number'}))
+
+    message = forms.CharField(required=True, max_length=254,
+                                widget=forms.Textarea({
+                                    'class':'form-control',
+                                    'placeholder':'Message',
+                                    'rows': 8,
+                                    'cols': 10 }))
+
+    # CAPTCHA field
+    captcha = CaptchaField()
+
+    def is_valid(self):
+        baseValid = super().is_valid()
+        return baseValid
+
+    def save(self):
+        user = super(ContactForm, self).save()
+        user.email = self.cleaned_data["email"]
+        user.first_name = self.cleaned_data["firstname"]
+        user.last_name = self.cleaned_data["lastname"]
+        user.phone_number = self.cleaned_data["phoneNumber"]
+        user.message = self.cleaned_data["message"]
+        return user
