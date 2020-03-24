@@ -15,9 +15,9 @@ import requests  #Note: this is for HTTP requests, not lab requests
 from datetime import datetime
 
 
-API='https://api.mailgun.net/v3/notify.lablineup.com/messages'
-API_KEY='8417d7db91e6ff4430906312affaf067-816b23ef-53a937ca'
-FROM = "LabLineup <no-reply@lablineup.com>"
+API=settings.MAILGUN_API
+API_KEY=settings.MAILGUN_API_KEY
+FROM = settings.MAILGUN_FROM
 BASEURL = settings.BASE_URL
 
 def sendEmailPlaintext(emails, subject, text):

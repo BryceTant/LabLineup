@@ -13,9 +13,9 @@ from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 import uuid
 
-ACCESS_TOKEN = "EAAAEKYGlhNeE5bozB2XB58MnNtQ34R5ctaRFhcozKCNSepkXOfhkUDy9HIipiE-"
-ENV = "production"
-LOCATION = "53F4A4TW4EXN5"
+ACCESS_TOKEN = settings.SQUARE_ACCESS_TOKEN
+ENV = settings.SQUARE_ENV
+LOCATION = settings.SQUARE_LOCATION
 BASE_ADDR = settings.BASE_URL
 
 sq = Client(access_token=ACCESS_TOKEN, environment=ENV)
