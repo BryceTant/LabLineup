@@ -44,6 +44,10 @@
             <div class="col-md-10">
                 <a href="/lab/queue/currentRequest" class="btn btn-primary">Accept Next Request</a>
             </div>
+        {% else %}
+            <div class="col-md-10">
+                <button class="btn btn-primary" disabled>Accept Next Request</button>
+            </div>
         {% endif %}
     </div>
 </div>

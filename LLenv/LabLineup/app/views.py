@@ -37,6 +37,7 @@ from app.modelFunc import getRole
 from app.modelFunc import getLabCode
 from app.modelFunc import deleteLabCode
 from app.modelFunc import getRequestCount
+from app.modelFunc import getUnassignedRequestCount
 from app.modelFunc import getUserByEmail
 from app.modelFunc import generatePasswordResetCode
 from app.modelFunc import resetPasswordFunc
@@ -463,7 +464,7 @@ def labQueue(request):
                 'message': 'Queue',
                 'year': datetime.now().year,
                 'role': role,
-                'requestCount': str(getRequestCount(currentLID)),
+                'requestCount': str(getUnassignedRequestCount(currentLID)),
                 'averageWait': str(getAvgWait(currentLID))
             }
         )

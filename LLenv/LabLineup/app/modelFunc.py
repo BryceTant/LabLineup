@@ -105,6 +105,11 @@ def getRequestCount(labID):
     count = Request.objects.filter(lid_id=labID, complete=False).count()
     return count
 
+#To get a count of current requests that are unassigned in a lab
+def getUnassignedRequestCount(labID):
+    count = Request.objects.filter(lid_id=labID, complete=False, huid_id=None).count()
+    return count
+
 #To get a list of completed requests for a lab (as a list of Request objects)
 def getCompletedRequests(labID):
     requests = []
