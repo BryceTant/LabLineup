@@ -387,11 +387,11 @@ class ContactForm(forms.Form):
         self.user = kwargs.pop('user', None)
         super(ContactForm, self).__init__(*args, **kwargs)
 
-    firstname = forms.CharField(required=True, max_length=254,
+    firstName = forms.CharField(required=True, max_length=254,
                                 widget=forms.TextInput({
                                     'class':'form-control',
                                     'placeholder':'First Name'}))
-    lastname = forms.CharField(required=True, max_length=254,
+    lastName = forms.CharField(required=True, max_length=254,
                                 widget=forms.TextInput({
                                     'class':'form-control',
                                     'placeholder':'Last Name'}))
@@ -400,7 +400,6 @@ class ContactForm(forms.Form):
                                     'class':'form-control',
                                     'placeholder':'Email'}))
 
-    # TODO: Modify for phone number field
     phoneNumber = forms.CharField(required=False, max_length=16,
                                 widget=forms.TextInput({
                                     'class':'form-control',
@@ -421,10 +420,4 @@ class ContactForm(forms.Form):
         return baseValid
 
     def save(self):
-        user = super(ContactForm, self).save()
-        user.email = self.cleaned_data["email"]
-        user.first_name = self.cleaned_data["firstname"]
-        user.last_name = self.cleaned_data["lastname"]
-        user.phone_number = self.cleaned_data["phoneNumber"]
-        user.message = self.cleaned_data["message"]
-        return user
+        return self.cleaned_data["firstName", "lastName", "email", "phoneNumber", "message"]

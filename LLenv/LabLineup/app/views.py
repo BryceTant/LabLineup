@@ -4,6 +4,8 @@ Definition of views.
 
 from datetime import datetime
 from django.shortcuts import render, redirect
+#from django.core.mail import EmailMessage
+#from django.template.loader import get_template
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.views.generic import CreateView
 from django.contrib.auth import update_session_auth_hash
@@ -104,8 +106,15 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             human = True
-            output = form.save()
-            # CALL fxn to submit msg to LL email
+            #output = form.save()
+            #firstName = request.POST.get('firstName', '')
+            #lastName = request.POST.get('lastName', '')
+            #email = request.POST.get('email', '')
+            #phoneNumber = request.POST.get('phoneNumber', '')
+            #message = request.POST.get('message', '')
+
+            #CALL fxn to submit msg to LL email
+            return redirect('contact')
     else:
         form = ContactForm()
     return render(
