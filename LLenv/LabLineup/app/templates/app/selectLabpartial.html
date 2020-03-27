@@ -1,8 +1,16 @@
 {% block content %}
 <div class="panel panel-default" id="selectLab">
         <div class="card-body">
-            <div class="panel-heading"><b>{{lab.name}}</b></div>
-            <div class="panel-body">{{lab.description}}</div>
+            <div class="panel-heading" style= "display:inline-block;"><b>{{lab.lab.name}}</b></div>
+            <div class="panel-body" style= "display:inline-block; float: right" >
+                {% if lab.requestCount > 0 %}
+                    <span class="badge badge-primary" style= "height: 40px; width: 40px; padding-top: 33%; border-radius: 100%">{{lab.requestCount}}</span>
+                {% else %}
+                    <span class="badge badge-light" style= "height: 40px; width: 40px; padding-top: 33%; border-radius: 100%">{{lab.requestCount}}</span>
+                {% endif %}
+            </div>
+            <div class="panel-body" >{{lab.lab.description}}</div>
+            
         </div>
 </div>
 {% endblock %}

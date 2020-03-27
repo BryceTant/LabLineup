@@ -2,37 +2,33 @@
 
 {% block content %}
 
-<h2><strong>{{ title }}</strong></h2>
-<h3>{{ message }}</h3>
-<br>
-<h4> Average Wait (minutes:seconds): <strong>{{ avgWaitTA }}</strong></h4>
-<br>
-<h4> Average Feedback (1-10): <strong>{{ avgFeedbackTA }}</strong></h4>
-<br>
-<h4> Number of requests closed: <strong>{{ numRequestsCompleteTA }}</strong></h4>
-<br>
-<h4> Number of outstanding requests: <strong>{{ numOutstandingRequestsTA }}</strong></h4>
+<h2 style="margin-bottom: 0px; "><strong>{{ title }}</strong></h2>
+<hr style="margin-top: 0px; margin-bottom: 0px;">
+<h5 style="margin-top: 2px; margin-bottom: 20px;padding-left: 20px">{{ message }}</h5>
+
+<h4 style="margin-top: 0px; padding-bottom: 8px"> Average Wait (minutes:seconds): <strong>{{ avgWaitTA }}</strong></h4>
+
+<h4 style="margin-top: 0px; padding-bottom: 8px"> Average Feedback (1-5): <strong>{{ avgFeedbackTA }}</strong></h4>
+
+<h4 style="margin-top: 0px; padding-bottom: 8px"> Number of requests closed: <strong>{{ numRequestsCompleteTA }}</strong></h4>
+
+<h4 style="margin-top: 0px; padding-bottom: 8px"> Number of outstanding requests: <strong>{{ numOutstandingRequestsTA }}</strong></h4>
 
 <br>
 <div class="row">
     <div class="col-md-8">
-        <section id="BacktoFeedbackPage">
-            <a href="/lab/feedback"><button class="btn btn-default">Back</button></a>
+        <section id="goBack">
+            <button type="button" class="btn btn-default" onclick="goBack()">Back</button>
         </section>
     </div>
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
+<script>
+    function goBack() {
+        window.history.go(-1);
+    }
+</script>
 
 
 {% endblock %}

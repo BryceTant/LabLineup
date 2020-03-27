@@ -153,6 +153,16 @@ class AddLabForm(forms.Form):
             Role.objects.get(uid_id=self.user.id, lid_id=queryLabCode.lid_id)
             self.add_error(field="labcode", error="You are already a member of this lab")
             baseValid = False
+            return baseValid
+        except:
+            pass
+        #See if the lab is marked as open or closed
+        queryLab = None
+        try:
+            queryLab = Lab.objects.get(lid=queryLabCode.lid_id)
+            if not queryLab.open:
+                self.add_error(field="labcode", error="The professor has closed this lab")
+                baseValid = False
         except:
             pass
         return baseValid
@@ -180,7 +190,8 @@ class CreateLabForm(forms.Form):
 
     def save(self):
         userID = self.user.id
-        newLab = Lab(name=self.cleaned_data['labName'], description=self.cleaned_data['labDescription'])
+        newLab = Lab(name=self.cleaned_data['labName'],
+                    description=self.cleaned_data['labDescription'])
         newLab.save()
         creatorRole = Role(lid_id=newLab.lid, uid_id=userID, role='p') #Add the professor role for the current user
         creatorRole.save()
@@ -197,6 +208,8 @@ class ManageLabForm(forms.Form):
     labDescription = forms.CharField(required=False, max_length=150,
                                 widget=forms.TextInput({
                                     'class':'form-control'}))
+    taViewFeedback = forms.BooleanField(required = False)
+    open = forms.BooleanField(required=False)
 
     def save(self):
         currentLab = Lab.objects.get(lid = self.lid)
@@ -205,6 +218,8 @@ class ManageLabForm(forms.Form):
 
         if (self.cleaned_data['labDescription'] != ""):  #If description updated
             Lab.objects.filter(lid=currentLab.lid).update(description=self.cleaned_data['labDescription'])
+        Lab.objects.filter(lid=currentLab.lid).update(taViewFeedback=self.cleaned_data['taViewFeedback'],
+                                                      open=self.cleaned_data['open'])
 
 class SubmitRequestForm(forms.Form):
     def __init__(self, *args, **kwargs):

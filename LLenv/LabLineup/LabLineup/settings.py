@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import posixpath
+from setEnvVars import set
+
+set("dev")
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'a5ddfa33-1b93-4a5a-8532-afe1dafe0b3b'
+SECRET_KEY = os.getenv("LL_DJANGO_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -80,11 +84,11 @@ WSGI_APPLICATION = 'LabLineup.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'lldb',
-        'USER': 'testDBUser',
-        'PASSWORD': 'z5b3P9wwr9F6',  #TODO: Get this from secure store
-        'HOST': '35.231.63.117',
-        'PORT': '3306',
+        'NAME': os.getenv("LL_DB_NAME"),
+        'USER': os.getenv("LL_DB_USER"),
+        'PASSWORD': os.getenv("LL_DB_PASSWORD"),
+        'HOST': os.getenv("LL_DB_HOST"),
+        'PORT': os.getenv("LL_DB_PORT"),
     }
 }
 
@@ -119,4 +123,14 @@ STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
 
 #BASE_URL should be https://www.LabLineup.com for prod and http://127.0.0.1:8000 for dev
-BASE_URL = "https://www.LabLineup.com"
+BASE_URL = os.getenv("LL_BASEURL")
+
+#SendEmail / MailGun Settings
+MAILGUN_API= os.getenv("LL_MAILGUN_API")
+MAILGUN_API_KEY= os.getenv("LL_MAILGUN_API_KEY")
+MAILGUN_FROM = os.getenv("LL_MAILGUN_FROM")
+
+#Payment / Square Settings
+SQUARE_ACCESS_TOKEN = os.getenv("LL_SQUARE_ACCESS_TOKEN")
+SQUARE_ENV = os.getenv("LL_SQUARE_ENV")
+SQUARE_LOCATION = os.getenv("LL_SQUARE_LOCATION")

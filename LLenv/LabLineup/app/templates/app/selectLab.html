@@ -40,12 +40,12 @@
                 {% for lab in labsWhereStudent %}
                     <div class="row">
                         <div class="col-md-10">
-                            <div onclick="javascript:setLab({{lab.lid}})">
+                            <div onclick="javascript:setLab({{lab.lab.lid}})">
                                 {% include 'app/selectLabpartial.html' %}
                             </div>
                         </div>
-                        <div class="col-md-2" align="right" id="selectLabRemove">
-                            <div onclick="javascript:setLabRemove({{lab.lid}})">
+                        <div class="col-sm-1" align="right" id="selectLabRemove">
+                            <div onclick="javascript:setLabRemove({{lab.lab.lid}})">
                                 {% include 'app/removeLab.html' %}
                             </div>
                         </div>
@@ -64,12 +64,12 @@
                 {% for lab in labsWhereTA %}
                     <div class="row">
                         <div class="col-md-10">
-                            <div onclick="javascript:setLab({{lab.lid}})">
+                            <div onclick="javascript:setLab({{lab.lab.lid}})">
                                 {% include 'app/selectLabpartial.html' %}
                             </div>
                         </div>
                         <div class="col-md-2" align="right">
-                            <div onclick="javascript:setLabRemove({{lab.lid}})">
+                            <div onclick="javascript:setLabRemove({{lab.lab.lid}})">
                                 {% include 'app/removeLab.html' %}
                             </div>
                         </div>
@@ -83,7 +83,7 @@
                 {% for lab in labsWhereProfessor %}
                     <div class="row">
                         <div class="col-md-10">
-                            <div onclick="javascript:setLab({{lab.lid}})">
+                            <div onclick="javascript:setLab({{lab.lab.lid}})">
                                 {% include 'app/selectLabpartial.html' %}
                             </div>
                         </div>

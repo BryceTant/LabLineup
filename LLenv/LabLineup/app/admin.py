@@ -5,7 +5,7 @@ from django.contrib.admin.models import LogEntry
 from app.models import Lab, Role, Request, LabCode, Notify, Subscription
 
 class LabAdmin(admin.ModelAdmin):
-    list_display=('lid','name', 'description', 'active')
+    list_display=('lid','name', 'description', 'active', 'taViewFeedback', 'open')
 
 class RoleAdmin(admin.ModelAdmin):
     list_display=('id', 'lid', 'uid', 'role')

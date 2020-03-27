@@ -9,9 +9,20 @@
 <table style="width:100%">
     <tr>
         <td><h2 valign="middle">{{ title }}</h2></td>
-        <td align="right" valign="middle"><a class="btn btn-default" href="/lab/manageLab/" role="button">
-            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-        </a></td>
+        <td align="right" valign="middle">
+            <a class="btn btn-default" href=
+                {% if role == 'p' %}
+                    "/lab/feedback/"
+                {% else %}
+                    "/lab/feedback/helper/{{user.id}}/"
+                {% endif %}
+               role="button">
+                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-default" href="/lab/manageLab/" role="button">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+            </a>
+        </td>
     </tr>
 </table>
 
@@ -32,6 +43,10 @@
         {% if requestCount != '0' %}
             <div class="col-md-10">
                 <a href="/lab/queue/currentRequest" class="btn btn-primary">Accept Next Request</a>
+            </div>
+        {% else %}
+            <div class="col-md-10">
+                <button class="btn btn-primary" disabled>Accept Next Request</button>
             </div>
         {% endif %}
     </div>

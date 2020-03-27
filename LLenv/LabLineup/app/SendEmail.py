@@ -15,9 +15,9 @@ import requests  #Note: this is for HTTP requests, not lab requests
 from datetime import datetime
 
 
-API='https://api.mailgun.net/v3/notify.lablineup.com/messages'
-API_KEY='8417d7db91e6ff4430906312affaf067-816b23ef-53a937ca'
-FROM = "LabLineup <no-reply@lablineup.com>"
+API=settings.MAILGUN_API
+API_KEY=settings.MAILGUN_API_KEY
+FROM = settings.MAILGUN_FROM
 BASEURL = settings.BASE_URL
 
 def sendEmailPlaintext(emails, subject, text):
@@ -140,3 +140,24 @@ def sendNeverHelped(lid, sid, rid):
     vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
 
     sendEmail(profEmail, subject, template="nothelped", variables=vars)
+
+def sendTransferredRequest(lid, rid, previousUser):
+    labName = Lab.objects.get(lid=lid).name
+    subject = "A request has been assigned to you in " + labName
+    request = Request.objects.get(rid=rid)
+    student = User.objects.get(id=request.suid_id)
+    studentName = student.first_name + " " + student.last_name
+    previousHelper = User.objects.get(id=previousUser)
+    previousName = previousHelper.first_name + " " + previousHelper.last_name
+    dateSubmitted = request.timeSubmitted.strftime("%m/%d/%Y %I:%M:%S %p")
+    helperEmail = User.objects.get(id=request.huid_id).email
+
+    vars = "{\"labName\": \"" + labName + "\","
+    vars = vars + "\"student\": \"" + studentName + "\","
+    vars = vars + "\"station\": \"" + request.station + "\","
+    vars = vars + "\"submitted\": \"" + dateSubmitted + "\","
+    vars = vars + "\"previousHelper\": \"" + previousName + "\","
+    vars = vars + "\"description\": \"" + request.description + "\","
+    vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
+
+    sendEmail(helperEmail, subject, template="transferredrequest", variables=vars)
