@@ -127,7 +127,7 @@ def sendNeverHelped(lid, sid, rid):
         helperName = "None"
     else:
         helperName = helper.first_name + " " + helper.last_name
-    
+
     dateSubmitted = request.timeSubmitted.strftime("%m/%d/%Y %I:%M:%S %p")
     # helperName = "TAFirst TA Last"
 
@@ -161,3 +161,15 @@ def sendTransferredRequest(lid, rid, previousUser):
     vars = vars + "\"labLink\": \"" + BASEURL + "\"}"
 
     sendEmail(helperEmail, subject, template="transferredrequest", variables=vars)
+
+def sendContactForm(firstName, lastName, email, phoneNumber, message):
+    contactEmail = "Contact@LabLineup.com"
+    subject = "New contact form submitted"
+
+    vars = "{\"firstName\": \"" + firstName + "\","
+    vars = vars + "\"lastName\": \"" + lastName + "\","
+    vars = vars + "\"email\": \"" + email + "\","
+    vars = vars + "\"phoneNumber\": \"" + phoneNumber + "\","
+    vars = vars + "\"message\": \"" + message + "\","
+
+    sendEmail([email,contactEmail], subject, template="contactsubmitted", variables=vars)

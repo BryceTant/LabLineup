@@ -435,4 +435,8 @@ class ContactForm(forms.Form):
         return baseValid
 
     def save(self):
-        return self.cleaned_data["firstName", "lastName", "email", "phoneNumber", "message"]
+        firstName = self.cleaned_data["firstName"]
+        lastName = self.cleaned_data["lastName"]
+        email = self.cleaned_data["email"]
+        phoneNumber = self.cleaned_data["phoneNumber"]
+        message = self.cleaned_data["message"]

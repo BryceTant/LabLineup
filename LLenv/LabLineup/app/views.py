@@ -87,6 +87,7 @@ from app.SendEmail import sendPasswordReset
 from app.SendEmail import sendRegistrationConfirmation
 from app.SendEmail import sendNeverHelped
 from app.SendEmail import sendTransferredRequest
+from app.SendEmail import sendContactForm
 
 from app.Payment import createCheckout
 from app.Payment import findRecentPayment
@@ -112,15 +113,16 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             human = True
-            #output = form.save()
-            #firstName = request.POST.get('firstName', '')
-            #lastName = request.POST.get('lastName', '')
-            #email = request.POST.get('email', '')
-            #phoneNumber = request.POST.get('phoneNumber', '')
-            #message = request.POST.get('message', '')
+            output = form.save()
+            firstName = request.POST.get('firstName', '')
+            lastName = request.POST.get('lastName', '')
+            email = request.POST.get('email', '')
+            phoneNumber = request.POST.get('phoneNumber', '')
+            message = request.POST.get('message', '')
 
             #CALL fxn to submit msg to LL email
-            return redirect('contact')
+            sendContactForm(firstName, lastName, email, phoneNumber, message)
+            return redirect('/contact/confirm')
     else:
         form = ContactForm()
     return render(
@@ -1154,6 +1156,18 @@ def subThankYou(request):
         {
             'title': "Error",
             'message': "Your subscription could not be updated. Please contact us.",
+            'year': datetime.now().year,
+        }
+    )
+
+def contactConfirm(request):
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/contactConfirm.html',
+        {
+            'title': 'Thank You!',
+            'message': "We will reply to your inquiry shortly.",
             'year': datetime.now().year,
         }
     )

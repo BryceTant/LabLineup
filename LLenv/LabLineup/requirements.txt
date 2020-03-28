@@ -6,3 +6,4 @@ sqlparse==0.3.0
 requests==2.22.0
 selenium==3.141.0
 squareup==4.1.0.20200122
+django-simple-captcha==0.5.11

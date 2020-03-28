@@ -49,4 +49,5 @@ urlpatterns = [
     path('pricing/', views.pricing, name='pricing'), #View to see pricing
     path('subscriptionConfirmation/', views.subThankYou, name='subThankYou'), #View to confirm subscription
     path(r'^captcha/', include('captcha.urls')),
+    path('contact/confirm/', views.contactConfirm, name='contactConfirm'), #View to confirm contact form submission
 ]
