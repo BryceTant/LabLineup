@@ -15,13 +15,18 @@
 </form>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 control-label">
+        <br />
         <b>Subscription Expiration: </b>
         {{userSub.subRenewal | date}}
     </div>
 </div>
 
 <div class="row">
+    <br />
+    <div class="col-md-2 control-label">
+        <b>Upgrade Plan: </b>
+    </div>
     <div class="col-md-2">
         <button type="button" class="btn btn-default" onclick="javascript:selectSub({{1}})">Silver Plan</button>
     </div>
