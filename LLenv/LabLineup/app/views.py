@@ -4,8 +4,6 @@ Definition of views.
 
 from datetime import datetime
 from django.shortcuts import render, redirect
-#from django.core.mail import EmailMessage
-#from django.template.loader import get_template
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.views.generic import CreateView
 from django.contrib.auth import update_session_auth_hash

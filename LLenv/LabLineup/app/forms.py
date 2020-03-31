@@ -399,7 +399,6 @@ class AddTAForm(forms.Form):
 
 class ContactForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
         super(ContactForm, self).__init__(*args, **kwargs)
 
     firstName = forms.CharField(required=True, max_length=254,

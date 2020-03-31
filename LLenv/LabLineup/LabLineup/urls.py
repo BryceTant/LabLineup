@@ -48,6 +48,6 @@ urlpatterns = [
     path('account/confirmAccount/<str:regConCode>/', views.confirmAccountView, name='confirmAccountView'), #View to confirm new account
     path('pricing/', views.pricing, name='pricing'), #View to see pricing
     path('subscriptionConfirmation/', views.subThankYou, name='subThankYou'), #View to confirm subscription
-    path(r'^captcha/', include('captcha.urls')),
+    path(r'^captcha/', include('captcha.urls')), #Path for unique CAPTCHA image (rendered each time /contact is rendered)
     path('contact/confirm/', views.contactConfirm, name='contactConfirm'), #View to confirm contact form submission
 ]
