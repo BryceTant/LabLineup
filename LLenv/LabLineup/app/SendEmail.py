@@ -170,6 +170,6 @@ def sendContactForm(firstName, lastName, email, phoneNumber, message):
     vars = vars + "\"lastName\": \"" + lastName + "\","
     vars = vars + "\"email\": \"" + email + "\","
     vars = vars + "\"phoneNumber\": \"" + phoneNumber + "\","
-    vars = vars + "\"message\": \"" + message + "\","
+    vars = vars + "\"message\": \"" + message + "\"}"
 
     sendEmail([email,contactEmail], subject, template="contactsubmitted", variables=vars)
