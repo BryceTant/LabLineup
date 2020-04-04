@@ -1121,35 +1121,30 @@ def requestHistoryProf(request):
         return render(request,
                       'app/notLoggedIn.html',{'year':datetime.now(utc).year})
     currentLID = request.session.get('currentLab')
-    requestsDict = getRequestHistory(mode="Professor", labID=currentLID)
-    return render(
-        request,
-        'app/requestHistoryProf.html',
-        {
-            'title': "Request History for " + getLabName(currentLID),
-            'message': "View request history",
-            'year': datetime.now().year,
-            'requests': requestsDict,
-            'view': "Professor"
-        }
-    )
-
-def requestHistoryProfAll(request):
-    assert(isinstance(request, HttpRequest))
-    if not request.user.is_authenticated:
-        return render(request,
-                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
-    requestsDict = getRequestHistory(userID=request.user)
-    return render(
-        request,
-        'app/requestHistory.html',
-        {
-            'title': "Request History",
-            'message': "View request history",
-            'year': datetime.now().year,
-            'requests': requestsDict
-        }
-    )
+    if (getRole(userID=request.user, labID=currentLID) == 'p'):
+        requestsDict = getRequestHistory(mode="Professor", labID=currentLID)
+        return render(
+            request,
+            'app/requestHistoryProf.html',
+            {
+                'title': "Request History for " + getLabName(currentLID),
+                'message': "View request history",
+                'year': datetime.now().year,
+                'requests': requestsDict,
+                'view': "Professor"
+            }
+        )
+    else:
+        # User is not the professor or TA for the current lab (Do not load the page)
+        return render(
+            request,
+            'app/permissionDenied.html',
+            {
+                'title': 'Permission Denied',
+                'message': 'You do not have permission to view this page',
+                'year': datetime.now().year
+            }
+        )
 
 def pricing(request):
     assert(isinstance(request, HttpRequest))
