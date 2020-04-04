@@ -455,18 +455,26 @@ def deleteAccount(userID):
     return True
 
 #To get list of requests as dictionary for student for lab for requestHistory
-def getStudentRequestsHistory(userID, labID):
+def getRequestsForHistory(labID, studentID=None, helperID=None):
     retList = []
     queryRequests = None
     try:
-        queryRequests = Request.objects.filter(suid_id=userID, lid_id=labID).order_by('-timeSubmitted')
+        if studentID != None:
+            queryRequests = Request.objects.filter(suid_id=studentID,
+                                                  lid_id=labID).order_by('-timeSubmitted')
+        elif helperID != None:
+            queryRequests = Request.objects.filter(huid_id=helperID,
+                                                  lid_id=labID).order_by('-timeSubmitted')
+        else:
+            queryRequests = Request.objects.filter(lid_id=labID).order_by('-timeSubmitted')
         for request in queryRequests:
             genDict = {"timeSubmitted":request.timeSubmitted,
                        "timeCompleted":request.timeCompleted,
                        "station":request.station,
                        "description":request.description,
                        "help":getNameOfUser(request.huid_id),
-                       "feedback":request.feedback
+                       "feedback":request.feedback,
+                       "student":getNameOfUser(request.suid_id),
                       }
             retList.append(genDict)
     except:
@@ -474,11 +482,16 @@ def getStudentRequestsHistory(userID, labID):
     return retList
 
 #To get requestHistory
-def getRequestHistory(userID):
+def getRequestHistory(mode="Student", studentID=None, helperID=None, labID=None):
     retDict = {}
-    listLabs = getLabsWithRole(userID, 's')
+    listLabs = []
+    if mode == "Student":
+        listLabs = getLabsWithRole(studentID, 's')
+    else: #Mode is Professor or TA
+        listLabs = [Lab.objects.get(lid=labID)]
     for lab in listLabs:
-        retDict[lab.name] = {"lid": lab.lid, "requests": getStudentRequestsHistory(userID, labID=lab.lid)}
+        requestList = getRequestsForHistory(labID=lab.lid, studentID=studentID, helperID=helperID)
+        retDict[lab.name] = {"lid": lab.lid, "requests": requestList}
     return retDict
 
 #To convert UTC to local datetime
@@ -675,3 +688,12 @@ def userExists(userID):
     except:
         pass
     return False
+
+#To get a lab name
+def getLabName(labID):
+    query = None
+    try:
+        query = Lab.objects.get(lid=labID).name
+    except:
+        pass
+    return query

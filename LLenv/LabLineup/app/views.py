@@ -79,6 +79,7 @@ from app.modelFunc import taViewFeedback
 from app.modelFunc import getLabsWithRoleStudent
 from app.modelFunc import getLabsWithRoleHelper
 from app.modelFunc import userExists
+from app.modelFunc import getLabName
 
 from app.SendEmail import sendAllRequest
 from app.SendEmail import sendPasswordReset
@@ -1098,6 +1099,42 @@ def requestEmailConfirmation(request):
     )
 
 def requestHistory(request):
+    assert(isinstance(request, HttpRequest))
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
+    requestsDict = getRequestHistory(mode="Student", studentID=request.user)
+    return render(
+        request,
+        'app/requestHistory.html',
+        {
+            'title': "Request History",
+            'message': "View request history",
+            'year': datetime.now().year,
+            'requests': requestsDict
+        }
+    )
+
+def requestHistoryProf(request):
+    assert(isinstance(request, HttpRequest))
+    if not request.user.is_authenticated:
+        return render(request,
+                      'app/notLoggedIn.html',{'year':datetime.now(utc).year})
+    currentLID = request.session.get('currentLab')
+    requestsDict = getRequestHistory(mode="Professor", labID=currentLID)
+    return render(
+        request,
+        'app/requestHistoryProf.html',
+        {
+            'title': "Request History for " + getLabName(currentLID),
+            'message': "View request history",
+            'year': datetime.now().year,
+            'requests': requestsDict,
+            'view': "Professor"
+        }
+    )
+
+def requestHistoryProfAll(request):
     assert(isinstance(request, HttpRequest))
     if not request.user.is_authenticated:
         return render(request,

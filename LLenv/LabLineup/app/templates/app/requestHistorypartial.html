@@ -9,11 +9,25 @@
                         Completed: {{request.timeCompleted}}
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-10" style="font-size: 12px;">
-                        Helped By: {{request.help}}
+                {% if view == 'Professor' or view == 'TA' %}
+                    <div class="row">
+                        <div class="col-md-10" style="font-size: 12px; ">
+                            Lab: {{request.lab}}
+                        </div>
                     </div>
-                </div>
+                    <div class="row">
+                        <div class="col-md-10" style="font-size: 12px; ">
+                            Student: {{request.student}}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if view != 'ta' %}
+                    <div class="row">
+                        <div class="col-md-10" style="font-size: 12px;">
+                            Helped By: {{request.help}}
+                        </div>
+                    </div>
+                {% endif %}
                 <div class="row">
                     <div class="col-md-10" style="font-size: 12px;">
                         Feedback: {{request.feedback}}
