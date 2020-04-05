@@ -974,6 +974,7 @@ def currentRequest(request):
                 nextRequest = openRequest
             else:
                 nextRequest = getNextRequest(currentLID)
+                print (nextRequest)
             if nextRequest != None:
                 #If the lab has a request to show
                 assignRequest(nextRequest.rid, request.user.id)

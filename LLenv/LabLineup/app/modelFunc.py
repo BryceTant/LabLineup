@@ -94,7 +94,7 @@ def getFeedbackCount(labID, userID):
 #To get a list of the current requests (as a list of Request objects) in a lab
 def getRequests(labID):
     requests = []
-    query = Request.objects.filter(lid_id=labID, timeCompleted__isnull=True)
+    query = Request.objects.filter(lid_id=labID, timeCompleted__isnull=True, complete=False)
     if query:
         for request in query:
             requests.append(request)
@@ -102,12 +102,12 @@ def getRequests(labID):
 
 #To get a count of current requests in a lab
 def getRequestCount(labID):
-    count = Request.objects.filter(lid_id=labID, complete=False).count()
+    count = Request.objects.filter(lid_id=labID, timeCompleted=None, complete=False).count()
     return count
 
 #To get a count of current requests that are unassigned in a lab
 def getUnassignedRequestCount(labID):
-    count = Request.objects.filter(lid_id=labID, complete=False, huid_id=None).count()
+    count = Request.objects.filter(lid_id=labID, timeCompleted=None, complete=False, huid_id=None).count()
     return count
 
 #To get a list of completed requests for a lab (as a list of Request objects)
