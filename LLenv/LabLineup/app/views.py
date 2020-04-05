@@ -910,6 +910,10 @@ def manageAccount(request):
             print("Error")
             return redirect('/account')
     numLabsUsed = getNumberOfLabs(request.user.id)
+    currentPlan = "Free"
+    temp = findProductOrder(findRecentPayment(userSub.id)[1])
+    if temp != None:
+        currentPlan = temp
     return render(
         request,
         'app/account.html',
@@ -923,7 +927,7 @@ def manageAccount(request):
             'userSub': userSub,
             'labsUsed': numLabsUsed,
             'labsPercentUsed': int(round(numLabsUsed/userSub.labLimit*100, 0)),
-            'userSubPlan': findProductOrder(findRecentPayment(userSub.id)[1]),
+            'userSubPlan': currentPlan,
             'alerts': getAlerts(request.user.id)
         }
     )

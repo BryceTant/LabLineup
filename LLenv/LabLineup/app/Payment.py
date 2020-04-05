@@ -109,14 +109,14 @@ def findRecentPayment(subID):
         }
     )
 
-    if result.is_success():
+    if result.is_success() and result.body != {}:
         for order in result.body["orders"]:
             if order["reference_id"] == str(subID):
                 orderAmt = order["tenders"][0]["amount_money"]["amount"]
                 if orderAmt != 0:
                     return (order["line_items"][0]["name"], order["id"])
         return (None, None)
-    elif result.is_error():
+    else:
         return (None, None)
 
 #To find which product was ordered by order/transaction ID
@@ -137,12 +137,12 @@ def findProductOrder(orderID):
         }
     )
 
-    if result.is_success():
+    if result.is_success() and result.body != {}:
         for order in result.body["orders"]:
             if order["id"] == orderID:
                 orderAmt = order["tenders"][0]["amount_money"]["amount"]
                 if orderAmt != 0:
                     return (order["line_items"][0]["name"])
         return None
-    elif result.is_error():
+    else:
         return None
