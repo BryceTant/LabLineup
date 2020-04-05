@@ -1,7 +1,6 @@
 {% load tz %}
 
 {% block content %}
-
 <script>
     function selectSub(selectedPlan) {
         document.forms["selectSubForm"].elements["subPlan"].value = selectedPlan;
@@ -17,6 +16,26 @@
 <div class="row">
     <div class="col-md-4 control-label">
         <br />
+        <b>Current Subscription: </b>
+        {{userSubPlan}} ({{userSub.labLimit}} labs)
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 control-label">
+        <br />
+        <b>Labs Used: </b>
+        {{labsUsed}} of {{userSub.labLimit}}
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{labsPercentUsed}}" aria-valuemin="0" aria-valuemax="100" style="width: {{labsPercentUsed}}%;">
+                {{labsPercentUsed}}%
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 control-label">
+        <br />
         <b>Subscription Expiration: </b>
         {{userSub.subRenewal | date}}
     </div>
@@ -25,13 +44,80 @@
 <div class="row">
     <br />
     <div class="col-md-2 control-label">
-        <b>Upgrade Plan: </b>
+        <b>Upgrade/Renew Plan: </b>    
     </div>
-    <div class="col-md-2">
-        <button type="button" class="btn btn-default" onclick="javascript:selectSub({{1}})">Silver Plan</button>
+</div>
+<section class="pricing py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Free Tier -->
+            <div class="col-lg-4">
+                <div class="card mb-5 mb-lg-0">
+                    <div class="card-body">
+                        <h3 class="card-title text-uppercase text-center">Free</h3>
+                        <h6 class="card-price text-center">$0<span class="period">/year</span></h6>
+                        <hr>
+                        <ul class="fa-ul">
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>1 Lab</strong></li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited students</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited TAs</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Notifications</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Add / Remove Students from Labs</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Reports</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Technical Support via Email</li>
+
+                        </ul>
+                        <a href="/account/" class="btn btn-block btn-primary text-uppercase">(No Action Necessary)</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Plus Tier -->
+            <div class="col-lg-4">
+                <div class="card mb-5 mb-lg-0">
+                    <div class="card-body">
+                        <h3 class="card-title text-muted text-uppercase text-center">Silver</h3>
+                        <h6 class="card-price text-center">$20<span class="period">/year</span></h6>
+                        <hr>
+                        <ul class="fa-ul">
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>5 Labs</strong></li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited students</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited TAs</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Notifications</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Add / Remove Students from Labs</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Reports</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Technical Support via Email</li>
+                        </ul>
+                        <button type="button" class="btn btn-block btn-primary" onclick="javascript:selectSub({{1}})">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Pro Tier -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-muted text-uppercase text-center text-warning">Gold</h3>
+                        <h6 class="card-price text-center">$30<span class="period">/year</span></h6>
+                        <hr>
+                        <ul class="fa-ul">
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>20 Labs</strong></li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited students</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited TAs</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Notifications</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Add / Remove Students from Labs</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Reports</li>
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Technical Support via Email</li>
+                        </ul>
+                        <button type="button" class="btn btn-block btn-primary" onclick="javascript:selectSub({{2}})">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-2">
-        <button type="button" class="btn btn-default" onclick="javascript:selectSub({{2}})">Gold Plan</button>
+</section>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <p>Note: If you modify your plan, you will receive the modified benefits for the remainder of your current subscription period and for the entirety of your renewed/upgraded subscription period.</p>
     </div>
 </div>
 

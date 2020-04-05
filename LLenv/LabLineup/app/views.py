@@ -92,6 +92,8 @@ from app.Payment import createCheckout
 from app.Payment import findRecentPayment
 from app.Payment import findProductOrder
 
+from app.Alert import getAlerts
+
 
 def home(request):
     """Renders the home page."""
@@ -102,6 +104,7 @@ def home(request):
         {
             'title': 'Home Page',
             'year': datetime.now().year,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -131,7 +134,8 @@ def contact(request):
             'title': 'Contact Us',
             'message': 'Please feel free to contact us with any suggestions or comments.',
             'year': datetime.now().year,
-            'form': form
+            'form': form,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -144,7 +148,8 @@ def about(request):
         {
             'title': 'About',
             'message': 'About LabLineup',
-            'year': datetime.now().year
+            'year': datetime.now().year,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -163,7 +168,8 @@ def register(request):
                     {
                         'title':"Welcome to LabLineup",
                         'message': "Please check your email for a link to activate your account.",
-                        'year': datetime.now().year
+                        'year': datetime.now().year,
+                        'alerts': getAlerts(request.user.id)
                     }
                 )
     else:
@@ -175,7 +181,8 @@ def register(request):
             'title': 'Register',
             'message:': 'Create an account.',
             'year': datetime.now().year,
-            'form': form
+            'form': form,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -189,6 +196,7 @@ def help(request):
             'title': 'FAQs',
             'message': 'Help / Frequently Asked Questions',
             'year': datetime.now().year,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -206,7 +214,8 @@ def createLab(request):
             {
                 'title': "Error",
                 'message': "You have reached your limit for labs as a professor. Please upgrade your subscription.",
-                'year': datetime.now().year
+                'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
             }
         )
     else:
@@ -225,7 +234,8 @@ def createLab(request):
                 'title': 'Create Lab',
                 'message': 'Create a lab for your class',
                 'year': datetime.now().year,
-                'form': form
+                'form': form,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -251,6 +261,7 @@ def addLab(request):
             'message': 'Add a lab to your account',
             'year': datetime.now().year,
             'form': form,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -287,7 +298,8 @@ def selectLab(request):
                     {
                         'title': "Error",
                         'message': "The lab could not be removed from your account. Please contact us.",
-                        'year': datetime.now(utc).year
+                        'year': datetime.now(utc).year,
+                        'alerts': getAlerts(request.user.id)
                     }
                 )
     else:
@@ -304,7 +316,8 @@ def selectLab(request):
                 'year': datetime.now(utc).year,
                 'labsWhereStudent': labsWhereStudent,
                 'labsWhereTA': labsWhereTA,
-                'labsWhereProfessor': labsWhereProfessor
+                'labsWhereProfessor': labsWhereProfessor,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -335,7 +348,8 @@ def studentRequest(request):
                 'title': 'Submit Request',
                 'message': 'Submit a request for help',
                 'year': datetime.now().year,
-                'form': form
+                'form': form,
+                'alerts': getAlerts(request.user.id)
             }
         )
     else:
@@ -345,7 +359,8 @@ def studentRequest(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -390,7 +405,8 @@ def studentRequestSubmitted(request):
                         {
                             'title': "Error",
                             'message': "Request was not deleted.",
-                            'year': datetime.now(utc).year
+                            'year': datetime.now(utc).year,
+                            'alerts': getAlerts(request.user.id)
                            }
                     )
             return redirect('/student/requestSubmitted')
@@ -405,7 +421,8 @@ def studentRequestSubmitted(request):
                 'stationID': currRequest.station,
                 'labID': lab.name,
                 'numBefore': numBefore,
-                'description': currRequest.description
+                'description': currRequest.description,
+                'alerts': getAlerts(request.user.id)
             }
         )
     else:
@@ -415,7 +432,8 @@ def studentRequestSubmitted(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -448,7 +466,8 @@ def studentRequestFeedback(request):
                 {
                     'title': 'Feedback',
                     'message': message,
-                    'year': datetime.now().year
+                    'year': datetime.now().year,
+                    'alerts': getAlerts(request.user.id)
                 }
         )
     else:
@@ -458,7 +477,8 @@ def studentRequestFeedback(request):
                 {
                     'title': 'Permission Denied',
                     'message': 'You do not have permission to view this page',
-                    'year': datetime.now().year
+                    'year': datetime.now().year,
+                    'alerts': getAlerts(request.user.id)
                 }
             )
 
@@ -485,7 +505,8 @@ def labQueue(request):
                 'year': datetime.now().year,
                 'role': role,
                 'requestCount': str(getUnassignedRequestCount(currentLID)),
-                'averageWait': str(getAvgWait(currentLID))
+                'averageWait': str(getAvgWait(currentLID)),
+                'alerts': getAlerts(request.user.id)
             }
         )
     else:
@@ -496,7 +517,8 @@ def labQueue(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -569,7 +591,8 @@ def labManage(request):
                         {
                             'title': "Error",
                             'message': "The user was not removed. Please contact us",
-                            'year': datetime.now(utc).year
+                            'year': datetime.now(utc).year,
+                            'alerts': getAlerts(request.user.id)
                         }
                     )
             elif 'deleteLab' in request.POST:  # If a lab was deleted
@@ -589,7 +612,8 @@ def labManage(request):
                             {
                                 'title': "Error",
                                 'message': "The lab was not deleted. Please contact us",
-                                'year': datetime.now(utc).year
+                                'year': datetime.now(utc).year,
+                                'alerts': getAlerts(request.user.id)
                             }
                         )
                 return redirect('/lab/manageLab')
@@ -621,7 +645,8 @@ def labManage(request):
                 'taLabCode': taLabCode,
                 'students': students,
                 'tas': tas,
-                'addTAform': addTAform
+                'addTAform': addTAform,
+                'alerts': getAlerts(request.user.id)
             }
         )
     #If the user if a TA for the current lab
@@ -649,6 +674,7 @@ def labManage(request):
                 'message': 'Edit Lab Settings',
                 'year': datetime.now().year,
                 'notificationForm': notificationForm,
+                'alerts': getAlerts(request.user.id)
             }
         )
     else:
@@ -659,7 +685,8 @@ def labManage(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -695,7 +722,8 @@ def labFeedback(request):
                               'app/error.html',
                               {
                                   'title': "Error!",
-                                  'message': "An unknown error has occurred"
+                                  'message': "An unknown error has occurred",
+                                  'alerts': getAlerts(request.user.id)
                               }
                              )
         return render(
@@ -710,7 +738,8 @@ def labFeedback(request):
                 'avgFeedback': round(avgFeedback,1),
                 'numRequestsComplete': numRequestsComplete,
                 'numOutstandingRequests': numOutstandingRequests,
-                'labTAs': helpers
+                'labTAs': helpers,
+                'alerts': getAlerts(request.user.id)
             }
         )
     else:
@@ -721,7 +750,8 @@ def labFeedback(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -756,7 +786,8 @@ def labFeedbackHelper(request, userID):
                 'avgWaitTA': avgWaitTA,
                 'avgFeedbackTA': round(avgFeedbackTA,1),
                 'numRequestsCompleteTA': numRequestsCompleteTA,
-                'numOutstandingRequestsTA': numOutstandingRequestsTA
+                'numOutstandingRequestsTA': numOutstandingRequestsTA,
+                'alerts': getAlerts(request.user.id)
              }
         )
     elif (role == 'p' or taViewAllowed) and feedbackCount < 3:
@@ -768,7 +799,8 @@ def labFeedbackHelper(request, userID):
             {
                 'title': "Not Enough Feedback",
                 'message': "This user has not received enough feedback to be viewed.",
-                'year': datetime.now(utc).year
+                'year': datetime.now(utc).year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -781,7 +813,8 @@ def labFeedbackHelper(request, userID):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -849,7 +882,8 @@ def manageAccount(request):
                         {
                             'title': "Error",
                             'message': "Checkout failed. Please contact us.",
-                            'year':datetime.now().year
+                            'year':datetime.now().year,
+                            'alerts': getAlerts(request.user.id)
                         }
                     )
             #Check if payment recieved. If so, updateSub(userID, plan#)
@@ -866,7 +900,8 @@ def manageAccount(request):
                         {
                             'title': "Error",
                             'message': str(delete[1]),
-                            'year':datetime.now().year
+                            'year':datetime.now().year,
+                            'alerts': getAlerts(request.user.id)
                         }
                     )
             else:
@@ -874,6 +909,7 @@ def manageAccount(request):
         else:
             print("Error")
             return redirect('/account')
+    numLabsUsed = getNumberOfLabs(request.user.id)
     return render(
         request,
         'app/account.html',
@@ -884,7 +920,11 @@ def manageAccount(request):
             'changePasswordForm': changePasswordForm,
             'editAccountDetailsForm': editAccountDetailsForm,
             'active': activeDict,
-            'userSub': userSub
+            'userSub': userSub,
+            'labsUsed': numLabsUsed,
+            'labsPercentUsed': int(round(numLabsUsed/userSub.labLimit*100, 0)),
+            'userSubPlan': findProductOrder(findRecentPayment(userSub.id)[1]),
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -922,7 +962,8 @@ def currentRequest(request):
                               {
                                   'title' : "Error",
                                   'message': "An error occured",
-                                  'year': datetime.now(utc).year
+                                  'year': datetime.now(utc).year,
+                                  'alerts': getAlerts(request.user.id)
                               }
                               )
         else:
@@ -952,7 +993,8 @@ def currentRequest(request):
                         'requests' : str(getRequestCount(currentLID)),
                         'labProfs': getLabUsersWithRole(labID=currentLID, role='p'),
                         'labTAs': getLabUsersWithRole(labID=currentLID, role='t'),
-                        'year': datetime.now(utc).year
+                        'year': datetime.now(utc).year,
+                        'alerts': getAlerts(request.user.id)
                     }
                 )
             else:
@@ -965,7 +1007,8 @@ def currentRequest(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now(utc).year
+                'year': datetime.now(utc).year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -989,6 +1032,7 @@ def forgotPassword(request):
                         'title': "Error",
                         'message': "No account with that email was found",
                         'year': datetime.now().year,
+                        'alerts': getAlerts(request.user.id)
                     }
                 )
     else:
@@ -1001,6 +1045,7 @@ def forgotPassword(request):
                 'message' : "If an account is found with your email, a password reset link will be sent to your email",
                 'form' : form,
                 'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -1021,7 +1066,8 @@ def resetPassword(request, prc):
                     {
                         'title': "Error",
                         'message': 'The Password Reset Code was not found',
-                        'year': datetime.now().year
+                        'year': datetime.now().year,
+                        'alerts': getAlerts(request.user.id)
                     }
                 )
         else:
@@ -1036,6 +1082,7 @@ def resetPassword(request, prc):
             'message': 'Set a new password for your LabLineup account',
             'year': datetime.now().year,
             'form': form,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -1050,7 +1097,8 @@ def confirmAccountView(request, regConCode):
                 'title': 'Account Confirmed',
                 'message': 'Your account has been activated.',
                 'year': datetime.now().year,
-                'accountConfirmed': True
+                'accountConfirmed': True,
+                'alerts': getAlerts(request.user.id)
             }
         )
     else:
@@ -1062,7 +1110,8 @@ def confirmAccountView(request, regConCode):
                 'title': 'Account Confirmation Failed',
                 'message': 'The account confirmation link is invalid.',
                 'year': datetime.now().year,
-                'accountConfirmed': False
+                'accountConfirmed': False,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -1080,7 +1129,8 @@ def requestEmailConfirmation(request):
                 {
                     'title':"Welcome to LabLineup",
                     'message': "Please check your email for a link to activate your account.",
-                    'year': datetime.now().year
+                    'year': datetime.now().year,
+                    'alerts': getAlerts(request.user.id)
                 }
             )
         else:
@@ -1094,7 +1144,8 @@ def requestEmailConfirmation(request):
             'title': 'Confirm Registration',
             'message:': 'Please enter your username below to send a new registration confirmation email',
             'year': datetime.now().year,
-            'form': form
+            'form': form,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -1111,7 +1162,8 @@ def requestHistory(request):
             'title': "Request History",
             'message': "View request history",
             'year': datetime.now().year,
-            'requests': requestsDict
+            'requests': requestsDict,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -1131,7 +1183,8 @@ def requestHistoryProf(request):
                 'message': "View request history",
                 'year': datetime.now().year,
                 'requests': requestsDict,
-                'view': "Professor"
+                'view': "Professor",
+                'alerts': getAlerts(request.user.id)
             }
         )
     else:
@@ -1142,7 +1195,8 @@ def requestHistoryProf(request):
             {
                 'title': 'Permission Denied',
                 'message': 'You do not have permission to view this page',
-                'year': datetime.now().year
+                'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
             }
         )
 
@@ -1155,6 +1209,7 @@ def pricing(request):
             'title': "Pricing",
             'message': "Subscription Options",
             'year': datetime.now().year,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -1176,6 +1231,7 @@ def subThankYou(request):
                     'title': "Thank You!",
                     'message': "Thank you for joining LabLineup Premium",
                     'year': datetime.now().year,
+                    'alerts': getAlerts(request.user.id)
                 }
             )
         else:
@@ -1187,6 +1243,7 @@ def subThankYou(request):
             'title': "Error",
             'message': "Your subscription could not be updated. Please contact us.",
             'year': datetime.now().year,
+            'alerts': getAlerts(request.user.id)
         }
     )
 
@@ -1199,5 +1256,6 @@ def contactConfirm(request):
             'title': 'Thank You!',
             'message': "We will reply to your inquiry shortly.",
             'year': datetime.now().year,
+            'alerts': getAlerts(request.user.id)
         }
     )

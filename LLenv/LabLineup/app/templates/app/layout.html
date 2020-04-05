@@ -52,10 +52,18 @@
             </div>
         </div>
     </div>
-
     <div class="container body-content">
-{% block content %}{% endblock %}
-        <hr/>
+        {% if user.is_authenticated %}
+            {% for alert in alerts %}
+                <br />
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>{{alert.0}}:</strong> {{alert.1}}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+        <hr />
         <footer>
             <p>&copy; {{ year }} - LabLineup | <a href="/about/">Terms of Service & Privacy Policy</a></p>
         </footer>

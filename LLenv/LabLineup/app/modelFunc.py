@@ -697,3 +697,16 @@ def getLabName(labID):
     except:
         pass
     return query
+
+#To get a list of labs with requests that need to be addressed
+def getLabsWithOpen(userID):
+    retList = []
+    for lab in getLabsWithRole(userID, 't'):
+        numOpen = getUnassignedRequestCount(lab.lid)
+        if numOpen > 0:
+            retList.append(lab.name)
+    for lab in getLabsWithRole(userID, 'p'):
+        numOpen = getUnassignedRequestCount(lab.lid)
+        if numOpen > 0:
+            retList.append(lab.name)
+    return retList
