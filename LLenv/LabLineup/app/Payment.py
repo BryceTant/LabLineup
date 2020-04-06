@@ -53,18 +53,21 @@ def createCheckout(userID, subID, plan):
         body = {
             "idempotency_key": uuid.uuid4().hex,
             "order": {
-                "reference_id": str(subID),
-                "line_items": [
-                    {
-                        "name": planName,
-                        "quantity": "1",
-                        "base_price_money": {
-                            "amount": planPrice,
-                            "currency": "USD"
-                        }
-                    },
-                        ],
-                    },
+                "order": {
+                    "location_id": LOCATION,
+                    "reference_id": str(subID),
+                    "line_items": [
+                        {
+                            "name": planName,
+                            "quantity": "1",
+                            "base_price_money": {
+                                "amount": planPrice,
+                                "currency": "USD"
+                            }
+                        },
+                            ],
+                        },
+                },
             "ask_for_shipping_address": False,
             "merchant_support_email": "contact@lablineup.com",
             "pre_populate_buyer_email": str(user.email),
