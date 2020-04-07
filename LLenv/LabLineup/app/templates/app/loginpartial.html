@@ -3,7 +3,7 @@
     {% csrf_token %}
     <ul class="nav navbar-nav navbar-right">
         <li><span id="nameLink" class="navbar-brand"><a id="nameLink" href="/account">Hello {{ user.first_name }}!</a></span></li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        <li style= "width: 75px; background-color:black; border-radius: 10px; margin-top:10px; margin-bottom:10px; padding-top:0px; padding-bottom:0px;float: right; margin-right:10px;"><a style="padding-top:5px; padding-bottom:5px;"href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>
 </form>
 
