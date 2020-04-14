@@ -98,7 +98,13 @@ from app.Alert import getAlerts
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
-    return render(
+    if request.method == "POST":
+        seen = request.POST.get("home")
+        if int(seen) == 1:
+            request.session["splashSeen"] = True
+    splashSeen = request.session.get("splashSeen")
+    if False: #splashSeen:
+        return render(
         request,
         'app/index.html',
         {
@@ -107,6 +113,16 @@ def home(request):
             'alerts': getAlerts(request.user.id)
         }
     )
+    else:
+        return render(
+            request,
+            'app/splashScreen.html',
+            {
+                'title': 'Home Page',
+                'year': datetime.now().year,
+                'alerts': getAlerts(request.user.id)
+            }
+        )
 
 def contact(request):
     """Renders the contact page."""

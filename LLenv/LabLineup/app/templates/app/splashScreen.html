@@ -1,0 +1,195 @@
+﻿<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducing LabLineup</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+    <link rel="shortcut icon" href="https://storage.cloud.google.com/lablineup-static/Favicons/favicon-16x16.png" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-156454997-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-156454997-1');
+    </script>
+
+    <style>
+        #splashBody {
+            padding: 0px;
+            margin: 0px;
+            border: 0px;
+            background-color: #FFFFFF;
+        }
+
+        #splashVideo {
+            vertical-align:middle;
+        }
+
+        #garnetStripe {
+            background-color:#73000a; 
+            min-height:350px;
+        }
+        
+        #continueButton {
+            position: fixed; /* Fixed/sticky position */
+            bottom: 20px; /* Place the button at the bottom of the page */
+            right: 30px; /* Place the button 30px from the right */
+            z-index: 99; /* Make sure it does not overlap */
+            border: none; /* Remove borders */
+            outline: none; /* Remove outline */
+            background-color: transparent; /* Set a background color */
+            color: #73000a; /* Text color */
+            cursor: pointer; /* Add a mouse pointer on hover */
+            padding: 15px; /* Some padding */
+            border-radius: 10px; /* Rounded corners */
+            font-size: 18px; /* Increase font size */
+        }
+    </style>
+
+    <script>
+        function home() {
+            document.forms["home"].elements["home"].value = 1;
+            document.getElementById("home").submit();
+    }
+    </script>
+
+    <form id="home" action="." method="post">
+        {% csrf_token %}
+        <input type="hidden" name="home" value=1 />
+    </form>
+
+</head>
+
+<body id="splashBody">
+    <div class="row">
+        <center>
+            <img src="https://storage.googleapis.com/lablineup-static/Logos/primary_logo.png" height=30%; width=auto;></img>
+        </center>
+    </div>
+    <div class="row">
+        <div id="garnetStripe">
+            <center>
+                <iframe id="splashVideo" width="560" height="315" src="https://www.youtube.com/embed/y6120QOlsfU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </center>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <h2>LabLineup Team</h2>
+    </div>
+    <div class="row">
+        <div style="align-items:center; align-content:center">
+            <div class="col-sm-2">
+                <div class="thumbnail">
+                    <img src="..." alt="Landon Everhart Portrait">
+                    <div class="caption">
+                        <h3>Landon Everhart</h3>
+                        <p><a href="#" class="btn btn-default" role="button">Button</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="thumbnail">
+                    <img src="https://storage.cloud.google.com/lablineup-static/Team/Nicholas_Knight.jpg" alt="Nicholas Knight Portrait">
+                    <div class="caption">
+                        <h3>Nicholas Knight</h3>
+                        <p><a href="https://github.com/Nickkick909" class="btn btn-default" role="button">GitHub</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="thumbnail">
+                    <img src="https://storage.cloud.google.com/lablineup-static/Team/Graham_McDonald.jpg" alt="Graham McDonald Portrait">
+                    <div class="caption">
+                        <h3>Graham McDonald</h3>
+                        <p><a href="https://www.linkedin.com/in/mcdonaldgs/" class="btn btn-default" role="button">LinkedIn</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="thumbnail">
+                    <img src="..." alt="Reed Segars Portrait">
+                    <div class="caption">
+                        <h3>Reed Segars</h3>
+                        <p><a href="#" class="btn btn-default" role="button">Button</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="thumbnail">
+                    <img src="..." alt="Bryce Tant Portrait">
+                    <div class="caption">
+                        <h3>Bryce Tant</h3>
+                        <p><a href="#" class="btn btn-default" role="button">Button</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <br />
+    <div class="row">
+        <h2>Screenshots</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <img src="..." alt="...">
+                        <div class="carousel-caption">
+                            ...
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img src="..." alt="...">
+                        <div class="carousel-caption">
+                            ...
+                        </div>
+                    </div>
+                    ...
+                </div>
+
+                <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+</body>
+<button id="continueButton" type="button" onclick="javascript:home()">
+    <span style="vertical-align:top">Continue to LabLineup</span>
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+</button>
+
+<footer>
+    <p>&copy; {{ year }} - LabLineup | <a href="/about/">Terms of Service & Privacy Policy</a></p>
+</footer>
+
+<script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
+<script src="{% static 'app/scripts/bootstrap.js' %}"></script>
+<script src="{% static 'app/scripts/respond.js' %}"></script>
