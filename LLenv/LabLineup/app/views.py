@@ -361,11 +361,12 @@ def studentRequest(request):
             request,
             'app/submitRequest.html',
             {
-                'title': 'Submit Request',
+                'title': 'Submit Request for ',
                 'message': 'Submit a request for help',
                 'year': datetime.now().year,
                 'form': form,
-                'alerts': getAlerts(request.user.id)
+                'alerts': getAlerts(request.user.id),
+                "lab":getLabName(currentLID)
             }
         )
     else:
