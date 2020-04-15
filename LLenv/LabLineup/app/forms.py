@@ -7,9 +7,11 @@ from captcha.fields import CaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import SetPasswordForm
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.password_validation import password_validators_help_text_html
 from django.core.validators import EmailValidator
 from app.models import Role
 from app.models import LabCode
@@ -56,11 +58,13 @@ class ChangePasswordForm(PasswordChangeForm):
     new_password1 = forms.CharField(label=_("Password"),
                                 widget=forms.PasswordInput({
                                     'class':'form-control',
-                                    'placeholder':'New Password'}))
+                                    'placeholder':'New Password'}),
+                                help_text=password_validators_help_text_html())
     new_password2 = forms.CharField(label=_("Password"),
                                 widget=forms.PasswordInput({
                                     'class':'form-control',
                                     'placeholder':'New Password'}))
+        
 
 class BootstrapRegisterForm(UserCreationForm):
     """User registration form that uses Bootstrap CSS"""
@@ -305,7 +309,11 @@ class ResetPasswordForm(forms.Form):
             pass
         if invalidPass != None:
             baseValid = False
-            self.add_error(field="new_password1", error="The password you entered doesn't meet the minimum requirements")
+            self.add_error(field="new_password1", error="The password you \
+                entered doesn't meet the minimum requirements. Your password\
+                must be at least 8 characters in length, cannot contain only \
+                numbers, cannot be similiar to your username, name, or email, \
+                and cannot be a common password.")
         return baseValid
 
     def save(self):
