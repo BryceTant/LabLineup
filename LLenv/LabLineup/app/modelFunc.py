@@ -74,7 +74,7 @@ def getLabLimit(userID):
     try:
         query = Subscription.objects.get(uid_id=userID).labLimit
     except:
-        pass
+        return 1
     return query
 
 #To get a list of feedback (ratings) for a TA or professor in a lab
@@ -322,6 +322,13 @@ def generateRegConCode(userID):
         except:
             pass
 
+#To create the initial (free) subscription
+def createInitSub(userID):
+    newSub = Subscription(uid_id=userID,
+                          labLimit = 1
+                          )
+    newSub.save()
+
 #To confirm an account using a registration confirmation code
 def confirmAccount(regConCode):
     query = None
@@ -337,6 +344,7 @@ def confirmAccount(regConCode):
         user = User.objects.get(id=query.uid_id)
         user.is_active = True
         user.save()
+        createInitSub(query.uid_id)
         #Delete the regConCode, as it is no longer needed
         query.delete()
         return True
