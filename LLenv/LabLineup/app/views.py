@@ -103,7 +103,7 @@ def home(request):
         if int(seen) == 1:
             request.session["splashSeen"] = True
     splashSeen = request.session.get("splashSeen")
-    if False: #splashSeen:
+    if splashSeen: #splashSeen: #False
         return render(
         request,
         'app/index.html',
@@ -407,6 +407,18 @@ def studentRequestSubmitted(request):
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
         if request.method == 'POST':
+            # If lab object doesn't exist, lab has been deleted, and student should get redirect
+            if lab == None:
+                return render(
+                    request,
+                    'app/permissionDenied.html',
+                    {
+                        'title': 'Permission Denied',
+                        'message': 'We\'re sorry. This lab is no longer active. Please contact your professor',
+                        'year': datetime.now().year,
+                        'alerts': getAlerts(request.user.id)
+                    }
+                )
             if 'neverHelped' in request.POST:
                 sendNeverHelped(currentLID, request.user, currRequest.rid)
                 markRequestNotComplete(rid=currRequest.rid)
