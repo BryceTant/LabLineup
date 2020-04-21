@@ -103,7 +103,7 @@ def home(request):
         if int(seen) == 1:
             request.session["splashSeen"] = True
     splashSeen = request.session.get("splashSeen")
-    if splashSeen: #splashSeen: #False
+    if False: #splashSeen:
         return render(
         request,
         'app/index.html',
