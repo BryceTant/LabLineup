@@ -127,7 +127,8 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User0,
                                                lid = self.Lab0,
-                                               huid = None)
+                                               huid = self.User1,
+                                               complete=False)
         self.Request1 = Request.objects.create(rid = 2,
                                                station = 111,
                                                description = "Request description 1",
@@ -136,7 +137,8 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User0,
                                                lid = self.Lab0,
-                                               huid = self.User1)
+                                               huid = self.User1,
+                                               complete=True)
         self.Request2 = Request.objects.create(rid = 3,
                                                station = 222,
                                                description = "Request description 2",
@@ -145,7 +147,8 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User1,
                                                lid = self.Lab1,
-                                               huid = self.User2)
+                                               huid = self.User2,
+                                               complete=True)
         self.Request3 = Request.objects.create(rid = 4,
                                                station = 333,
                                                description = "Request description 3",
@@ -154,7 +157,8 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User1,
                                                lid = self.Lab1,
-                                               huid = None)
+                                               huid = self.User2,
+                                               complete=False)
         self.Request4 = Request.objects.create(rid = 5,
                                                station = 444,
                                                description = "Request description 4",
@@ -163,7 +167,8 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User1,
                                                lid = self.Lab1,
-                                               huid = self.User3)
+                                               huid = self.User3,
+                                               complete=True)
         self.Request5 = Request.objects.create(rid = 6,
                                                station = 555,
                                                description = "Request description 5",
@@ -172,7 +177,8 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User1,
                                                lid = self.Lab1,
-                                               huid = self.User2)
+                                               huid = self.User2,
+                                               complete=True)
         self.Request6 = Request.objects.create(rid = 7,
                                                station = 665,
                                                description = "Request description 6",
@@ -181,7 +187,8 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User1,
                                                lid = self.Lab1,
-                                               huid = None)
+                                               huid = self.User3,
+                                               complete=False)
         self.Request7 = Request.objects.create(rid = 8,
                                                station = 777,
                                                description = "Request description 7",
@@ -190,7 +197,8 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User1,
                                                lid = self.Lab1,
-                                               huid = None)
+                                               huid = None,
+                                               complete=False)
         self.Request8 = Request.objects.create(rid = 9,
                                                station = 888,
                                                description = "Request description 8",
@@ -199,7 +207,8 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User1,
                                                lid = self.Lab1,
-                                               huid = None)
+                                               huid = None,
+                                               complete=False)
         self.Request9 = Request.objects.create(rid = 10,
                                                station = 999,
                                                description = "Request description 9",
@@ -208,7 +217,21 @@ class ModelFuncTest(TestCase):
                                                feedback = None,
                                                suid = self.User1,
                                                lid = self.Lab1,
-                                               huid = None)
+                                               huid = None,
+                                               complete=False)
+        #   set up Roles
+        self.Role0 = Role.objects.create(lid = self.Lab0,
+                                            uid = self.User0,
+                                            role = 'p')
+
+        self.Role1 = Role.objects.create(lid = self.Lab1,
+                                            uid = self.User1,
+                                            role = 's')
+
+        self.Role2 = Role.objects.create(lid = self.Lab1,
+                                            uid = self.User2,
+                                            role = 't')
+
 
     def test_getLabCode(self):
         self.assertNotEqual("3ff93",
@@ -296,5 +319,25 @@ class ModelFuncTest(TestCase):
         self.assertNotEqual(None, mf.generatePasswordResetCode(self.User3.id))
 
     def test_resetPasswordFunc(self):
-        #test reset
+        self.assertEqual(1,1)
+    
+    def test_removeLabFromAccount(self):
+        self.assertNotEqual(self.Role1, mf.removeLabFromAccount(self.User0.id, self.Lab0.lid))
+        self.assertEqual(False, mf.removeLabFromAccount(self.User0.id, self.Lab0.lid))
+
+        self.assertNotEqual(self.Role1, mf.removeLabFromAccount(self.User1.id, self.Lab1.lid))
+        self.assertEqual(False, mf.removeLabFromAccount(self.User1.id, self.Lab1.lid))
+
+        self.assertNotEqual(self.Role1, mf.removeLabFromAccount(self.User2.id, self.Lab1.lid))
+        self.assertEqual(False, mf.removeLabFromAccount(self.User2.id, self.Lab1.lid))
+    
+    def test_getOutstandingRequests(self):
+        self.assertNotEqual(None, mf.getOutstandingRequest(self.Lab0.lid, self.User1.id))
+        self.assertEqual(self.Request0, mf.getOutstandingRequest(self.Lab0.lid, self.User1.id))
+
+        self.assertNotEqual(None, mf.getOutstandingRequest(self.Lab1.lid, self.User2.id))
+        self.assertEqual(self.Request3, mf.getOutstandingRequest(self.Lab1.lid, self.User2.id))
+
+        self.assertNotEqual(None, mf.getOutstandingRequest(self.Lab1.lid, self.User3.id))
+        self.assertEqual(self.Request6, mf.getOutstandingRequest(self.Lab1.lid, self.User3.id))
         
