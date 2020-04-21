@@ -407,8 +407,8 @@ def studentRequestSubmitted(request):
     # Should only render if user's role is student
     if (getRole(userID=request.user, labID=currentLID) == 's'):
         if request.method == 'POST':
-            # If lab object doesn't exist, lab has been deleted, and student should get redirect
-            if lab == None:
+            # If lab is not active, student should get redirect
+            if lab.active == False:
                 return render(
                     request,
                     'app/permissionDenied.html',
