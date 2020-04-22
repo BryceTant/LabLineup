@@ -388,3 +388,29 @@ class ModelFuncTest(TestCase):
 
         # Lab1, helper 2: Req2-5, Avg: 5
         self.assertEqual(5, mf.getAvgFeedbackTA(self.Lab1.lid, self.Request2.huid))
+
+    def test_getNotificationSettings(self):
+        self.assertEqual(None, mf.getNotificationSettings(self.User0.id, self.Lab0.lid))
+        self.assertEqual(None, mf.getNotificationSettings(self.User1.id, self.Lab1.lid))
+        self.assertEqual(None, mf.getNotificationSettings(self.User2.id, self.Lab1.lid))
+        self.assertEqual(None, mf.getNotificationSettings(self.User3.id, self.Lab1.lid))
+
+
+    def test_generateRegConCode(self):
+        self.assertNotEqual(None, mf.generateRegConCode(self.User0.id))
+        self.assertNotEqual(None, mf.generateRegConCode(self.User1.id))
+        self.assertNotEqual(None, mf.generateRegConCode(self.User2.id))
+        self.assertNotEqual(None, mf.generateRegConCode(self.User3.id))
+
+    def test_confirmAccount(self):
+        rcc = mf.generateRegConCode(self.User0.id)
+        self.assertNotEqual(None, mf.confirmAccount(rcc))
+
+        rcc2 = mf.generateRegConCode(self.User1.id)
+        self.assertNotEqual(None, mf.confirmAccount(rcc2))
+
+        rcc3 = mf.generateRegConCode(self.User2.id)
+        self.assertNotEqual(None, mf.confirmAccount(rcc3))
+
+        rcc4 = mf.generateRegConCode(self.User3.id)
+        self.assertNotEqual(None, mf.confirmAccount(rcc4))
