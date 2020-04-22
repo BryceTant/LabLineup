@@ -124,7 +124,7 @@ class ModelFuncTest(TestCase):
                                                description = "Request description 0",
                                                timeSubmitted = datetime.datetime.now(utc),
                                                timeCompleted = None,
-                                               feedback = None,
+                                               feedback = 3,
                                                suid = self.User0,
                                                lid = self.Lab0,
                                                huid = self.User1,
@@ -134,7 +134,7 @@ class ModelFuncTest(TestCase):
                                                description = "Request description 1",
                                                timeSubmitted = datetime.datetime.now(utc),
                                                timeCompleted = datetime.datetime.now(utc),
-                                               feedback = None,
+                                               feedback = 7,
                                                suid = self.User0,
                                                lid = self.Lab0,
                                                huid = self.User1,
@@ -144,7 +144,7 @@ class ModelFuncTest(TestCase):
                                                description = "Request description 2",
                                                timeSubmitted = datetime.datetime.now(utc),
                                                timeCompleted = datetime.datetime.now(utc),
-                                               feedback = None,
+                                               feedback = 5,
                                                suid = self.User1,
                                                lid = self.Lab1,
                                                huid = self.User2,
@@ -164,7 +164,7 @@ class ModelFuncTest(TestCase):
                                                description = "Request description 4",
                                                timeSubmitted = datetime.datetime.now(utc),
                                                timeCompleted = datetime.datetime.now(utc),
-                                               feedback = None,
+                                               feedback = 10,
                                                suid = self.User1,
                                                lid = self.Lab1,
                                                huid = self.User3,
@@ -184,7 +184,7 @@ class ModelFuncTest(TestCase):
                                                description = "Request description 6",
                                                timeSubmitted = datetime.datetime.now(utc),
                                                timeCompleted = None,
-                                               feedback = None,
+                                               feedback = 0,
                                                suid = self.User1,
                                                lid = self.Lab1,
                                                huid = self.User3,
@@ -204,7 +204,7 @@ class ModelFuncTest(TestCase):
                                                description = "Request description 8",
                                                timeSubmitted = datetime.datetime.now(utc),
                                                timeCompleted = None,
-                                               feedback = None,
+                                               feedback = 1,
                                                suid = self.User1,
                                                lid = self.Lab1,
                                                huid = None,
@@ -266,7 +266,7 @@ class ModelFuncTest(TestCase):
         self.assertEqual(5, mf.getLabLimit(self.User1.id))
         self.assertEqual(1, mf.getLabLimit(self.User2.id))
         self.assertEqual(321, mf.getLabLimit(self.User3.id))
-    
+
     def test_getUserByEmail(self):
         self.assertNotEqual(None, mf.getUserByEmail("test0@test.com"))
         self.assertNotEqual(self.User1, mf.getUserByEmail("test0@test.com"))
@@ -281,7 +281,7 @@ class ModelFuncTest(TestCase):
         self.assertEqual(self.User1, mf.getUserByEmail("test1@test.com"))
         self.assertEqual(self.User2, mf.getUserByEmail("test2@test.com"))
         self.assertEqual(self.User3, mf.getUserByEmail("test3@test.com"))
-    
+
     def test_getNumComplete(self):
         self.assertNotEqual(None, mf.getNumComplete(self.Lab0.lid))
         self.assertNotEqual(-1, mf.getNumComplete(self.Lab0.lid))
@@ -300,7 +300,7 @@ class ModelFuncTest(TestCase):
         self.assertEqual(1, mf.getNumCompleteTA(self.Lab0.lid, self.User1))
         self.assertEqual(2, mf.getNumCompleteTA(self.Lab1.lid, self.User2))
         self.assertEqual(1, mf.getNumCompleteTA(self.Lab1.lid, self.User3))
-    
+
     def test_getNameOfUser(self):
         self.assertNotEqual(None, mf.getNameOfUser(self.User0.id))
         self.assertNotEqual(None, mf.getNameOfUser(self.User1.id))
@@ -320,7 +320,7 @@ class ModelFuncTest(TestCase):
 
     def test_resetPasswordFunc(self):
         self.assertEqual(1,1)
-    
+
     def test_removeLabFromAccount(self):
         self.assertNotEqual(self.Role1, mf.removeLabFromAccount(self.User0.id, self.Lab0.lid))
         self.assertEqual(False, mf.removeLabFromAccount(self.User0.id, self.Lab0.lid))
@@ -330,7 +330,7 @@ class ModelFuncTest(TestCase):
 
         self.assertNotEqual(self.Role1, mf.removeLabFromAccount(self.User2.id, self.Lab1.lid))
         self.assertEqual(False, mf.removeLabFromAccount(self.User2.id, self.Lab1.lid))
-    
+
     def test_getOutstandingRequests(self):
         self.assertNotEqual(None, mf.getOutstandingRequest(self.Lab0.lid, self.User1.id))
         self.assertEqual(self.Request0, mf.getOutstandingRequest(self.Lab0.lid, self.User1.id))
@@ -340,4 +340,51 @@ class ModelFuncTest(TestCase):
 
         self.assertNotEqual(None, mf.getOutstandingRequest(self.Lab1.lid, self.User3.id))
         self.assertEqual(self.Request6, mf.getOutstandingRequest(self.Lab1.lid, self.User3.id))
-        
+
+    def test_getAvgWait(self):
+        self.assertNotEqual(None, mf.getAvgWait(self.Lab0.lid))
+        self.assertEqual("0:0", mf.getAvgWait(self.Lab0.lid))
+
+        self.assertNotEqual(None, mf.getAvgWait(self.Lab1.lid))
+        self.assertEqual("0:0", mf.getAvgWait(self.Lab1.lid))
+
+    def test_getAvgWaitTA(self):
+        self.assertNotEqual(None, mf.getAvgWaitTA(self.Lab0.lid, self.Request0.huid))
+        self.assertEqual("0:0", mf.getAvgWaitTA(self.Lab0.lid, self.Request1.huid))
+
+        self.assertNotEqual(None, mf.getAvgWaitTA(self.Lab1.lid, self.Request6.huid))
+        self.assertEqual("0:0", mf.getAvgWaitTA(self.Lab1.lid, self.Request8.huid))
+
+
+    def test_getAvgFeedback(self):
+        self.assertNotEqual(None, mf.getAvgFeedback(self.Lab0.lid))
+        self.assertNotEqual(None, mf.getAvgFeedback(self.Lab1.lid))
+
+        self.assertNotEqual(-1, mf.getAvgFeedback(self.Lab0.lid))
+        self.assertNotEqual(0.9, mf.getAvgFeedback(self.Lab0.lid))
+
+        self.assertNotEqual(-1, mf.getAvgFeedback(self.Lab1.lid))
+        self.assertNotEqual(0.9, mf.getAvgFeedback(self.Lab1.lid))
+
+        # Lab0: Req1-3, Req2-7 Avg:5
+        self.assertEqual(5, mf.getAvgFeedback(self.Lab0.lid))
+
+        # Lab1: Req2-5, Req4-10, Req6-0, Req8-1 Avg: 4
+        self.assertEqual(4, mf.getAvgFeedback(self.Lab1.lid))
+
+    def test_getAvgFeedbackTA(self):
+        self.assertNotEqual(None, mf.getAvgFeedbackTA(self.Lab0.lid, self.Request0.huid))
+        self.assertNotEqual(None, mf.getAvgFeedbackTA(self.Lab1.lid, self.Request2.huid))
+
+        self.assertNotEqual(-1, mf.getAvgFeedbackTA(self.Lab0.lid, self.Request0.huid))
+        self.assertNotEqual(0.9, mf.getAvgFeedbackTA(self.Lab0.lid, self.Request2.huid))
+
+        self.assertNotEqual(-1, mf.getAvgFeedbackTA(self.Lab1.lid, self.Request0.huid))
+        self.assertNotEqual(0.9, mf.getAvgFeedbackTA(self.Lab1.lid, self.Request2.huid))
+
+        # Lab0, helper 1: Req1-3, Req2-7 Avg: 5
+        self.assertEqual(5, mf.getAvgFeedbackTA(self.Lab0.lid, self.Request0.huid))
+        self.assertEqual(5, mf.getAvgFeedbackTA(self.Lab0.lid, self.Request1.huid))
+
+        # Lab1, helper 2: Req2-5, Avg: 5
+        self.assertEqual(5, mf.getAvgFeedbackTA(self.Lab1.lid, self.Request2.huid))
