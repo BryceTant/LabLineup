@@ -1001,7 +1001,7 @@ def currentRequest(request):
                               )
         else:
             #If not post, then assign a new request
-            openRequest = getOutstandingRequest(labID=currentLID, userID=request.user.id)
+            openRequest = getOutstandingRequest(labID=currentLID, userID=currentUserID)
             nextRequest = None
             if openRequest != None:
                 nextRequest = openRequest
@@ -1009,10 +1009,23 @@ def currentRequest(request):
                 nextRequest = getNextRequest(currentLID)
             if nextRequest != None:
                 #If the lab has a request to show
-                assignRequest(nextRequest.rid, request.user.id)
+                assignRequest(nextRequest.rid, currentUserID)
                 request.session["currentRID"] = nextRequest.rid
                 requestSubmitted = str(nextRequest.timeSubmitted.date())
                 requestSubmitted = requestSubmitted + " " + str(nextRequest.timeSubmitted.strftime("%X"))
+                labProfs = getLabUsersWithRole(labID=currentLID, role='p')
+                labTAs = getLabUsersWithRole(labID=currentLID, role='t')
+                #Remove current user from transfer list
+                if role == 'p':
+                    for user in labProfs:
+                        if user.id == currentUserID:
+                            #If the user is the professor
+                            labProfs.remove(user)
+                else:
+                    for user in labTAs:
+                        if user.id == currentUserID:
+                            #If the user is a TA
+                            labTAs.remove(user)
                 return render(
                     request,
                     'app/currentRequest.html',
@@ -1024,8 +1037,8 @@ def currentRequest(request):
                         'requestSubmitted': requestSubmitted,
                         'averageWait' : getAvgWait(currentLID),
                         'requests' : str(getRequestCount(currentLID)),
-                        'labProfs': getLabUsersWithRole(labID=currentLID, role='p'),
-                        'labTAs': getLabUsersWithRole(labID=currentLID, role='t'),
+                        'labProfs': labProfs,
+                        'labTAs': labTAs,
                         'year': datetime.now(utc).year,
                         'alerts': getAlerts(request.user.id)
                     }
