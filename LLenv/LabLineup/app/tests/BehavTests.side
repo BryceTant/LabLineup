@@ -2264,6 +2264,773 @@
       ],
       "value": ""
     }]
+  }, {
+    "id": "7f4f69fc-120c-40da-83ca-09319079ff92",
+    "name": "Submitting A Request",
+    "commands": [{
+      "id": "9bdd1053-456b-4133-b2c6-f53b4f2e5a77",
+      "comment": "",
+      "command": "open",
+      "target": "https://lablineup.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "864ca21b-7153-439d-86ce-107c79f7b112",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "2064x1128",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "38e74f32-3ae4-40e5-b138-c6aa9614f983",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Log in",
+      "targets": [
+        ["linkText=Log in", "linkText"],
+        ["css=.navbar-right a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log in')]", "xpath:link"],
+        ["xpath=(//a[contains(@href, '/login/')])[2]", "xpath:href"],
+        ["xpath=//ul[2]/li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log in')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "ffc75cb7-d128-4a17-8905-2993d6832667",
+      "comment": "",
+      "command": "click",
+      "target": "css=.form-group:nth-child(4)",
+      "targets": [
+        ["css=.form-group:nth-child(4)", "css:finder"],
+        ["xpath=//section[@id='loginForm']/form/div", "xpath:idRelative"],
+        ["xpath=//form/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2d2b3df9-056d-4f1d-947d-46d0c9f7b1fa",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "testUser3"
+    }, {
+      "id": "75e3a4d2-e972-4775-9653-0017313f47e1",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_password",
+      "targets": [
+        ["id=id_password", "id"],
+        ["name=password", "name"],
+        ["css=#id_password", "css:finder"],
+        ["xpath=//input[@id='id_password']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "LabLineup3"
+    }, {
+      "id": "c38a9562-e6e8-473c-a7b7-8bed509fadab",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Log in']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[3]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5a732c03-83c6-4241-8e57-8790ad5adbdc",
+      "comment": "",
+      "command": "click",
+      "target": "css=.card-body",
+      "targets": [
+        ["css=.card-body", "css:finder"],
+        ["xpath=//div[@id='selectLab']/div", "xpath:idRelative"],
+        ["xpath=//div/div/div/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d7369022-520b-4ea6-951f-7751d3a57d24",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_station",
+      "targets": [
+        ["id=id_station", "id"],
+        ["name=station", "name"],
+        ["css=#id_station", "css:finder"],
+        ["xpath=//input[@id='id_station']", "xpath:attributes"],
+        ["xpath=//section[@id='SubmitRequestForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "69cb7b38-a48e-4131-86b9-40878ac47972",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_station",
+      "targets": [
+        ["id=id_station", "id"],
+        ["name=station", "name"],
+        ["css=#id_station", "css:finder"],
+        ["xpath=//input[@id='id_station']", "xpath:attributes"],
+        ["xpath=//section[@id='SubmitRequestForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "123"
+    }, {
+      "id": "478e5816-780a-4277-afab-ef487245b220",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_description",
+      "targets": [
+        ["id=id_description", "id"],
+        ["name=description", "name"],
+        ["css=#id_description", "css:finder"],
+        ["xpath=//textarea[@id='id_description']", "xpath:attributes"],
+        ["xpath=//section[@id='SubmitRequestForm']/form/div[2]/div/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "This is a test request for help."
+    }, {
+      "id": "e8d07ffc-4d91-4f24-b76c-9fd8621875c6",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Submit']", "xpath:attributes"],
+        ["xpath=//section[@id='SubmitRequestForm']/form/div[3]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fe7692d0-bde6-41ba-9ee3-6ae5ba9864cd",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=h2",
+      "targets": [
+        ["css=h2", "css:finder"],
+        ["xpath=//h2", "xpath:position"],
+        ["xpath=//h2[contains(.,'Request Submitted')]", "xpath:innerText"]
+      ],
+      "value": "Request Submitted"
+    }, {
+      "id": "d9fe30ab-11e5-40b3-99a2-1517c5c3f857",
+      "comment": "",
+      "command": "click",
+      "target": "css=.form-horizontal:nth-child(1) > .btn",
+      "targets": [
+        ["css=.form-horizontal:nth-child(1) > .btn", "css:finder"],
+        ["xpath=(//button[@type='button'])[2]", "xpath:attributes"],
+        ["xpath=//form/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Cancel Request')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "6a1e5c3d-a5d8-45be-9dff-53531677d9b7",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Log off",
+      "targets": [
+        ["linkText=Log off", "linkText"],
+        ["css=.navbar-right > li > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log off')]", "xpath:link"],
+        ["xpath=//form[@id='logoutForm']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, \"javascript:document.getElementById('logoutForm').submit()\")]", "xpath:href"],
+        ["xpath=//form/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log off')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "2c1dec08-7ee5-4a22-af63-df2014386751",
+    "name": "Get Next Request",
+    "commands": [{
+      "id": "d010311f-bcba-4692-9c4e-a3b586f7d884",
+      "comment": "",
+      "command": "open",
+      "target": "https://lablineup.com/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "05a922c5-b945-4bb6-8d6e-db0a0bf0a09b",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "2064x1128",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "be4948b7-5b3f-4a64-bebd-a25e8675d621",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Log in",
+      "targets": [
+        ["linkText=Log in", "linkText"],
+        ["css=.navbar-right a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log in')]", "xpath:link"],
+        ["xpath=(//a[contains(@href, '/login/')])[2]", "xpath:href"],
+        ["xpath=//ul[2]/li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log in')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "62dd35db-4727-4a78-a32d-e38b2ddefa1e",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "01c91907-3f60-4c49-85bd-9b75aa00bdbb",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "testUser4"
+    }, {
+      "id": "dd086097-d9e7-409f-80ec-402c76430324",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_password",
+      "targets": [
+        ["id=id_password", "id"],
+        ["name=password", "name"],
+        ["css=#id_password", "css:finder"],
+        ["xpath=//input[@id='id_password']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "LabLineup4"
+    }, {
+      "id": "21dcadd5-3a3a-4512-a2cd-a6b798ac45af",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Log in']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[3]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "21309426-3561-440e-ba41-1a208bc2f932",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-default",
+      "targets": [
+        ["css=.btn-default", "css:finder"],
+        ["xpath=//section[@id='createNewLab']/a/button", "xpath:idRelative"],
+        ["xpath=//section/a/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Create a lab (Professor)')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "9c6043c5-504e-4acf-b386-512f2422f2e8",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_labName",
+      "targets": [
+        ["id=id_labName", "id"],
+        ["name=labName", "name"],
+        ["css=#id_labName", "css:finder"],
+        ["xpath=//input[@id='id_labName']", "xpath:attributes"],
+        ["xpath=//section[@id='createLabForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ad9c0e42-9f73-400d-b229-d55fb1793706",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_labName",
+      "targets": [
+        ["id=id_labName", "id"],
+        ["name=labName", "name"],
+        ["css=#id_labName", "css:finder"],
+        ["xpath=//input[@id='id_labName']", "xpath:attributes"],
+        ["xpath=//section[@id='createLabForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "Test Lab 4"
+    }, {
+      "id": "4c210442-16de-472a-8a6a-0bfcf6b147e4",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_labDescription",
+      "targets": [
+        ["id=id_labDescription", "id"],
+        ["name=labDescription", "name"],
+        ["css=#id_labDescription", "css:finder"],
+        ["xpath=//input[@id='id_labDescription']", "xpath:attributes"],
+        ["xpath=//section[@id='createLabForm']/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "This is the fourth test lab"
+    }, {
+      "id": "655da26e-112d-4f26-a365-adaf0b5d2f81",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Create Lab']", "xpath:attributes"],
+        ["xpath=//section[@id='createLabForm']/form/div[3]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "554516ef-8483-4e14-b25d-e1aab11ebcfb",
+      "comment": "",
+      "command": "click",
+      "target": "css=.panel:nth-child(4) .btn",
+      "targets": [
+        ["css=.panel:nth-child(4) .btn", "css:finder"],
+        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
+        ["xpath=//section[@id='LabCodes']/div[2]/div/button", "xpath:idRelative"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2ac72ee8-7b52-4f3d-9d05-84db0f6ac749",
+      "comment": "",
+      "command": "storeText",
+      "target": "css=.panel:nth-child(4) td:nth-child(1)",
+      "targets": [],
+      "value": "studentCode"
+    }, {
+      "id": "c90eeb6e-e63c-466d-94d0-765e8ce21450",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Log off",
+      "targets": [
+        ["linkText=Log off", "linkText"],
+        ["css=.navbar-right > li > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log off')]", "xpath:link"],
+        ["xpath=//form[@id='logoutForm']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, \"javascript:document.getElementById('logoutForm').submit()\")]", "xpath:href"],
+        ["xpath=//form/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log off')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "66823cce-df44-413f-90b2-dde4a17d43b4",
+      "comment": "",
+      "command": "open",
+      "target": "https://lablineup.com/login",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f88c8c1f-ad15-454b-8a16-4a9a957daf20",
+      "comment": "",
+      "command": "click",
+      "target": "css=.form-group:nth-child(4)",
+      "targets": [
+        ["css=.form-group:nth-child(4)", "css:finder"],
+        ["xpath=//section[@id='loginForm']/form/div", "xpath:idRelative"],
+        ["xpath=//form/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7a8f3a52-b71c-4dfb-99d1-bfe3bb85d38f",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "testUser3"
+    }, {
+      "id": "a1a6f22e-0b9c-484a-b7e8-6578e8618be5",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_password",
+      "targets": [
+        ["id=id_password", "id"],
+        ["name=password", "name"],
+        ["css=#id_password", "css:finder"],
+        ["xpath=//input[@id='id_password']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "LabLineup3"
+    }, {
+      "id": "f4971bff-236c-4f4a-a065-f5cba70e4236",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Log in']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[3]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8e990697-26ef-4c59-8928-89ffe430185f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-success",
+      "targets": [
+        ["css=.btn-success", "css:finder"],
+        ["xpath=(//button[@type='button'])[2]", "xpath:attributes"],
+        ["xpath=//a/button", "xpath:position"],
+        ["xpath=//button[contains(.,'+')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "70926c97-7d6a-4d2e-be46-5e9827ca7fef",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_labcode",
+      "targets": [
+        ["id=id_labcode", "id"],
+        ["name=labcode", "name"],
+        ["css=#id_labcode", "css:finder"],
+        ["xpath=//input[@id='id_labcode']", "xpath:attributes"],
+        ["xpath=//section[@id='addLabForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8cd4bcd1-3143-492d-9f22-32d70fd41f53",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_labcode",
+      "targets": [
+        ["id=id_labcode", "id"],
+        ["name=labcode", "name"],
+        ["css=#id_labcode", "css:finder"],
+        ["xpath=//input[@id='id_labcode']", "xpath:attributes"],
+        ["xpath=//section[@id='addLabForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "${studentCode}"
+    }, {
+      "id": "5c9a3bf6-40d9-4fb2-a6a4-855fa6a9fa06",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Add Lab']", "xpath:attributes"],
+        ["xpath=//section[@id='addLabForm']/form/div[2]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f6cea394-8c35-4b61-a4d2-27d270c32ed6",
+      "comment": "",
+      "command": "click",
+      "target": "css=.row:nth-child(3) .card-body",
+      "targets": [
+        ["css=.row:nth-child(3) .card-body", "css:finder"],
+        ["xpath=(//div[@id='selectLab']/div)[2]", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "757914ed-3ee3-4796-a88c-957818686ffc",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_station",
+      "targets": [
+        ["id=id_station", "id"],
+        ["name=station", "name"],
+        ["css=#id_station", "css:finder"],
+        ["xpath=//input[@id='id_station']", "xpath:attributes"],
+        ["xpath=//section[@id='SubmitRequestForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "842bc1c0-dd76-4939-aee1-bb41bbccf9b5",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_station",
+      "targets": [
+        ["id=id_station", "id"],
+        ["name=station", "name"],
+        ["css=#id_station", "css:finder"],
+        ["xpath=//input[@id='id_station']", "xpath:attributes"],
+        ["xpath=//section[@id='SubmitRequestForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "123"
+    }, {
+      "id": "5525b352-9652-4b18-9f3b-4d3fca281c22",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_description",
+      "targets": [
+        ["id=id_description", "id"],
+        ["name=description", "name"],
+        ["css=#id_description", "css:finder"],
+        ["xpath=//textarea[@id='id_description']", "xpath:attributes"],
+        ["xpath=//section[@id='SubmitRequestForm']/form/div[2]/div/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "Test"
+    }, {
+      "id": "d6cb4b04-0195-4c53-b562-48040c896b23",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Submit']", "xpath:attributes"],
+        ["xpath=//section[@id='SubmitRequestForm']/form/div[3]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "00ff1f4e-d70e-4192-b304-f6ca0ea93011",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Log off",
+      "targets": [
+        ["linkText=Log off", "linkText"],
+        ["css=.navbar-right > li > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log off')]", "xpath:link"],
+        ["xpath=//form[@id='logoutForm']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, \"javascript:document.getElementById('logoutForm').submit()\")]", "xpath:href"],
+        ["xpath=//form/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log off')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "6e5a4d63-77b9-4a2e-9f8c-8e1d2617be83",
+      "comment": "",
+      "command": "open",
+      "target": "https://lablineup.com/login",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "643b9167-e1aa-4168-b326-2e018be8b406",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f6c1d548-09c8-4175-b51f-c58bf5703668",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_username",
+      "targets": [
+        ["id=id_username", "id"],
+        ["name=username", "name"],
+        ["css=#id_username", "css:finder"],
+        ["xpath=//input[@id='id_username']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "testUser4"
+    }, {
+      "id": "e39e5e22-46a9-4d71-9e1a-b90a24b90570",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_password",
+      "targets": [
+        ["id=id_password", "id"],
+        ["name=password", "name"],
+        ["css=#id_password", "css:finder"],
+        ["xpath=//input[@id='id_password']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "LabLineup4"
+    }, {
+      "id": "20789479-ddd1-47af-bef4-763d08364771",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn",
+      "targets": [
+        ["css=.btn", "css:finder"],
+        ["xpath=//input[@value='Log in']", "xpath:attributes"],
+        ["xpath=//section[@id='loginForm']/form/div[3]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c2911e80-0a1e-40fd-8330-68fb88c0fa2c",
+      "comment": "",
+      "command": "click",
+      "target": "css=.panel-body:nth-child(3)",
+      "targets": [
+        ["css=.panel-body:nth-child(3)", "css:finder"],
+        ["xpath=//div[@id='selectLab']/div/div[3]", "xpath:idRelative"],
+        ["xpath=//div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0f43b650-ce8b-4603-8b00-36c00ec646ad",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Accept Next Request",
+      "targets": [
+        ["linkText=Accept Next Request", "linkText"],
+        ["css=.btn-primary", "css:finder"],
+        ["xpath=//a[contains(text(),'Accept Next Request')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/lab/queue/currentRequest')]", "xpath:href"],
+        ["xpath=//div[4]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Accept Next Request')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1a7f08fa-7f5c-44e8-90a0-cb52e1b26351",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=h2",
+      "targets": [
+        ["css=h2", "css:finder"],
+        ["xpath=//h2", "xpath:position"],
+        ["xpath=//h2[contains(.,'Current Request')]", "xpath:innerText"]
+      ],
+      "value": "Current Request"
+    }, {
+      "id": "47e4c4ef-73b2-4de6-8813-44ede80b06c9",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-success",
+      "targets": [
+        ["css=.btn-success", "css:finder"],
+        ["xpath=//input[@value='Mark Request Complete']", "xpath:attributes"],
+        ["xpath=//div[6]/input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "1ce1e46a-2c32-4e62-9aed-c692c796eff8",
+      "comment": "",
+      "command": "click",
+      "target": "css=.glyphicon-cog",
+      "targets": [
+        ["css=.glyphicon-cog", "css:finder"],
+        ["xpath=//a[2]/span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a1db4493-3919-4a0b-8c49-6aefa60e3c8f",
+      "comment": "",
+      "command": "chooseOkOnNextConfirmation",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b9495419-674c-455f-bd9b-8c585d9edf5e",
+      "comment": "",
+      "command": "click",
+      "target": "css=td:nth-child(3) > .btn",
+      "targets": [
+        ["css=td:nth-child(3) > .btn", "css:finder"],
+        ["xpath=(//button[@type='button'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='userList']/div/table/tbody/tr/td[3]/button", "xpath:idRelative"],
+        ["xpath=//td[3]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "64d4e274-40fb-405f-bf83-dd9638d68cdb",
+      "comment": "",
+      "command": "webdriverChooseOkOnVisibleConfirmation",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "37a3bcac-91f9-4d6f-b8cf-75d3ba5c55b5",
+      "comment": "",
+      "command": "chooseOkOnNextConfirmation",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9689f225-9739-45e6-b681-936bf7e38a2f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-danger:nth-child(1)",
+      "targets": [
+        ["css=.btn-danger:nth-child(1)", "css:finder"],
+        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
+        ["xpath=//section[@id='LabCodes']/div[2]/div/table/tbody/tr/td[2]/button", "xpath:idRelative"],
+        ["xpath=//td[2]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'X')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "2fba9d8b-b93a-41a1-abfd-1da7d190674f",
+      "comment": "",
+      "command": "answerOnNextPrompt",
+      "target": "Delete",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "24d0af28-10fb-4973-bac2-ea9857d1d8b9",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-danger",
+      "targets": [
+        ["css=.btn-danger", "css:finder"],
+        ["xpath=(//button[@type='button'])[4]", "xpath:attributes"],
+        ["xpath=//div[6]/div/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Delete Lab')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "fc9475fa-4e8d-4b14-8104-05b35a72e9f8",
+      "comment": "",
+      "command": "webdriverAnswerOnVisiblePrompt",
+      "target": "Delete",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "829964fc-18ca-4f89-9120-77223e869bb2",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Log off",
+      "targets": [
+        ["linkText=Log off", "linkText"],
+        ["css=.navbar-right > li > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Log off')]", "xpath:link"],
+        ["xpath=//form[@id='logoutForm']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, \"javascript:document.getElementById('logoutForm').submit()\")]", "xpath:href"],
+        ["xpath=//form/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Log off')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
   }],
   "suites": [{
     "id": "d9080b00-4876-4d7b-ae9e-b67846de42e4",
