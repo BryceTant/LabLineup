@@ -274,8 +274,17 @@ class EditAccountDetailsForm(forms.Form):
             emailValidator(self.cleaned_data["email"])
         except:
             emailValid = False
+        if len(self.cleaned_data["email"]) == 0:
+            emailValid = False
+            self.add_error("email", "Your email cannot be blank")
         if (not emailValid):
             baseValid = False
+        if len(self.cleaned_data["firstname"]) == 0:
+            baseValid = False
+            self.add_error("firstname", "Your first name cannot be blank")
+        if len(self.cleaned_data["lastname"]) == 0:
+            baseValid = False
+            self.add_error("lastname", "Your last name cannot be blank")
         return baseValid
 
     def save(self):
