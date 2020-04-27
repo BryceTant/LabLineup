@@ -12,28 +12,28 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link active" id="FAQLabs-Tab" data-toggle="tab"
+        <a class="nav-link" id="FAQLabs-Tab" data-toggle="tab"
            href="#FAQ-Labs" role="tab" aria-controls="FAQ-Labs"
-           aria-selected="true">Labs</a>
+           aria-selected="false">Labs</a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link active" id="FAQSubscription-Tab" data-toggle="tab"
+        <a class="nav-link" id="FAQSubscription-Tab" data-toggle="tab"
            href="#FAQ-Subscription" role="tab" aria-controls="FAQ-Subscription"
-           aria-selected="true">Subscription</a>
+           aria-selected="false">Subscription</a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link active" id="FAQRequests-Tab" data-toggle="tab"
+        <a class="nav-link" id="FAQRequests-Tab" data-toggle="tab"
            href="#FAQ-Requests" role="tab" aria-controls="FAQ-Requests"
-           aria-selected="true">Requests</a>
+           aria-selected="false">Requests</a>
     </li>
 
     
 </ul>
 
 <div class="tab-content" id="FAQTabsContent">
-    <div class="tab-pane fade {{active.FAQAccount}}" id="FAQ-Account" role="tabpanel"
+    <div class="tab-pane active {{active.FAQAccount}}" id="FAQ-Account" role="tabpanel"
          aria-labelledby="FAQAccount-Tab">
         {% include "app/FAQAccount.html" %}
     </div>
