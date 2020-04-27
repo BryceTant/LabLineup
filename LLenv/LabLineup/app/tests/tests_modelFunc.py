@@ -319,7 +319,28 @@ class ModelFuncTest(TestCase):
         self.assertNotEqual(None, mf.generatePasswordResetCode(self.User3.id))
 
     def test_resetPasswordFunc(self):
-        self.assertEqual(1,1)
+        prc = mf.generatePasswordResetCode(self.User0.id)
+        newPassword = 'Test123!'
+        self.assertNotEqual(self.User0.password, mf.resetPasswordFunc(prc, newPassword))
+
+    def test_getLabUsers(self):
+        self.assertNotEqual(None, mf.getLabUsers(self.Lab0.lid))
+        self.assertNotEqual(None, mf.getLabUsers(self.Lab1.lid))
+
+    def test_getLabUsersWithRole(self):
+        self.assertNotEqual(None, mf.getLabUsersWithRole(self.Lab0.lid, 's'))
+        self.assertNotEqual(None, mf.getLabUsersWithRole(self.Lab0.lid, 't'))
+        self.assertNotEqual(None, mf.getLabUsersWithRole(self.Lab1.lid, 's'))
+        self.assertNotEqual(None, mf.getLabUsersWithRole(self.Lab1.lid, 't'))
+
+    def test_getEmailsToNotifyNew(self):
+        self.assertNotEqual(None, mf.getEmailsToNotifyNew(self.Lab0.lid))
+        self.assertNotEqual(None, mf.getEmailsToNotifyNew(self.Lab1.lid))
+
+    def test_getEmailsToNotifyThreshold(self):
+        self.assertNotEqual(0, mf.getEmailsToNotifyThreshold(self.Lab0.lid, 4))
+        self.assertNotEqual(0, mf.getEmailsToNotifyThreshold(self.Lab1.lid, 4))
+
 
     def test_removeLabFromAccount(self):
         self.assertNotEqual(self.Role1, mf.removeLabFromAccount(self.User0.id, self.Lab0.lid))
